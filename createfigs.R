@@ -5,6 +5,7 @@ library(patchwork)
 library(ggmap)
 library(sf)
 library(extrafont)
+library(readxl)
 
 loadfonts(device = 'win', quiet = T)
 
@@ -13,11 +14,9 @@ fml <- "Lato"
 # wq matrix ---------------------------------------------------------------
 
 # local file path
-# xlsx <- 'T:/03_BOARDS_COMMITTEES/05_TBNMC/BAY_TARGETS/2019_update/data-raw/epchc.xlsx'
 xlsx <- 'data/Results_Updated.xls'
 
 # import and download if new
-# epcdata <- read_importwq(xlsx, download_latest = F)
 epcdata <- read_importwq(xlsx, download_latest = T)
 maxyr <- 2019
 
@@ -30,7 +29,7 @@ p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 4, abbrev = T, histori
   ) +
   ggtitle("Water Quality Report Card")
 
-jpeg('~/Desktop/figs/attainmat.jpg',height = 10, width = 3, units = 'in', res = 300)
+jpeg('figures/attainmat.jpg',height = 10, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -44,7 +43,7 @@ p <- show_sitemap(epcdata, yrsel = maxyr) +
     axis.ticks = element_blank()
   )
 
-jpeg('~/Desktop/figs/wqmap.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
+jpeg('figures/wqmap.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -64,7 +63,7 @@ p2 <- show_tbniscr(tbniscr) +
 
 p <- p1 + p2 + plot_layout(ncol = 1, heights = c(1, 1))
 
-jpeg('~/Desktop/figs/tbnits.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
+jpeg('figures/tbnits.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -77,7 +76,7 @@ p <- show_tbnimatrix(tbniscr, family = fml) +
   ) +
   ggtitle('Tampa Bay Nekton Index\nReport Card')
 
-jpeg('~/Desktop/figs/tbnireport.jpg', family = fml, height = 7, width = 3, units = 'in', res = 300)
+jpeg('figures/tbnireport.jpg', family = fml, height = 7, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -88,7 +87,7 @@ tidres <- anlz_tdlcrk(tidcrk, iwrraw, yr = 2018)
 
 out <- show_tdlcrkmatrix(tidres)
 
-jpeg('~/Desktop/tidalcreekreport.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
+jpeg('figures/tidalcreekreport.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
 print(out)
 dev.off()
 
@@ -134,6 +133,37 @@ p <- ggmap::ggmap(bsmap) +
   ggsn::scalebar(tomap, dist = 6, dist_unit = "km", st.size = 3, location = 'topright',
                  transform = TRUE, model = "WGS84", height = 0.015)
 
-jpeg('~/Desktop/tidalcreekmap.jpg', family = fml, height = 9, width = 5, units = 'in', res = 300)
+jpeg('figures/tidalcreekmap.jpg', family = fml, height = 9, width = 5, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# TN H2O load -------------------------------------------------------------
+
+dat <- read_excel('data/TB_ANNUAL_LOADS_1985-2018.xlsx') %>% 
+  mutate(
+    `Bay Segment` = factor(`Bay Segment`, levels = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Remainder Lower Tampa Bay')), 
+    bayseg = `Bay Segment`
+  ) 
+
+p <- ggplot(dat, aes(x = Year, y = TN_H2O_RATIO)) + 
+  geom_line() + 
+  geom_point() + 
+  geom_hline(aes(yintercept = HYDRO_REF_LINE), linetype = 'dashed', colour = 'blue') +
+  facet_wrap(~`Bay Segment`, ncol = 1) +
+  scale_x_continuous(breaks = seq(1985, 2020, by = 5)) +
+  theme_minimal() + 
+  theme(
+    axis.title.x = element_blank(), 
+    strip.background = element_blank(), 
+    text = element_text(family = fml)
+  ) + 
+  labs(
+    y = expression(paste('tons/million ', m^3)), 
+    title = 'Nitrogen and Hydrologic Load Ratios', 
+    subtitle = 'Annual averages by major bay segment'
+  )
+
+png('figures/tnload.png', height = 8, width = 4, family = fml, units = 'in', res = 300)
+p
+dev.off()
+
