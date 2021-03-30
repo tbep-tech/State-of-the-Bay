@@ -1,0 +1,147 @@
+---
+output: 
+  html_document
+---
+
+# Tampa Bay salinity trends {.tabset}
+
+```{r setup, message = F, warning = F, results = 'hide', echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F, echo = F, fig.path = 'figs/', fig.path = 'figures/')
+library(tidyverse)
+library(tbeptools)
+library(patchwork)
+
+# monthly salinity
+moout <- epcdata %>%
+  dplyr::select(yr, mo, bay_segment, epchc_station, Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth) %>%
+  dplyr::rowwise() %>% 
+  dplyr::mutate(sal = mean(c(Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth), na.rm = T)) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(-Sal_Top_ppth, -Sal_Mid_ppth, -Sal_Bottom_ppth) %>% 
+  tidyr::gather('var', 'val',sal) %>%
+  dplyr::group_by(bay_segment, yr, mo, var) %>%
+  dplyr::summarise(
+    val = mean(val, na.rm = T), 
+    .groups = 'drop'
+  ) %>%
+  dplyr::filter(!is.na(val)) %>%
+  dplyr::filter(!is.infinite(val)) %>%
+  dplyr::arrange(var, yr, mo, bay_segment)
+
+
+# annual salinity
+anout <- moout %>%
+  dplyr::group_by(yr, bay_segment, var) %>%
+  dplyr::summarise(
+    valave = mean(val), 
+    valhi = t.test(val)$conf.int[2], 
+    vallo = t.test(val)$conf.int[1],
+    .groups = 'drop'
+  ) %>% 
+  dplyr::arrange(var, yr, bay_segment)
+
+# annual plots
+annplo <- anout %>% 
+  group_by(bay_segment) %>% 
+  nest() %>% 
+  mutate(
+    plos = purrr::pmap(list(bay_segment, data), function(bay_segment, data){
+      
+      p <- ggplot(data = data, aes(x = yr, y = valave)) +
+        geom_point(size = 3, color = 'red') +
+        geom_line(linetype = 'solid', size = 0.75,  color = 'red') +
+        geom_errorbar(aes(ymin = vallo, ymax = valhi),  color = 'red') +
+        scale_y_continuous(limits = c(15, 40)) + 
+        labs(y = 'Salinity (ppth, +/- 95% CI)', subtitle = bay_segment) +
+        theme(axis.title.x = element_blank(),
+              # panel.grid.minor=element_blank(),
+              panel.grid.major=element_blank(),
+              panel.background = element_rect(fill = '#ECECEC'),
+              legend.background = element_rect(fill=NA),
+              legend.key = element_rect(fill = '#ECECEC'),
+              legend.title = element_blank(),
+              axis.text.x = element_text(angle = 45, size = 7, hjust = 1)
+        )
+  
+      return(p)
+    
+    })
+  )
+
+# monthly plots
+moplo <- moout %>% 
+  group_by(bay_segment) %>% 
+  nest() %>% 
+  mutate(
+    plos = purrr::pmap(list(bay_segment, data), function(bay_segment, data){
+  
+      yrsel <- 2020
+      yrrng <- c(1973, 2019)
+      
+      # toplo1 is all but current year
+      toplo1 <- data %>%
+        dplyr::filter(!yr %in% yrsel)
+    
+      # toplo2 is current year
+      toplo2 <- data %>%
+        dplyr::filter(yr %in% yrsel)
+
+      # colors and legend names
+      cols <- c("black", "red")
+      names(cols)[1] <- case_when(
+        yrsel == yrrng[1] ~ paste(yrrng[1] + 1, yrrng[2], sep = '-'),
+        yrsel == yrrng[2] ~ paste(yrrng[1], yrrng[2] - 1, sep = '-'),
+        yrsel > yrrng[1] & yrsel < yrrng[2] ~ paste(paste(yrrng[1], yrsel - 1, sep = '-'), paste(yrsel + 1, yrrng[2], sep = '-'), sep = ', '),
+        T ~ paste(yrrng, collapse = '-')
+      )
+      names(cols)[2] <- as.character(yrsel)
+    
+      p <- ggplot() +
+        geom_boxplot(data = data, aes(x = factor(mo), y = val, colour = names(cols)[1]), outlier.colour = NA) +
+        geom_point(data = toplo1, aes(x = mo, y = val, group = yr, colour = names(cols)[1]), position = position_jitter(width = 0.2), size = 1) +
+        geom_point(data = toplo2, aes(x = mo, y = val, group = yr, fill = names(cols)[2]), pch = 21, color = cols[2], size = 3, alpha = 0.7) +
+        scale_y_continuous(limits = c(8, 45)) + 
+        labs(y = 'Salinity (ppth)', subtitle = bay_segment) +
+        theme(axis.title.x = element_blank(),
+              # panel.grid.minor=element_blank(),
+              panel.grid.major=element_blank(),
+              panel.background = element_rect(fill = '#ECECEC'),
+              legend.position = 'right',#c(0.85, 0.95),
+              legend.background = element_rect(fill=NA),
+              legend.key = element_rect(fill = '#ECECEC'),
+              legend.title = element_blank(),
+              axis.text.x = element_text(angle = 45, size = 8, hjust = 1)
+        ) +
+        scale_colour_manual(values = cols[1]) +
+        scale_fill_manual(values = cols[2]) +
+        scale_linetype_manual(values = 'dotted') +
+        guides(linetype = guide_legend(override.aes = list(colour = 'blue')))
+          
+    return(p)
+    
+    })
+  )
+```
+
+## Annual trends
+
+```{r, fig.height = 12, fig.width = 7}
+p1 <- annplo$plos[[1]]
+p2 <- annplo$plos[[2]]
+p3 <- annplo$plos[[3]]
+p4 <- annplo$plos[[4]]
+
+p4 + p1 + p3 + p2 + plot_layout(ncol = 1)
+```
+
+## Monthly trends
+
+```{r, fig.height = 12, fig.width = 7}
+p1 <- moplo$plos[[1]]
+p2 <- moplo$plos[[2]]
+p3 <- moplo$plos[[3]]
+p4 <- moplo$plos[[4]]
+
+p4 + p1 + p3 + p2 + plot_layout(ncol = 1)
+```
+
