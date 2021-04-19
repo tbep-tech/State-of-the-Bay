@@ -264,6 +264,6 @@ gt$grobs[[is_axisr]] <-axisl$children[[1]]
 ##
 # save plot
 
-png('figure/seagrasscov.png', height = 3.25, width = 6, res = 300, unit = 'in')
+png('figures/seagrasscov.png', height = 3.25, width = 6, res = 300, unit = 'in')
 grid.newpage(); grid.draw(gt)
 dev.off()
