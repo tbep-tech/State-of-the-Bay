@@ -82,6 +82,21 @@ jpeg('figures/tbnireport.jpg', family = fml, height = 7, width = 3, units = 'in'
 print(p)
 dev.off()
 
+
+# tbbi report card --------------------------------------------------------
+
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, family = fml) +
+  theme(
+    text = element_text(family = fml),
+    axis.text.y = element_text(family = fml)
+  ) +
+  ggtitle('Tampa Bay Benthic Index Report Card')
+
+jpeg('figures/tbbireport.jpg', family = fml, height = 7, width = 5, units = 'in', res = 300)
+print(p)
+dev.off()
+
 # tidal creek report ------------------------------------------------------
 
 tidcrk <- tidalcreeks[tbshed, ]
