@@ -36,7 +36,7 @@ download_this(seagrass,
 knitr::kable(seagrass, caption = 'All estimates for all segments, based on historical coverages used to report on annual progress toward recovery goals.')
 ```
 
-[download figure](figures/seagrsscov.png)
+[download figure](figures/seagrasscov.png)
 
 ```{r, out.width = '100%'}
 knitr::include_graphics(here('figures/seagrasscov.png'))
