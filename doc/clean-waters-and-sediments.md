@@ -2,8 +2,6 @@
 
 ## Water Quality Decision Matrix
 
-fr;ryr ,r ;sdyrt 
-
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution-reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment since 2005.
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Hillsborough County Environmental Protection Commission.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations.  Chlorophyll provides a measure of algae growth in the water column, which can be stimulated by excess nutrient pollution from wastewater and stormwater runoff.   The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
@@ -16,9 +14,9 @@ Links to wq report card data page: http://dev.tbep.org/water-quality-report-card
 
 ## Total Nitrogen Loading
 
-In 2011, the Tampa Bay Nitrogen Management Consortium recommended and the FDEP approved, numeric nutrient criteria (NNC) for each of the bay segments recognized in the 2009 Tampa Bay Reasonable Assurance (RA) Update. The Tampa Bay NNC represent a total "nitrogen delivery ratio" [i.e. total nitrogen load (tons/yr) per unit water (million m3) delivered] to each of the RA segments and have been codified as FDEP Estuary Nutrient Regions in F.A.C. 62-302.532. The NNC are based on the average of 1992-1994 ratios for each of the RA segments, and therefore, account for year-to-year variation in rainfall and set a baseline for the assessment of future loading conditions.
+In 2011, the FDEP approved numeric nutrient criteria (NNC) for each of the bay segments described by the Tampa Bay Nitrogen Management Consortium in the 2009 Tampa Bay Reasonable Assurance (RA) Update. The Tampa Bay NNC represent a total "nitrogen delivery ratio" [i.e. total nitrogen load (tons/yr) per unit water (million m3) delivered] to each of the RA segments and have been codified as FDEP Estuary Nutrient Regions in F.A.C. 62-302.532. The NNC are based on the average of 1992-1994 ratios for each of the RA segments, and therefore, account for year-to-year variation in rainfall and set a baseline for the assessment of future loading conditions.
 
-Despite an ever increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (ancillary figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2016, refer to 5-panel summary). 
+Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (ancillary figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2016, refer to 5-panel summary). 
 
 ## Tidal Creeks
 
