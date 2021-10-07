@@ -2,11 +2,11 @@
 
 ## Behavior Change 
 
-\#LoveTampaBay is TBEP’s latest community campaign, aimed at celebrating the beauty and wonder of Tampa Bay and its watershed. Residents and visitors are encouraged to DO MORE to protect the bay, LEARN MORE about how we depend on a healthy bay, and SHARE THE LOVE by posting photos showing how Tampa Bay inspires us.
+\Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed. 
 
-TBEP keeps the "Scoop that Poop!" campaign alive by making outreach materials available to interested campaign ambassadors upon request.
+TBEP keeps the "Scoop the Poop!" campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
 
-Each spring, TBEP directs its marketing efforts towards the well known Be Floridian Campaign, coinciding with the regional fertilizer ordinances. Through inbound marketing tactics, the Program works to increase the campaign's reach through its Facebook page.
+Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances and share tips for individuals to reduce their nutrient footprint.
 
 ## Give-a-Day for the Bay
 
