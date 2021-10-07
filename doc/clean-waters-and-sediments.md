@@ -2,6 +2,8 @@
 
 ## Water Quality Decision Matrix
 
+fr;ryr ,r ;sdyrt 
+
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution-reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment since 2005.
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Hillsborough County Environmental Protection Commission.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations.  Chlorophyll provides a measure of algae growth in the water column, which can be stimulated by excess nutrient pollution from wastewater and stormwater runoff.   The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
