@@ -2,7 +2,7 @@
 
 ## Behavior Change 
 
-Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed. 
+Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair, or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed. 
 
 TBEP keeps the "Scoop the Poop!" campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
 
@@ -16,7 +16,7 @@ To date, TBERF has received $8.0M in funding + $13.3M in matching funds to suppo
 
 Since 2000, sales from the Tarpon Tag speciality license plate have collectively awarded $2M to more than 370 community-based restoration projects in the bay through TBEP's Bay Mini-Grant program
 
-Established during the COVID-19 pandemic, the Digital Challenge Grant program was created to provide income opportunities for digital content creators, science communicators, graphic designers and educators.
+Established during the COVID-19 pandemic, the Digital Challenge Grant program was created to provide income opportunities for digital content creators, science communicators, graphic designers, and educators.
 
 ## Reach Index
 
