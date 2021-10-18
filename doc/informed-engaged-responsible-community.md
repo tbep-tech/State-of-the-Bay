@@ -18,7 +18,7 @@ Since 2019, there have been 28 Give-A-Day for the Bay volunteer events co-hosted
 
 To date, TBERF has received $8.0M in funding + $13.3M in matching funds to support 80 grants within the Tampa Bay watershed.
 
-Since 2000, sales from the Tarpon Tag speciality license plate have collectively awarded $2M to more than 370 community-based restoration projects in the bay through TBEP's Bay Mini-Grant program
+Funded by sales from the Tarpon Tag, Tampa Bay's specialty license plate, Bay Mini-Grants are competative cash awards (up to $5,000) offered to community organizations for projects that help restore and protect Tampa Bay. To achiee Program goals, specific Bay Mini-Grant priority actions are annoucned annually. Expanding the use of green infrastructure and understanding emerging contaminants have both been recent Bay Mini-Grant priorities. Since 2000, sales from the Tarpon Tag speciality license plate have collectively awarded $2M to more than 370 community-based restoration projects in the bay through TBEP's Bay Mini-Grant program.
 
 Established during the COVID-19 pandemic, the Digital Challenge Grant program was created to provide income opportunities for digital content creators, science communicators, graphic designers, and educators.
 
