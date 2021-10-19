@@ -8,7 +8,7 @@ For most habitats, information comes from assessments of seagrasses and land cov
 
 When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses since 1988; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) since 1990; and 3) the 39 percent loss in native upland habitats since 1990. The increasing trend in seagrass coverage is a testament to improved bay water quality.
 
-While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality gained over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
+While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
 
 The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects and state and federal wetland regulatory programs. Minor increases in salt barrens may also reflect a landward expansion associated with sea level rise. 
 
@@ -24,7 +24,7 @@ Habitat restoration is an attempt to restore important services, such as providi
 
 In fact, Tampa Bay restoration professionals often work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
 
-Habitat restoration in the Tampa Bay region has evolved over time from a simple planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on regionally significant tracts of coastal land e.g., Rock Ponds (2,543 acres). Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971. 
+Habitat restoration in the Tampa Bay region has evolved over time from a simple planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on regionally significant tracts of coastal land. Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971.
 
 To continue the improvements that have occurred, the Habitat Master Plan (2020 Update) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
 
