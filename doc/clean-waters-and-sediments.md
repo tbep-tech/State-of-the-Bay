@@ -34,20 +34,18 @@ Link to tidal creeks data page: http://dev.tbep.org/tidal-creeks/
 
 Benthic invertebrates are a group of relatively small organisms (microscopic to visible to the naked eye) that live the majority of their life cycles in or near bay bottom sediments. They are a food source for small fish and crustaceans and may provide some water quality benefits through sediment removal via filtration during feeding (similar to oysters). Tampa Bay supports many different benthic organisms. The type of benthos varies depending on the salinity, sediment type, temperature, dissolved oxygen, and presence of excess nutrients and/or toxic contaminants. 
 
-The Tampa Bay Benthic Monitoring Program was started in 1993 and partners include the Environmental Protection Commission of Hillsborough County, and Hillsborough, Manatee and Pinellas Counties. Our partners monitor environmental conditions that affect benthic invertebrates, including percent silt-clay, sediment contaminant levels, and dissolved oxygen.
+The Tampa Bay Benthic Monitoring Program was started in 1993, and partners include the Environmental Protection Commission of Hillsborough County, and Hillsborough, Manatee and Pinellas Counties. Our partners monitor benthic invertebrate population characteristics and environmental conditions that affect these organisms, including percent silt-clay, sediment contaminant levels, and dissolved oxygen.
 
-The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic habitats in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2017, and the bay-wide median TBBI was continuously in the "Healthy" range from 2013-2017.
-
-The highest TBBI values were in the main portion of Tampa Bay (Old Tampa Bay, Middle Tampa Bay, and Lower Tampa Bay), while lower values were found in Hillsborough Bay and the Manatee River. 
+The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2017, and the bay-wide median TBBI was continuously in the "Healthy" range from 2013-2017. During that time frame, the highest TBBI values were observed in the main portion of Tampa Bay (Old Tampa Bay, Middle Tampa Bay, and Lower Tampa Bay), while lower values were found in Hillsborough Bay and the Manatee River. 
 
 Anthropogenic (human-caused) pollution can result in the contamination of aquatic sediments with various dangerous chemicals and heavy metals. As polluted water enters a waterbody, metals and other chemicals may adsorb or attach to suspended solids in the water column. These solids eventually sink to the bottom and integrate into the existing sediments. Toxicological studies have shown that many of these substances can affect the growth and survival of benthic organisms.
 
-Sediment contaminant levels are assigned a letter grade (A, B, C. D, F) by combining according to the mean Probable Effects Level ratio, a measure of how likely a contaminant is to have a toxic effect on invertebrates. From 1993-2017, most sites fell within the "C" range, and "D" and "F" graded sites were found primarily in Hillsborough Bay, the Manatee River, and Boca Ciega Bay. 
-
-2005 Tampa Bay Dredged Hole Habitat Assessment Project: https://tbeptech.org/TBEP_TECH_PUBS/2005/TBEP_04-05TBayDredgedHole.pdf 
+Sediment contaminant levels are assigned a letter grade (A, B, C. D, F) by averaging the scores of multiple contaminants according to the mean Probable Effects Level ratio, a measure of how likely a contaminant is to have a toxic effect on invertebrates. From 1993-2017, most sites fell within the "C" range, while some "D" and "F" graded sites were found, primarily in Hillsborough Bay, the Manatee River, and Boca Ciega Bay. 
 
 2020 Report: Twenty-five-year Trends in the Benthic Community and Sediment Quality of Tampa Bay 1993 - 2017 (table and map came from this report) http://www.tbeptech.org/TBEP_TECH_PUBS/2020/TBEP_06_20_Karlen_TampaBayBenthicTrends1993-2017.pdf 
 
 Table: Tampa Bay Benthic Index averages from 1993-2017 https://drive.google.com/file/d/15EV5GJYA_eVOfJrYAImIFPD_p2NezbZk/view?usp=sharing 
 
 Map: Probable Effects Levels for biological contaminants in Tampa Bay from 1993-2017 https://drive.google.com/file/d/1ONfrCRJid6paZPYPHZL2AyejtwBy6ji5/view?usp=sharing 
+
+TBBI GitHub Vignette: https://tbep-tech.github.io/tbeptools/articles/tbbi.html
