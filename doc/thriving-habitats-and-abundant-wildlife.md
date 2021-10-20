@@ -6,7 +6,7 @@ Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or los
 
 For most habitats, information comes from assessments of seagrasses and land cover conducted by the Southwest Florida Water Management District. To gain or improve our knowledge about some habitats (such as hard bottom), the TBEP and its partners conduct supplemental studies when we recognize that additional information is needed.
 
-When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses since 1988; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) since 1990; and 3) the 39 percent loss in native upland habitats since 1990. The increasing trend in seagrass coverage is a testament to improved bay water quality.
+When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses from 1988 to 2000; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) between 1990 and 2017; and 3) the 39 percent loss in native upland habitats from 1990 to 2017. The increasing trend in seagrass coverage is a testament to improved bay water quality.
 
 While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
 
@@ -22,9 +22,9 @@ Seagrass coverage data: https://shiny.tbep.org/seagrass-analysis/
 
 Habitat restoration is an attempt to restore important services, such as providing fish nurseries, improving water quality, and storm protection, to an ecosystem. This can involve a variety of habitat types, from salt marshes to pine flatwoods. 
 
-In fact, Tampa Bay restoration professionals often work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
-
 Habitat restoration in the Tampa Bay region has evolved over time from a simple planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on regionally significant tracts of coastal land. Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971.
+
+Tampa Bay restoration professionals often work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
 
 To continue the improvements that have occurred, the Habitat Master Plan (2020 Update) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
 
@@ -35,9 +35,9 @@ To continue the improvements that have occurred, the Habitat Master Plan (2020 U
 
 2020 Tampa Bay Habitat Master Plan Update: https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view
 
-Opportutunities for habitat restoration by segment: https://github.com/tbep-tech/hmpu-workflow
+Restoration opportutunities by segment: https://github.com/tbep-tech/hmpu-workflow
 
-Another table (slightly less painful - GR thinks a version of this will be useful, but needs to be updated with past 2-3 years of GPRA data): https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing 
+Habitat restoration table (needs to be updated with past 2-3 years of GPRA data): https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing 
 
 Habitat restoration projects (and associated database) in the Tampa Bay Watershed: https://www.tampabay.wateratlas.usf.edu/restoration/
 
