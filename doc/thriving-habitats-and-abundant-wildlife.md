@@ -6,7 +6,7 @@ Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or los
 
 For most habitats, information comes from assessments of seagrasses and land cover conducted by the Southwest Florida Water Management District. To gain or improve our knowledge about some habitats (such as hard bottom), the TBEP and its partners conduct supplemental studies when we recognize that additional information is needed.
 
-When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses from 1988 to 2000; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) between 1990 and 2017; and 3) the 39 percent loss in native upland habitats from 1990 to 2017. The increasing trend in seagrass coverage is a testament to improved bay water quality.
+When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses from 1988 to 2020; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) between 1990 and 2017; and 3) the 39 percent loss in native upland habitats from 1990 to 2017. The increasing trend in seagrass coverage is a testament to improved bay water quality.
 
 While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
 
