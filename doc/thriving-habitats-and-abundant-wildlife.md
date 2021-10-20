@@ -29,8 +29,11 @@ Tampa Bay restoration professionals often work to create or restore a mosaic of 
 To continue the improvements that have occurred, the Habitat Master Plan (2020 Update) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
 
 -50 acres of oyster reefs
+
 -1,000 acres of tidal wetlands, such as salt marshes, salt barrens, and mangroves
+
 -1,500 acres of freshwater wetlands, including freshwater marshes, wet prairies, and cypress forests
+
 -600 acres of uplands, including coastal hammocks and pine flatwoods
 
 2020 Tampa Bay Habitat Master Plan Update: https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view
