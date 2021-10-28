@@ -2,15 +2,15 @@
 
 ## Water Quality Decision Matrix
 
-Water quality in Tampa Bay has improved steadily in recent decades due to pollution-reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment since 2005.
+Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2005.
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Hillsborough County Environmental Protection Commission.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations.  Chlorophyll provides a measure of algae growth in the water column, which can be stimulated by excess nutrient pollution from wastewater and stormwater runoff.   The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
 
 Action: Maintain progress in bay segments meeting water clarity standards. Direct additional research and restoration to Old Tampa Bay and other bay segments affected by algal blooms.
 
-Green: "Stay the Course." Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. Yellow: "Caution Alert." Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations. Red: "On Alert." Finalize development and implement appropriate management actions to get back on track.
+Green: "Stay the Course." Continue planned projects. Report progress annually. Yellow: "Caution Alert." Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations. Red: "On Alert." Finalize development and implement appropriate management actions to get back on track.
 
-Links to wq report card data page: http://dev.tbep.org/water-quality-report-card/
+Water Quality Report Card data page: https://tbep.org/water-quality-report-card/
 
 ## Total Nitrogen Loading
 
