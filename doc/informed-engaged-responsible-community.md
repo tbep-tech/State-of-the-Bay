@@ -6,7 +6,7 @@ Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at 
 
 TBEP keeps the "Scoop that Poop!" campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
 
-Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances and share tips for individuals to reduce their nutrient footprint.
+Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances, shares tips for individuals to reduce their nutrient footprint and encourages florida-friendly landscaping practices.
 
 ## Give-a-Day for the Bay
 
