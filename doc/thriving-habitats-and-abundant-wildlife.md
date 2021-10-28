@@ -2,9 +2,7 @@
 
 ## How are Tampa Bay’s Natural Habitats Changing?
 
-Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or lost during development activities. Once the value of these habitats was recognized, protections were put in place and monitoring of these habitats began to occur on a regular basis to help understand the effectiveness of different conservation and restoration activities.
-
-For most habitats, information comes from assessments of seagrasses and land cover conducted by the Southwest Florida Water Management District. To gain or improve our knowledge about some habitats (such as hard bottom), the TBEP and its partners conduct supplemental studies when we recognize that additional information is needed.
+Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or lost during development activities. Once the value of these habitats was recognized, protections were put in place and monitoring began on a regular basis to understand the effectiveness of different conservation and restoration activities.
 
 When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses from 1988 to 2020; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) between 1990 and 2017; and 3) the 39 percent loss in native upland habitats from 1990 to 2017. The increasing trend in seagrass coverage is a testament to improved bay water quality.
 
@@ -20,7 +18,7 @@ Seagrass coverage data: https://shiny.tbep.org/seagrass-analysis/
 
 ## Restoration Projects to Improve Tampa Bay’s Natural Systems
 
-Habitat restoration is an attempt to restore important services, such as providing fish nurseries, improving water quality, and storm protection, to an ecosystem. This can involve a variety of habitat types, from salt marshes to pine flatwoods. 
+Habitat restoration is an attempt to restore important services provided by natural systems. These ecological services can include providing fish nurseries; improving water quality; reducing erosion; and storm surge protection. This can involve a variety of habitat types, from salt marshes to pine flatwoods. 
 
 Habitat restoration in the Tampa Bay region has evolved over time from a simple planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on regionally significant tracts of coastal land. Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971.
 
