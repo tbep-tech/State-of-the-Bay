@@ -16,7 +16,7 @@ Water Quality Report Card data page: https://tbep.org/water-quality-report-card/
 
 In 2011, the FDEP approved numeric nutrient criteria (NNC) for each of the bay segments described by the Tampa Bay Nitrogen Management Consortium in the 2009 Tampa Bay Reasonable Assurance (RA) Update. The Tampa Bay NNC represent a total "nitrogen delivery ratio" [i.e. total nitrogen load (tons/yr) per unit water (million m3) delivered] to each of the RA segments and have been codified as FDEP Estuary Nutrient Regions in F.A.C. 62-302.532. The NNC are based on the average of 1992-1994 ratios for each of the RA segments, and therefore, account for year-to-year variation in rainfall and set a baseline for the assessment of future loading conditions.
 
-Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (ancillary figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2016, refer to 5-panel summary). 
+Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (ancillary figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020, refer to 5-panel summary). 
 
 ## Tidal Creeks
 
