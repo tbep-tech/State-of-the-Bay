@@ -1,10 +1,40 @@
 <!-- # Clean Waters & Sediments -->
 
+```{r setup, warning = F, message = F, echo = F}
+source(here::here('doc/setup.R'))
+```
+
+```{r}
+# local file path
+xlsx <- here('data/Results_Updated.xls')
+
+# import and download if new
+epcdata <- read_importwq(xlsx, download_latest = T)
+maxyr <- 2020
+
+p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 4, abbrev = T, historic = T, family = fml) +
+  theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(size = 12, colour = 'black', family = fml),
+    axis.text.x = element_text(size = 12, colour = 'black', family = fml),
+    plot.title = element_text(size = 14, colour = 'black', family = fml)
+  ) +
+  ggtitle("Water Quality Report Card")
+
+jpeg(here('figures/attainmat.jpg'),height = 10, width = 3, units = 'in', res = 300)
+print(p)
+invisible(dev.off())
+```
+
 ## Water Quality Decision Matrix
 
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2006.
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Environmental Protection Commission of Hillsborough County.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations and water column light attenuation.  Chlorophyll provides a measure of algae growth in the water column and light attenuation provides a measure of potential shading from algae growth that can limit seagrass growth.  Excess nutrient pollution from atmospheric, wastewater and stormwater sources can cause excess algae growth. The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
+
+```{r, out.width = '25%'}
+knitr::include_graphics(here('figures/attainmat.jpg'))
+```
 
 Conditions in 2021 were ...  
 

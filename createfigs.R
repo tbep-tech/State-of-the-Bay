@@ -13,28 +13,6 @@ loadfonts(device = 'win', quiet = T)
 
 fml <- "Lato"
 
-# wq matrix ---------------------------------------------------------------
-
-# local file path
-xlsx <- 'data/Results_Updated.xls'
-
-# import and download if new
-epcdata <- read_importwq(xlsx, download_latest = T)
-maxyr <- 2019
-
-p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 4, abbrev = T, historic = T, family = fml) +
-  theme(
-    plot.background = element_rect(fill = NA, color = NA),
-    axis.text.y = element_text(size = 12, colour = 'black', family = fml),
-    axis.text.x = element_text(size = 12, colour = 'black', family = fml),
-    plot.title = element_text(size = 14, colour = 'black', family = fml)
-  ) +
-  ggtitle("Water Quality Report Card")
-
-jpeg('figures/attainmat.jpg',height = 10, width = 3, units = 'in', res = 300)
-print(p)
-dev.off()
-
 # wq matrix map -----------------------------------------------------------
 
 txtcol <- 'black'
