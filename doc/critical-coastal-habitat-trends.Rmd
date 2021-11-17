@@ -1,0 +1,17 @@
+<!-- # Thriving Habitats and Abundant Wildlife -->
+
+## How are Tampa Bay’s Natural Habitats Changing?
+
+Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or lost during development activities. Once the value of these habitats was recognized, protections were put in place and monitoring began on a regular basis to understand the effectiveness of different conservation and restoration activities.
+
+When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the 47% gain in seagrasses from 1988 to 2020; 2) the slight gains in both emergent tidal wetlands (10% gain) and freshwater wetlands (2% gain) between 1990 and 2017; and 3) the 39 percent loss in native upland habitats from 1990 to 2017. The increasing trend in seagrass coverage is a testament to improved bay water quality.
+
+While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
+
+The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects and state and federal wetland regulatory programs. Minor increases in salt barrens may also reflect a landward expansion associated with sea level rise. 
+
+However, a loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
+
+Land use change data: https://shiny.tbep.org/landuse-change/
+  
+Seagrass coverage data: https://shiny.tbep.org/seagrass-analysis/
