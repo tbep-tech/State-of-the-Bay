@@ -132,36 +132,6 @@ jpeg('figures/tidalcreekmap.jpg', family = fml, height = 9, width = 5, units = '
 print(p)
 dev.off()
 
-# TN H2O load -------------------------------------------------------------
-
-dat <- read_excel('data/TB_ANNUAL_LOADS_1985-2018.xlsx') %>% 
-  mutate(
-    `Bay Segment` = factor(`Bay Segment`, levels = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Remainder Lower Tampa Bay')), 
-    bayseg = `Bay Segment`
-  ) 
-
-p <- ggplot(dat, aes(x = Year, y = TN_H2O_RATIO)) + 
-  geom_line() + 
-  geom_point() + 
-  geom_hline(aes(yintercept = HYDRO_REF_LINE), linetype = 'dashed', colour = 'blue') +
-  facet_wrap(~`Bay Segment`, ncol = 1) +
-  scale_x_continuous(breaks = seq(1985, 2020, by = 5)) +
-  theme_minimal() + 
-  theme(
-    axis.title.x = element_blank(), 
-    strip.background = element_blank(), 
-    text = element_text(family = fml)
-  ) + 
-  labs(
-    y = expression(paste('tons/million ', m^3)), 
-    title = 'Nitrogen and Hydrologic Load Ratios', 
-    subtitle = 'Annual averages by major bay segment'
-  )
-
-png('figures/tnload.png', height = 8, width = 4, family = fml, units = 'in', res = 300)
-p
-dev.off()
-
 # seagrass coverage -------------------------------------------------------
 
 ##

@@ -1,7 +1,27 @@
 <!-- # Clean Waters & Sediments -->
 
+```{r setup, warning = F, message = F, echo = F}
+source(here::here('doc/setup.R'))
+
+# from https://github.com/tbep-tech/load-estimates
+load(file = here('data/totanndat.RData'))
+load(file = here('data/popdat.RData'))
+```
+
 ## Total Nitrogen Loading
 
 In 2011, the Florida Department of Environmental Protection approved regulatory thresholds for nutrients that apply to major segments of Tampa Bay.  These criteria describe a threshold at which nutrient loads exceeding that amount may have a negative impact on environmental resources.  These thresholds are defined for ratios of total nitrogen (nutrient load) to the volume of water (hydrologic load) entering the bay, which accounts for naturally changing loads with variation in precipitation.  Each year, the Tampa Bay Nitrogen Management Consortium assesses progress in achieving the regulatory thresholds.  This is accomplished through regular reporting of load estimates by the Tampa Bay Estuary Program.  To date, nitrogen and hydrologic load ratios continue to decline throughout the Bay, indicating that the Nitrogen Management Consortium has been effective in implementing management actions that limit nutrient inputs. 
 
-Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (ancillary figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020, refer to 5-panel summary). 
+```{r}
+p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'), 
+          addlns = T, width = 600, height = 500)
+div(p, align = 'center')
+```
+
+Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time (figure below), and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020). 
+
+```{r}
+p <- ldrat_plo(totanndat, popdat, width = 600, height = 500)
+div(p, align = 'center')
+```
+

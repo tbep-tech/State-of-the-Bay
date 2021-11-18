@@ -11,9 +11,13 @@ library(readxl)
 library(ggfx)
 library(grid)
 library(here)
+library(htmltools)
+library(plotly)
 
 loadfonts(device = 'win', quiet = T)
 
 fml <- "Lato"
+
+source(here('R/funcs.R'))
 
 knitr::opts_chunk$set(message = F, echo = F, warning = F, fig.align = 'center')
