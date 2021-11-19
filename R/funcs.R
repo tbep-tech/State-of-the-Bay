@@ -156,3 +156,78 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
   return(out)
   
 }
+
+#' color function for tidal creek reactable table cells
+colfun <- function(x){
+  
+  out <- case_when(
+    x == 'No Data' ~ 'lightblue', 
+    x == 'Monitor' ~ '#00ff00', 
+    x == 'Caution' ~ 'yellow', 
+    x == 'Investigate' ~ 'orange', 
+    x == 'Prioritize' ~ 'coral'
+  )
+  
+  return(out)
+  
+}
+
+#' tidal creek reactable table
+crkrct_tab <- function(dat, tidalcreeks, colfun){
+    
+  totab <- dat %>% 
+    inner_join(tidalcreeks, by = c('id', 'wbid', 'JEI', 'class', 'name')) %>% 
+    mutate(`Length (km)` = round(Creek_Length_m / 1000, 2)) %>% 
+    filter(score != 'No Data') %>% 
+    select(Name= name, wbid, JEI, `Length (km)`, monitor, caution, investigate, prioritize, score)
+
+  out <- reactable(totab, 
+            columns = list(
+              score = colDef(
+                style = function(value){
+                  list(background = colfun(value))
+                }), 
+              `Length (km)` = colDef(
+                aggregate = 'sum', 
+                format = colFormat(digits = 2),
+                cell = function(value) {
+                  
+                  width <- paste0(value / max(totab$`Length (km)`, na.rm = T) * 100, "%")
+                  value <- format(value, width = 9, justify = "right")
+                  bar <- div(
+                    class = "bar-chart",
+                    style = list(marginRight = "6px"),
+                    div(class = "bar", style = list(width = width, backgroundColor = "#958984"))
+                  )
+                  div(class = "bar-cell", span(class = "number", value), bar)
+                }
+              ), 
+              # wbid = colDef(
+              #   aggregate = 'count'
+              # ), 
+              # JEI = colDef(
+              #   aggregate = 'count'
+              # ),
+              monitor = colDef(
+                aggregate = 'sum'
+              ), 
+              caution = colDef(
+                aggregate = 'sum'
+              ),  
+              investigate = colDef(
+                aggregate = 'sum'
+              ),  
+              prioritize = colDef(
+                aggregate = 'sum'
+              )
+              
+            ), 
+            groupBy = 'score',
+            filterable = T, pageSizeOptions = c(10, 20, nrow(totab)), defaultPageSize = 10,
+            showPageSizeOptions = T, compact = T
+  )
+  
+  return(out)
+  
+}
+

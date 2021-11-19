@@ -1,7 +1,7 @@
 <!-- # Clean Waters & Sediments -->
 
 ```{r setup, warning = F, message = F, echo = F}
-source(here::here('doc/setup.R'))
+source(here::here('docs/setup.R'))
 ```
 
 ## Water Quality Decision Matrix

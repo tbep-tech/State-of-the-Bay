@@ -13,6 +13,7 @@ library(grid)
 library(here)
 library(htmltools)
 library(plotly)
+library(reactable)
 
 loadfonts(device = 'win', quiet = T)
 
