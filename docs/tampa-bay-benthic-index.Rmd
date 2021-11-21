@@ -1,17 +1,41 @@
 <!-- # Clean Waters & Sediments -->
 
+```{r setup, warning = F, message = F, echo = F}
+source(here::here('docs/setup.R'))
+
+maxyr <- 2019
+seg <- c('OTB', 'HB', 'MTB', 'LTB', 'All (wt)')
+
+tbbiscr <- anlz_tbbiscr(benthicdata)
+tbbimed <- anlz_tbbimed(tbbiscr, bay_segment = seg, yrrng = c(1993, maxyr))
+
+tbbidsc <- tbbimed %>% 
+  filter(yr == maxyr) %>% 
+  select(bay_segment, TBBICat) %>% 
+  tibble::deframe()
+```
+
 ## Tampa Bay Benthic Index
 
 Benthic invertebrates are a group of relatively small organisms (microscopic to visible to the naked eye) that live the majority of their life cycles in or near bay bottom sediments. They are a food source for small fish and crustaceans and may provide some water quality benefits through sediment removal via filtration during feeding (similar to oysters). Tampa Bay supports many different benthic organisms. The type of benthos varies depending on the salinity, sediment type, temperature, dissolved oxygen, and presence of excess nutrients and/or toxic contaminants. 
 
 The Tampa Bay Benthic Monitoring Program was started in 1993, and partners include the Environmental Protection Commission of Hillsborough County, and Hillsborough, Manatee and Pinellas Counties. Our partners monitor benthic invertebrate population characteristics and environmental conditions that affect these organisms, including percent silt-clay, sediment contaminant levels, and dissolved oxygen.
 
-The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2017, and the bay-wide median TBBI was continuously in the "Healthy" range from 2013-2017. During that time frame, the highest TBBI values were observed in the main portion of Tampa Bay (Old Tampa Bay, Middle Tampa Bay, and Lower Tampa Bay), while lower values were found in Hillsborough Bay and the Manatee River. 
+The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2019, and the bay-wide median TBBI was continuously in the "Healthy" range from 2015-2017, with slight decreases in 2018 and 2019. During that time frame, the highest TBBI values were observed in lower and Middle Tampa Bay, with intermediate values observed in Old Tampa Bay and degraded values in Hillsborough Bay.
 
-Human-caused pollution can contaminate aquatic sediments with various dangerous chemicals and heavy metals. As polluted water enters a waterbody, metals and other chemicals may adsorb or attach to suspended solids in the water column. These solids eventually sink to the bottom and integrate into the existing sediments. Toxicological studies have shown that many of these substances can affect the growth and survival of benthic organisms.
+In `r maxyr`, Old Tampa Bay received an overall assessment of `r tbbidsc['OTB']` (based on the amount of site scores as degraded, intermediate, or healthy), Hillsborough Bay was `r tbbidsc['HB']`, Middle Tampa Bay was `r tbbidsc['MTB']`, and Lower Tampa Bay was `r tbbidsc['LTB']`.  The bay-wide assessment of benthic condition was `r tbbidsc['All (wt)']`.
+
+```{r}
+p <- show_tbbimatrix(tbbiscr, width = 350, height = 600, plotly = T, family = fml, bay_segment = seg)
+div(p, align = 'center')
+```
+
+Human-caused pollution can contaminate aquatic sediments with various dangerous chemicals and heavy metals. As polluted water enters a waterbody, metals and other chemicals may attach to suspended solids in the water column. These solids eventually sink to the bottom and integrate into the existing sediments. Toxicological studies have shown that many of these substances can affect the growth and survival of benthic organisms.
 
 Sediment contaminant levels are assigned a letter grade (A, B, C. D, F) by averaging the scores of multiple contaminants according to the mean Probable Effects Level ratio, a measure of how likely a contaminant is to have a toxic effect on invertebrates. From 1993-2017, most sites fell within the "C" range, while some "D" and "F" graded sites were found, primarily in Hillsborough Bay, the Manatee River, and Boca Ciega Bay. 
 
-this an edit...
+```{r, out.width = '65%'}
+knitr::include_graphics(here('figures/PEL_Map1993-2017.jpg'))
+```
 
 Link to benthic data page: https://tbep.org/tampa-bay-benthic-index/
