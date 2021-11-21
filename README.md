@@ -7,6 +7,7 @@ State of the Bay pages:
 * [Water Quality Report Card](https://tbep-tech.github.io/State-of-the-Bay/docs/water-quality-decision-matrix)
 * [Total Nitrogen Loading](https://tbep-tech.github.io/State-of-the-Bay/docs/total-nitrogen-loading)
 * [Tidal Creeks](https://tbep-tech.github.io/State-of-the-Bay/docs/tidal-creeks)
+* [Tampa Bay Benthic Index](https://tbep-tech.github.io/State-of-the-Bay/docs/tampa-bay-benthic-index)
 
 Additional content: 
 
