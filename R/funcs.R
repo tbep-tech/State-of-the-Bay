@@ -231,3 +231,92 @@ crkrct_tab <- function(dat, tidalcreeks, colfun){
   
 }
 
+# reactable table function that works for supra/intertidal and subtidal
+lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', firstwidth = 240, estout = F){
+  
+  sticky_style <- list(position = "sticky", left = 0, background = "#fff", zIndex = 1,
+                       borderRight = "1px solid #eee")
+  
+  jsfun <- JS("function(rowInfo) {
+    var value = rowInfo.row.chg
+    if (parseInt(value) >= 0) {
+      var color = '#008000E6'
+    } else if (parseInt(value) < 0) {
+      var color = '#e00000E6'
+    } 
+    return { color: color, fontWeight: 'bold' }
+    }"
+  )
+  
+  typ <- match.arg(typ)
+  
+  # options that change by input
+  rmv <- c('Open Water', 'Oyster Bars')
+  ttl <- paste0('Watershed land use change from ', yrsel, ' to ', topyr, ' (acres and % change)')
+  if(typ == 'subtidal'){
+    rmv <- c(rmv, 'Restorable')
+    ttl <- gsub('^Watershed', 'Subtidal', ttl)
+  }
+
+  # arrange input data and take chg diff  
+  sums <- datin %>%
+    filter(!HMPU_TARGETS %in% rmv) %>% 
+    spread(name, Acres, fill = NA) %>% 
+    rename(chgyr = !!yrsel) %>%
+    rename(maxyr = !!topyr) %>% 
+    mutate(
+      chg = maxyr -  chgyr,
+      chgper = 100 * (maxyr - chgyr) / chgyr
+    ) %>% 
+    rename(val = HMPU_TARGETS)
+  
+  names(sums)[names(sums) == 'chgyr'] <- yrsel
+  names(sums)[names(sums) == 'maxyr'] <- topyr
+  
+  totab <- sums %>% 
+    mutate(
+      chg = formatC(round(chg, 0), format = "d", big.mark = ","),
+      chgper = as.character(round(chgper, 0))
+    )
+
+  if(estout)
+    return(totab)
+  
+  out <- reactable(
+    totab, 
+    columns = list(
+      val = colDef(name = colnm, footer = 'Total', minWidth = firstwidth, class = 'sticky left-col-1-bord', headerClass = 'sticky left-col-1-bord', footerClass = 'sticky left-col-1-bord'), 
+      chg = colDef(name = paste0(yrsel, '-', topyr, ' change'), minWidth = 140,
+                   style = jsfun, class = 'sticky right-col-2', headerClass = 'sticky right-col-2', footerClass = 'sticky right-col-2'
+      ), 
+      chgper = colDef(name = '% change', minWidth = 85,
+                      style = jsfun,
+                      format = colFormat(suffix = '%', digits = 0), 
+                      class = 'sticky right-col-1', headerClass = 'sticky right-col-1', footerClass = 'sticky right-col-1'
+                      
+      )
+    ),
+    defaultColDef = colDef(
+      footer = function(values){
+        if(!is.numeric(values))
+          return()
+        
+        formatC(round(sum(values), 0), format= "d", big.mark = ",")
+        
+      },
+      footerStyle = list(fontWeight = "bold"),
+      format = colFormat(digits = 0, separators = TRUE), 
+      minWidth = 80, resizable = TRUE
+    ),
+    defaultPageSize = nrow(sums),
+    showPageSizeOptions = F,
+    highlight = T,
+    wrap = F
+  )
+  
+  # add caption
+  out <- htmlwidgets::prependContent(out, h5(class = "title", ttl))
+
+  return(out)
+  
+}

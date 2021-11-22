@@ -1,7 +1,7 @@
 <!-- # Clean Waters & Sediments -->
 
 ```{r setup, warning = F, message = F, echo = F}
-source(here::here('docs/setup.R'))
+source(here::here('R/setup.R'))
 
 tbcrks <- tidalcreeks[tbshed, ]
 dat <- anlz_tdlcrk(tbcrks, iwrraw, yr = 2021)

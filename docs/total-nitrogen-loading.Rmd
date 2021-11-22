@@ -1,10 +1,9 @@
 <!-- # Clean Waters & Sediments -->
 
 ```{r setup, warning = F, message = F, echo = F}
-source(here::here('docs/setup.R'))
+source(here::here('R/setup.R'))
 
-# from https://github.com/tbep-tech/load-estimates
-load(file = here('data/totanndat.RData'))
+load(url("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData"))
 load(file = here('data/popdat.RData'))
 ```
 

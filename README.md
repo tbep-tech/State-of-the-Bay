@@ -8,6 +8,7 @@ State of the Bay pages:
 * [Total Nitrogen Loading](https://tbep-tech.github.io/State-of-the-Bay/docs/total-nitrogen-loading)
 * [Tidal Creeks](https://tbep-tech.github.io/State-of-the-Bay/docs/tidal-creeks)
 * [Tampa Bay Benthic Index](https://tbep-tech.github.io/State-of-the-Bay/docs/tampa-bay-benthic-index)
+* [Critical Coastal Habitat Trends](https://tbep-tech.github.io/State-of-the-Bay/docs/critical-coastal-habitat-trends)
 
 Additional content: 
 

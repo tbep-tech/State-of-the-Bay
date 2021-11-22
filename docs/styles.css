@@ -1,0 +1,48 @@
+/* reactable fixed columns*/
+
+.sticky {
+  position: sticky !important;
+  background: #fff;
+  z-index: 1;
+}
+
+.left-col-1 {
+  left: 0px;
+}
+
+.left-col-2 {
+  left: 170px;
+  border-right: 1px solid #eee !important;
+}
+
+.left-col-3 {
+  left: 370px;
+  border-right: 1px solid #eee !important;
+}
+
+.left-col-1-bord {
+  left: 0px;
+  border-right: 1px solid #eee !important;
+}
+
+.right-col-1 {
+  right: 0px;
+}
+
+.right-col-2 {
+  right: 85px;
+  border-left: 1px solid #eee !important;
+}
+
+.right-col-3 {
+  right: 225px;
+  border-left: 1px solid #eee !important;
+}
+
+.right-col-2a {
+  right: 100px;}
+
+.right-col-3a {
+  right: 200px;
+  border-left: 1px solid #eee !important;
+}
