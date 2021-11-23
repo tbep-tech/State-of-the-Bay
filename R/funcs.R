@@ -75,7 +75,9 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
   
   out <- subplot(mget(plts), shareX = T, nrows = length(levs), shareY = F, titleY = T) %>%
     layout(
-      xaxis = list(title = NA, gridcolor = '#FFFFFF')
+      xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)'),
+      plot_bgcolor = 'rgba(0,128,110, 0.1)' 
+      # yaxis = list(gridcolor = '#FFFFFF')
     )
   
   return(out)
@@ -94,7 +96,10 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
     )
   
   ay <- list(
-    title = "TN vs Hydrology ratio\nTampa Bay total",
+    title = list(
+      text = "TN vs Hydrology ratio\nTampa Bay total",
+      font = list(color = "blue")
+    ), 
     tickfont = list(color = "blue"),
     overlaying = "y",
     side = "right"
@@ -104,16 +109,19 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
     add_trace(x = ~yr, y = ~pop, color = I('tomato1'), type = 'bar', showlegend = T, name = 'Pop.') %>%
     add_trace(x = ~yr, y = ~tnhy, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
     layout(
-      yaxis = list(title = 'Population (millions)', tickfont = list(color = 'red')),
+      yaxis = list(
+        title = list(text = 'Population (millions)', font = list(color = 'red')), 
+        tickfont = list(color = 'red')
+        ),
       yaxis2 = ay
     ) %>% 
     layout(
-      plot_bgcolor='#e5ecf6',
+      plot_bgcolor = 'rgba(0,128,110, 0.1)',
       xaxis = list(
         title = NA,
         zerolinecolor = '#ffff',
         zerolinewidth = 2,
-        gridcolor = 'ffff'
+        xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)')
       ),
       yaxis = list(
         zerolinecolor = '#ffff',
