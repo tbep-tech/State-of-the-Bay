@@ -289,3 +289,64 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
   return(out)
   
 }
+
+# hmpu database projects table
+rstdat_tab <- function(rstdat){
+  
+  # data prep
+  rstsum <- rstdat %>% 
+    select(Year, Category, Acres, Activity, `Linear Ft`) %>% 
+    mutate(
+      Category = case_when(
+        Category == 'estuarine' ~ 'Estuarine', 
+        grepl('^Mix', Category) ~ 'Mixed', 
+        T ~ Category
+      )
+    ) %>% 
+    group_by(Category, Activity) %>% 
+    summarise(
+      tot= n(),
+      Acres = sum(Acres, na.rm = T), 
+      Feet = sum(`Linear Ft`, na.rm = T),
+      .groups = 'drop'
+    ) %>% 
+    filter(!is.na(Category)) %>% 
+    group_by(Category) %>% 
+    mutate(
+      tot = sum(tot)
+    ) %>% 
+    pivot_longer(c('Acres', 'Feet'), names_to = 'var', values_to = 'val') %>% 
+    unite('var', Activity, var, sep = ', ') %>% 
+    pivot_wider(names_from = 'var', values_from = 'val')
+  
+  # table
+  tab <- reactable(
+    rstsum, 
+    columns = list(
+      Category = colDef(name = 'Habitat', footer = 'Total',  minWidth = 50, class = 'sticky left-col-1-bord', headerClass = 'sticky left-col-1-bord', footerClass = 'sticky left-col-1-bord'), 
+      tot = colDef(name = 'Total projects', minWidth = 50)
+    ),
+    defaultColDef = colDef(
+      footer = function(values){
+        if(!is.numeric(values))
+          return()
+        
+        formatC(round(sum(values), 0), format= "d", big.mark = ",")
+        
+      },
+      footerStyle = list(fontWeight = "bold"),
+      format = colFormat(digits = 0, separators = TRUE), 
+      minWidth = 80, resizable = TRUE
+    ),
+    showPageSizeOptions = F,
+    highlight = T,
+    wrap = F
+  )
+  
+  # add title
+  out <-  htmlwidgets::prependContent(tab, h5(class = "title", 'Enhancement and restoration projects in Tampa Bay (1970-2020)'))
+  
+  return(out)
+  
+}
+

@@ -14,9 +14,13 @@ library(here)
 library(htmltools)
 library(plotly)
 library(reactable)
+library(googlesheets4)
+library(googledrive)
+
+drive_deauth()
+gs4_deauth()
 
 loadfonts(device = 'win', quiet = T)
-
 fml <- "Lato"
 
 source(here('R/funcs.R'))
