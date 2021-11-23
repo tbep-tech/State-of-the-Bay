@@ -9,6 +9,7 @@ State of the Bay pages:
 * [Tidal Creeks](https://tbep-tech.github.io/State-of-the-Bay/docs/tidal-creeks)
 * [Tampa Bay Benthic Index](https://tbep-tech.github.io/State-of-the-Bay/docs/tampa-bay-benthic-index)
 * [Critical Coastal Habitat Trends](https://tbep-tech.github.io/State-of-the-Bay/docs/critical-coastal-habitat-trends)
+* [Tampa Bay Nekton Index](https://tbep-tech.github.io/State-of-the-Bay/docs/tampa-bay-nekton-index)
 
 Additional content: 
 
