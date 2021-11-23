@@ -30,31 +30,23 @@ acsdat <- out %>%
   select(yr, pop = estimate)
 
 ##
-# ten year census data
-dec2000 <- get_decennial('county', variables = 'P001001', year = 2000, state = 'FL', county = c('Pinellas', 'Hillsborough', 'Manatee')) %>% 
-  mutate(
-    yr = 2000
-  )
-# no api endpoint for 1990, https://www.census.gov/data/tables/time-series/demo/popest/estimates-and-change-1990-2000.html
-dec1990 <- tibble(
-    GEOID = c('12057', '12081', '12103'),
-    NAME = c('Hillsborough County, Florida', 'Manatee County, Florida', 'Pinellas County, Florida'),
-    variable = rep('P001001', 3), 
-    value = c(834054, 211707, 851659)
+# from ES project, see https://github.com/tbep-tech/State-of-the-Bay/issues/19
+
+legdat <- read.csv(here('data-raw/uscb_pop_estimates_tb_metro.csv')) %>% 
+  select(
+    yr = year, 
+    pop = USCB_POP_EST_TB_Metro
   ) %>% 
   mutate(
-    yr = 1990
-  )
-
-decdat <- bind_rows(dec1990, dec2000) %>% 
-  group_by(yr) %>% 
-  summarise(
-    pop = sum(value)
+    pop = gsub('\\,', '', pop),
+    pop = as.numeric(pop)
   )
 
 ## 
 # combine both
-popdat <- bind_rows(decdat, acsdat) %>% 
+popdat <- bind_rows(legdat, acsdat) %>% 
+  group_by(yr) %>% 
+  summarise(pop = mean(pop), .groups = 'drop') %>% 
   arrange(yr)
 
 save(popdat, file = here('data/popdat.RData'))

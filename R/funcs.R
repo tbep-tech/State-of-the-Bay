@@ -82,76 +82,45 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
   
 }
 
-#' plot tn, pop est, and ratio of the two
+#' plot pop and tn/hy ratio
 ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
   
   toplo <- totanndat %>% 
     filter(grepl('^All\\sSegments', bay_segment)) %>% 
-    select(yr = year, tn_load) %>% 
-    left_join(popdat, by = 'yr') %>%  
+    select(yr = year, tnhy) %>% 
+    left_join(popdat, by = 'yr') %>% 
     mutate(
-      lb_per_ind = tn_load * 2000 / pop
+      pop = pop / 1e6
     )
   
-  p1 <- plot_ly(toplo, height = height, width = width)  %>% 
-    add_trace(x = ~yr, y = ~tn_load, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = F) %>% #, marker = list(opacity = 1, size = 4)) %>% 
-    add_annotations(
-      text = 'Nitrogen load',
-      x = 0.5,
-      y = 1.2,
-      yref = "paper",
-      xref = "paper",
-      xanchor = "middle",
-      yanchor = "top",
-      showarrow = FALSE,
-      font = list(size = 15)
+  ay <- list(
+    title = "TN vs Hydrology ratio\nTampa Bay total",
+    tickfont = list(color = "blue"),
+    overlaying = "y",
+    side = "right"
+  )
+  
+  out <- plot_ly(toplo, width = width, height = height) %>% 
+    add_trace(x = ~yr, y = ~pop, color = I('tomato1'), type = 'bar', showlegend = T, name = 'Pop.') %>%
+    add_trace(x = ~yr, y = ~tnhy, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
+    layout(
+      yaxis = list(title = 'Population (millions)', tickfont = list(color = 'red')),
+      yaxis2 = ay
     ) %>% 
     layout(
-      yaxis = list(title = 'Tons'), 
-      xaxis = list(title = '')
+      plot_bgcolor='#e5ecf6',
+      xaxis = list(
+        title = NA,
+        zerolinecolor = '#ffff',
+        zerolinewidth = 2,
+        gridcolor = 'ffff'
+      ),
+      yaxis = list(
+        zerolinecolor = '#ffff',
+        zerolinewidth = 2,
+        gridcolor = 'ffff'
+      )
     )
-  
-  p2 <- plot_ly(toplo, height = height, width = width)  %>% 
-    add_trace(x = ~yr, y = ~pop / 1e6, color = I('tomato1'), type = 'bar', showlegend = F) %>% #, marker = list(opacity = 1, size = 4)) %>% 
-    add_annotations(
-      text = 'Bay area population',
-      x = 0.5,
-      y = 1.2,
-      yref = "paper",
-      xref = "paper",
-      xanchor = "middle",
-      yanchor = "top",
-      showarrow = FALSE,
-      font = list(size = 15)
-    ) %>% 
-    layout(
-      yaxis = list(title = 'Millions'), 
-      xaxis = list(title = '')
-    )
-  
-  p3 <- plot_ly(toplo, height = height, width = width)  %>% 
-    add_trace(x = ~yr, y = ~lb_per_ind, color = I('lightblue'), type = 'bar', showlegend = F) %>% #, marker = list(opacity = 1, size = 4)) %>% 
-    add_annotations(
-      text = 'Nitrogen per individual',
-      x = 0.5,
-      y = 1.2,
-      yref = "paper",
-      xref = "paper",
-      xanchor = "middle",
-      yanchor = "top",
-      showarrow = FALSE,
-      font = list(size = 15)
-    ) %>% 
-    layout(
-      yaxis = list(title = 'lbs / person'), 
-      xaxis = list(title = '')
-    )
-  
-  out <- subplot(p1, p2, p3, shareX = T, nrows = 3, shareY = F, titleY = T, margin = c(0.03)) %>% 
-    layout(
-      xaxis = list(title = NA, gridcolor = '#FFFFFF')
-    )
-  
   
   return(out)
   

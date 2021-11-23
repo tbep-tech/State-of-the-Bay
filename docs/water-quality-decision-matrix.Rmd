@@ -12,7 +12,7 @@ The water quality report card is produced annually to track status and trends of
 
 ```{r}
 # local file path
-xlsx <- here('data/Results_Updated.xls')
+xlsx <- here('data-raw/Results_Updated.xls')
 
 # import and download if new
 epcdata <- read_importwq(xlsx, download_latest = T)
