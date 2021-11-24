@@ -9,7 +9,7 @@ load(file = here('data/popdat.RData'))
 
 ## Total Nitrogen Loading
 
-In 2011, the Florida Department of Environmental Protection approved regulatory thresholds for nutrients that apply to major segments of Tampa Bay.  These criteria describe a point at which nutrient loads exceeding that amount may have a negative impact on environmental resources.  These thresholds are defined for ratios of total nitrogen (nutrient load) to the volume of water (hydrologic load) entering the bay, which accounts for naturally changing loads with variation in rainfall.  Each year, the Tampa Bay Nitrogen Management Consortium assesses if conditions are within allowable limits.  This is accomplished through regular reporting of load estimates by the Tampa Bay Estuary Program.  To date, nitrogen and hydrologic load ratios continue to decline throughout the Bay, indicating that the Nitrogen Management Consortium has been effective at reducing nutrient inputs. 
+In 2011, the Florida Department of Environmental Protection approved regulatory thresholds for nutrients that apply to major segments of Tampa Bay.  These criteria describe a point at which nutrient loadings may have a negative impact on environmental resources.  These thresholds are defined for ratios of total nitrogen (nutrient load) to the volume of water (hydrologic load) entering the bay, accounting for annual variation in rainfall.  Each year, the Tampa Bay Nitrogen Management Consortium assesses if conditions are within allowable limits.  This is accomplished through regular synthesis and reporting of load estimates by the Tampa Bay Estuary Program.  To date, nitrogen and hydrologic load ratios continue to decline throughout the Bay, indicating that the Nitrogen Management Consortium has been effective at reducing the amount of nutrients per unit of water input into Tampa Bay. 
 
 ```{r}
 p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'), 
@@ -17,7 +17,7 @@ p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough
 div(p, align = 'center')
 ```
 
-Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading to the bay continues to decrease over time, and the amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020). 
+Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading also continues to decrease over time. The amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020). 
 
 ```{r}
 p <- ldrat_plo(totanndat, popdat, width = 900, height = 400)
