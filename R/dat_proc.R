@@ -1,10 +1,15 @@
 library(tidycensus)
 library(tidyverse)
 library(here)
+library(rsmartsheet)
 
-mykey <- Sys.getenv("census_key")
+cenkey <- Sys.getenv("census_key")
+smrkey <- Sys.getenv("smartsheets_key")
 
-census_api_key(mykey)
+census_api_key(cenkey)
+set_smartsheet_api_key(smrkey)
+
+# population data ---------------------------------------------------------
 
 ##
 # american community survey data (started in 2005)
@@ -51,5 +56,43 @@ popdat <- bind_rows(legdat, acsdat) %>%
 
 save(popdat, file = here('data/popdat.RData'))
 
+# social media data -------------------------------------------------------
 
+datraw <- get_sheet_as_csv('Comms. Metrics Sheet') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
 
+parents <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Be Floridian FB', 'TBEP LinkTree', 'TBEP Unsplash', 
+             'TBEP Twitter', 'Constant Contact', 'TBEP YouTube', 'GSC: TBEP.ORG', 'GSC: Be Floridian', 
+             'GA: tbep.org', 'TBEP: Google My Business', 'Reddit', 'Outreach Materials Request')
+
+comdat <- datraw %>% 
+  mutate(
+    parent = case_when(
+      PLATFORM %in% parents ~ PLATFORM, 
+      T ~ NA_character_
+    )
+  ) %>% 
+  fill(parent) %>% 
+  filter(!PLATFORM %in% parents) %>% 
+  select(-contains('Change')) %>% 
+  pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('PLATFORM|parent')) %>% 
+  separate(date, into = c('month', 'year'), sep = '\\.') %>% 
+  mutate(
+    year = str_pad(year, width = 4, pad = '0'),
+    year = substr(year, 3, 4), 
+    year = paste0('20', year), 
+    year = as.numeric(year),
+    month = substr(month, 1, 3),
+    month = tolower(month),
+    uni = case_when(
+      grepl('%', val) ~ 'percent', 
+      T ~ 'count'
+    ), 
+    val = gsub('\\,|\\%|N/A', '', val),
+    val = as.numeric(val)
+  ) %>% 
+  select(platform = parent, metric = PLATFORM, everything()) %>% 
+  filter(!is.na(val))
+
+save(comdat, file = here('data/comdat.RData'))
