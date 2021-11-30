@@ -14,7 +14,11 @@ State of the Bay pages:
      * [Habitat Restoration](https://tbep-tech.github.io/State-of-the-Bay/docs/habitat-restoration)
      * [Tampa Bay Nekton Index](https://tbep-tech.github.io/State-of-the-Bay/docs/tampa-bay-nekton-index)
 * Informed, Engaged, Responsible Community
-
+     * [Behavior Change](https://tbep-tech.github.io/State-of-the-Bay/docs/behavior-change.html)
+     * [Give a Day](https://tbep-tech.github.io/State-of-the-Bay/docs/give-a-day.html)
+     * [Grants Awarded](https://tbep-tech.github.io/State-of-the-Bay/docs/grants-awarded.html)
+     * [Reach Index](https://tbep-tech.github.io/State-of-the-Bay/docs/reach-index.html)
+     
 Additional content: 
 
 * [Salinity trends](https://tbep-tech.github.io/State-of-the-Bay/docs/salinity-trends)
