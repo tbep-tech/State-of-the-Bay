@@ -14,6 +14,7 @@ library(here)
 library(htmltools)
 library(plotly)
 library(reactable)
+library(reactablefmtr)
 library(googlesheets4)
 library(googledrive)
 

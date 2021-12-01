@@ -358,3 +358,77 @@ rstdat_tab <- function(rstdat){
   
 }
 
+# reactable table for be floridian fb stats
+befloridian_tab <- function(comdat, maxyr, fntsz = 22){
+  
+  cmpyr <- maxyr - 1
+  
+  fct <- c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans')
+  icons <- c('volume-up', 'heart', 'mouse-pointer', 'users')
+  
+  fbdat <- comdat %>% 
+    filter(platform %in% 'Be Floridian FB') %>% 
+    filter(year %in% c(maxyr, cmpyr)) %>% 
+    group_by(metric, year) %>%
+    summarise(
+      val = sum(val), 
+      .groups = 'drop'
+    ) %>% 
+    pivot_wider(names_from = 'year', values_from = 'val') %>% 
+    rename(
+      maxyr = !!as.character(maxyr), 
+      cmpyr = !!as.character(cmpyr)
+    ) %>% 
+    mutate(
+      `% change` = (maxyr - cmpyr) / cmpyr, 
+      # `% change` = round(`% change`, 0), 
+      `chgicon` = case_when(
+        `% change` > 0 ~ 'arrow-alt-circle-up', 
+        `% change` < 0 ~ 'arrow-alt-circle-down'
+      ),
+      `chgcols` = case_when(
+        `% change` > 0 ~ 'darkgreen', 
+        `% change` < 0 ~ 'red'
+      ),
+      icons = factor(metric, levels = fct, labels = icons), 
+      icons = as.character(icons)
+    )
+  
+  # https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
+  out <- reactable(
+    fbdat, 
+    columns = list(
+      icons = colDef(show = F),
+      chgicon = colDef(show = F), 
+      chgcols = colDef(show = F),
+      metric = colDef(
+        minWidth = 300,
+        name = '',
+        cell = icon_sets(fbdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black")
+      ), 
+      cmpyr = colDef(
+        name = as.character(cmpyr), 
+        format = colFormat(separators = TRUE), 
+        align = 'center'
+      ), 
+      maxyr = colDef(
+        name = as.character(maxyr), 
+        format = colFormat(separators = TRUE), 
+        align = 'center'
+      ),
+      `% change` = colDef(
+        name = 'Change',
+        cell = icon_sets(fbdat, icon_ref = 'chgicon', icon_color_ref = "chgcols", icon_size = fntsz, number_fmt = scales::percent)
+      )
+    ), 
+    style = list(fontSize = paste0(fntsz, 'px')),
+    borderless = T, 
+    resizable = T, 
+    theme = reactableTheme(
+      headerStyle = list(borderColor = 'white')
+    )
+  )
+  
+  return(out)  
+
+}

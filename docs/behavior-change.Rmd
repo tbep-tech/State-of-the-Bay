@@ -1,5 +1,10 @@
 <!-- # Informed, Engaged, Responsible Community -->
 
+```{r setup, warning = F, message = F, echo = F}
+source(here::here('R/setup.R'))
+load(file = here('data/comdat.RData'))
+```
+
 ## Behavior Change 
 
 Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair, or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed.
@@ -9,3 +14,8 @@ Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at 
 TBEP keeps the "Scoop that Poop!" campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
 
 Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances, shares tips for individuals to reduce their nutrient footprint and encourages Florida-Friendly Landscaping practices.
+
+```{r}
+befloridian_tab(comdat, maxyr = 2020)
+```
+
