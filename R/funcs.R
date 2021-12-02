@@ -360,17 +360,47 @@ rstdat_tab <- function(rstdat){
 
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
-reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
+reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', 'TBEP IG', 'TBEP YouTube', 'TBEP Unsplash', 'Constant Contact'), 
+                      maxyr, fntsz = 16, chg = TRUE){
   
-  fct <- c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans')
-  icons <- c('volume-up', 'heart', 'mouse-pointer', 'users')
+  platform <- match.arg(platform)
+  
+  ics <- list(
+    `Be Floridian FB` = list(  
+      fct = c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans'),
+      icons = c('volume-up', 'heart', 'mouse-pointer', 'users')
+      ), 
+    `TBEP Facebook` = list(
+      fct = c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans'),
+      icons = c('volume-up', 'heart', 'mouse-pointer', 'users') 
+      ), 
+    `TBEP IG` = list(
+      fct = c('Total Impressions', 'Total Engagements', 'Profile Actions', 'Followers'),
+      icons = c('volume-up', 'heart', 'mouse-pointer', 'users') 
+      ),
+    `TBEP YouTube` = list(
+      fct = c('Total Views', 'Watch Time (Hours)', 'Subscriber gain/loss'),
+      icons = c('film', 'clock', 'users')
+      ), 
+    `TBEP Unsplash` = list(
+      fct = c('All Time Views', 'All Time Downloads'),
+      icons = c('', '')
+      ),
+    `Constant Contact` = list(
+      fct = c('Net new contacts', 'Number of Campaigns Sent', 'Click Rate', 'Open Rate'), 
+      icons = c('', '', '', '')
+      )
+    )
+  
+  fct <- ics[[platform]]$fct
+  icons <- ics[[platform]]$icons
   
   # table as change
   if(chg){
     
     cmpyr <- maxyr - 1
   
-    fbdat <- comdat %>% 
+    sumdat <- comdat %>% 
       filter(platform %in% !!platform) %>% 
       filter(metric %in% fct) %>% 
       filter(year %in% c(maxyr, cmpyr)) %>% 
@@ -395,12 +425,14 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
           `% change` > 0 ~ 'darkgreen', 
           `% change` < 0 ~ 'red'
         ),
+        metric = factor(metric, levels = fct),
         icons = factor(metric, levels = fct, labels = icons), 
         icons = as.character(icons)
-      )
+      ) %>% 
+      arrange(metric)
     
     out <- reactable(
-      fbdat, 
+      sumdat, 
       columns = list(
         icons = colDef(show = F),
         chgicon = colDef(show = F), 
@@ -408,7 +440,7 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
         metric = colDef(
           minWidth = 300,
           name = '',
-          cell = icon_sets(fbdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
+          cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
           align = 'right'
         ), 
         cmpyr = colDef(
@@ -423,7 +455,7 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
         ),
         `% change` = colDef(
           name = 'Change',
-          cell = icon_sets(fbdat, icon_ref = 'chgicon', icon_color_ref = "chgcols", icon_size = fntsz, number_fmt = scales::percent)
+          cell = icon_sets(sumdat, icon_ref = 'chgicon', icon_color_ref = "chgcols", icon_size = fntsz, number_fmt = scales::percent)
         )
       ), 
       style = list(fontSize = paste0(fntsz, 'px')),
@@ -438,7 +470,7 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
     
   if(!chg){
     
-    fbdat <- comdat %>% 
+    sumdat <- comdat %>% 
       filter(platform %in% !!platform) %>% 
       filter(metric %in% fct) %>% 
       filter(year %in% !!maxyr) %>% 
@@ -452,18 +484,20 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
         maxyr = !!as.character(maxyr)
       ) %>% 
       mutate(
+        metric = factor(metric, levels = fct),
         icons = factor(metric, levels = fct, labels = icons), 
         icons = as.character(icons)
-      )
+      ) %>% 
+      arrange(metric)
     
     out <- reactable(
-      fbdat, 
+      sumdat, 
       columns = list(
         icons = colDef(show = F),
         metric = colDef(
           minWidth = 300,
           name = '',
-          cell = icon_sets(fbdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
+          cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
           align = 'right'
         ), 
         maxyr = colDef(
@@ -484,4 +518,82 @@ reach_tab <- function(comdat, platform, maxyr, fntsz = 16, chg = TRUE){
   
   return(out)  
 
+}
+
+# reactable table for comms reach statistics, constant contact only
+# icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
+ccreach_tab <- function(comdat, maxyr, fntsz = 16){
+  
+  fct <- c('Net new contacts', 'Number of Campaigns Sent', 'Open Rate', 'Click Rate')
+
+  sumdat <- comdat %>% 
+    filter(platform %in% 'Constant Contact') %>% 
+    filter(metric %in% fct) %>% 
+    filter(year %in% !!maxyr) %>% 
+    group_by(metric, uni) %>%
+    nest() %>% 
+    mutate(
+      val = purrr::pmap(list(data, uni), function(data, uni){
+        
+        if(uni == 'percent')
+          out <- round(mean(data$val, na.rm = T), 0)
+        if(uni == 'count')
+          out <- sum(data$val, na.rm = T)
+        
+        return(out)
+      
+      })
+    ) %>% 
+    select(metric, uni, val) %>% 
+    mutate(
+      metric = factor(metric, levels = fct)
+    ) %>% 
+    arrange(metric) %>% 
+    unnest('val') %>% 
+    ungroup %>% 
+    mutate(
+      val = case_when(
+        uni == 'percent'~ paste0(val, '%'), 
+        T ~ as.character(val)
+      ), 
+      metric = as.character(metric),
+      metric = case_when(
+        uni == 'percent' ~ paste0('Avg. Monthly ', metric), 
+        T ~ metric
+      ), 
+      metric = gsub('^Net\\snew\\contacts', 'New Contacts', metric)
+    ) %>% 
+    select(-uni)
+  
+  tobnd <- tibble(
+    metric = c('All-Industry Average Open Rate', 'All-Industry Average Click Rate'), 
+    val = c('16%', '7%')
+  )
+  
+  sumdat <- bind_rows(sumdat, tobnd)
+  
+  out <- reactable(
+    sumdat, 
+    columns = list(
+      metric = colDef(
+        minWidth = 300,
+        name = '',
+        align = 'right'
+      ), 
+      val = colDef(
+        name = as.character(maxyr), 
+        format = colFormat(separators = TRUE), 
+        align = 'center'
+      )
+    ), 
+    style = list(fontSize = paste0(fntsz, 'px')),
+    borderless = T, 
+    resizable = T, 
+    theme = reactableTheme(
+      headerStyle = list(borderColor = 'white')
+    )
+  )
+  
+  return(out)  
+  
 }
