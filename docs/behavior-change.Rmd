@@ -16,6 +16,6 @@ TBEP keeps the "Scoop that Poop!" campaign alive by making outreach materials av
 Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances, shares tips for individuals to reduce their nutrient footprint and encourages Florida-Friendly Landscaping practices.
 
 ```{r}
-befloridian_tab(comdat, maxyr = 2020)
+reach_tab(comdat, platform = 'Be Floridian FB', maxyr = 2021, chg = T)
 ```
 
