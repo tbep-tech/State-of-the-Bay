@@ -18,8 +18,8 @@ library(reactablefmtr)
 library(googlesheets4)
 library(googledrive)
 
-drive_deauth()
-gs4_deauth()
+drive_auth(email = 'mbeck@tbep.org')
+gs4_auth(token = drive_token())
 
 loadfonts(device = 'win', quiet = T)
 fml <- "Lato"

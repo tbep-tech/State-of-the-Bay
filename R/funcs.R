@@ -299,18 +299,26 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
 }
 
 # hmpu database projects table
-rstdat_tab <- function(rstdat){
-  
+rstdat_tab <- function(rstdat, maxyr){
+
   # data prep
   rstsum <- rstdat %>% 
-    select(Year, Category, Acres, Activity, `Linear Ft`) %>% 
+    select(
+      Year = `Year Reported`, 
+      Category = `Habitat Type (basic ESA categories)(existing databases)`, 
+      Acres, 
+      Activity = `Basic Activity (Enhance/Rest)`, 
+      `Linear Ft` = `Linear Feet`
+      ) %>% 
     mutate(
       Category = case_when(
         Category == 'estuarine' ~ 'Estuarine', 
+        Category == 'Upland' ~ 'Uplands',
         grepl('^Mix', Category) ~ 'Mixed', 
         T ~ Category
       )
     ) %>% 
+    filter(Year <= maxyr) %>% 
     group_by(Category, Activity) %>% 
     summarise(
       tot= n(),
@@ -326,6 +334,12 @@ rstdat_tab <- function(rstdat){
     pivot_longer(c('Acres', 'Feet'), names_to = 'var', values_to = 'val') %>% 
     unite('var', Activity, var, sep = ', ') %>% 
     pivot_wider(names_from = 'var', values_from = 'val')
+
+  # yrrng
+  yrs <- rstdat %>% 
+    pull(`Year Reported`) %>% 
+    min(na.rm = T) %>% 
+    c(., maxyr)
   
   # table
   tab <- reactable(
@@ -352,7 +366,8 @@ rstdat_tab <- function(rstdat){
   )
   
   # add title
-  out <-  htmlwidgets::prependContent(tab, h5(class = "title", 'Enhancement and restoration projects in Tampa Bay (1970-2020)'))
+  ttl <- paste0('Enhancement and restoration projects in Tampa Bay (', yrs[1], '-', yrs[2], ')')
+  out <-  htmlwidgets::prependContent(tab, h5(class = "title", ttl))
   
   return(out)
   
