@@ -96,3 +96,40 @@ comdat <- datraw %>%
   filter(!is.na(val))
 
 save(comdat, file = here('data/comdat.RData'))
+
+# give a day from smartsheets ---------------------------------------------
+
+datraw <- get_sheet_as_csv('Give-A-Day_Project Management') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+gaddat <- datraw %>% 
+  select(
+    status = Status, 
+    event = Task.Name, 
+    nevent = `X..Events`, 
+    nadults = `X..Adults`, 
+    nyouth = `X..Youth`,
+    lat = Latitude, 
+    lng = Longitude,
+    npartner = Number.of.Partners,
+    nplants = `X..Plants.Installed`, 
+    nlbs = `Lbs.of.Debris.Removed`,
+    descrip = `Project.Description..Comments`
+  ) %>% 
+  mutate(
+    year = case_when(
+      grepl('^Give-A-Day Activities', event) ~ event, 
+      T ~ NA_character_
+    )
+  ) %>% 
+  fill(year) %>% 
+  filter(!year == event) %>% 
+  mutate(
+    year = gsub('^.*FY', '', year)
+  ) %>% 
+  filter(status == 'Complete') %>% 
+  select(-status) %>% 
+  select(year, everything())
+
+save(gaddat, file = here('data/gaddat.RData'))

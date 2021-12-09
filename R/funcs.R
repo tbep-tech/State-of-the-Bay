@@ -612,3 +612,61 @@ ccreach_tab <- function(comdat, maxyr, fntsz = 16){
   return(out)  
   
 }
+
+# tally gad efforts
+# total T will get totals for all data in gaddat, plus 2019/2020 hard-coded
+# total F will get totals for maxyr
+gadsum_fun <- function(gaddat, total = T, maxyr){
+
+  # these are tallies prior to 2021
+  priors <- c(
+      nevent = 14,
+      npartner = 15,
+      nvols = 581, # not differentiated between adult/youth
+      nlbs = 1736,
+      nplants = 216
+    ) %>% 
+    enframe('var', 'priorval')
+  
+  if(total)
+    out <- gaddat %>% 
+      mutate(
+        nvols = nadults + nyouth
+      ) %>% 
+      select(-event, -descrip, -lat, -lng, -nadults, -nyouth) %>% 
+      pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
+      group_by(var) %>% 
+      summarise(
+        val = sum(val, na.rm = T), 
+        .groups = 'drop'
+      ) %>% 
+      full_join(priors, by = 'var') %>% 
+      mutate(val = val + priorval) %>% 
+      select(-priorval)
+  
+  if(!total)
+    out <- gaddat %>% 
+      filter(year == maxyr) %>% 
+      mutate(
+        nvols = nadults + nyouth
+      ) %>% 
+      select(-event, -descrip, -lat, -lng) %>% 
+      pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
+      group_by(var) %>% 
+      summarise(
+        val = sum(val, na.rm = T), 
+        .groups = 'drop'
+      )
+  
+  # final formatting  
+  out <- out %>% 
+    pivot_wider(names_from = 'var', values_from = 'val') %>% 
+    mutate(
+      ntons = nlbs / 2e3, 
+      ntons = round(ntons, 1)
+    ) %>% 
+    mutate_all(function(x) format(x, big.mark = ',', scientific = FALSE))
+  
+   return(out)
+    
+}
