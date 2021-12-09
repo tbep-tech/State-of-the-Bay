@@ -3,13 +3,63 @@
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/gaddat.RData'))
-maxyr <- 2021
-
-tots <- gadsum_fun(gaddat, total = T, maxyr = maxyr)
+yrsel <- 2021
+tots <- gadsum_fun(gaddat)
 ```
 
 ## Give-a-Day for the Bay
 
 Community involvement has been at the center of Tampa Bay's recovery story since the start. Keeping that tradition alive is the Give-a-Day for the Bay volunteer program where community members put in "sweat equity" to protect and restore bay-area parks and preserves. From planting native vegetation to removing trash from a mangrove island, these events encourage the community to get out, give back, and enjoy the bay!
 
-Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer workdays co-hosted with `r tots['npartner']` bay-area partners. During this time, significant attention has been given to addressing excessive litter and native habitat degradation in regions of the watershed that have historically not received support for restoration activities. During these events, `r tots['nvols']` volunteers removed `r tots['ntons']` tons of debris and litter, planted `r tots['nplants']` native plants, and moved 30 tons of oyster shells to create oyster reefs. Volunteers have also participated in citizen science projects that highlighted the importance of blue carbon habitats by using tea bags to measure soil decomposition rates and carbon storage capacities of wetlands.
+Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer workdays co-hosted with `r tots['npartner']` bay-area partners. During this time, significant attention has been given to addressing excessive litter and native habitat degradation in regions of the watershed that have historically not received support for restoration activities. During these events, `r tots['nvols']` volunteers removed `r tots['ntons']` tons of debris and litter and planted `r tots['nplants']` native plants. Volunteers have also participated in citizen science projects that highlighted the importance of blue carbon habitats by using tea bags to measure soil decomposition rates and carbon storage capacities of wetlands.
+
+A `r yrsel` year in review is below: 
+
+```{r, out.width = '100%'}
+gaddat %>% 
+  gadsum_fun(yrsel = yrsel) %>% 
+  gadsum_plo
+```
+
+A map of all Give a Day locations shows where the events have occurred.
+
+```{r}
+tomap <- gaddat %>% 
+  filter(!is.na(lng)) %>% 
+  mutate(
+    Volunteers = nadults + nyouth
+  ) %>% 
+  select(
+    Event = event, 
+    Year = year, 
+    Volunteers, 
+    `Lbs. of trash removed` = nlbs, 
+    `Plants installed` = nplants, 
+    lng = lng, 
+    lat = lat, 
+    Description = descrip
+  ) %>% 
+  unite(lab, c('Event', 'Description'), sep = ': ', remove = F) %>% 
+  mutate(
+    lab = str_wrap(lab, 70),
+    lab = gsub('\\n', '~', lab), 
+    lab = HTML(lab)
+    ) %>% 
+  as.data.frame()
+
+sd <- SharedData$new(tomap)
+
+# Use SharedData like a dataframe with Crosstalk-enabled widgets
+bscols(list(
+  leaflet(sd) %>% 
+    addProviderTiles(providers$CartoDB.Positron) %>% 
+    addMarkers(lng = ~lng, lat = ~lat, label = ~lab),
+  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+            options=list(deferRender=TRUE, scrollY=300, scroller=F, 
+                         columnDefs = list(list(visible=FALSE, 
+                                      targets=c(1, 7, 8 , 9))))
+            )
+  )
+)
+```
+

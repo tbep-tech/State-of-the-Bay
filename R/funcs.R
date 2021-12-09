@@ -614,9 +614,9 @@ ccreach_tab <- function(comdat, maxyr, fntsz = 16){
 }
 
 # tally gad efforts
-# total T will get totals for all data in gaddat, plus 2019/2020 hard-coded
-# total F will get totals for maxyr
-gadsum_fun <- function(gaddat, total = T, maxyr){
+# yrsel not provided, get totals for all data in gaddat, plus 2019/2020 hard-coded
+# yrsel provided will get totals for yrsel
+gadsum_fun <- function(gaddat, yrsel = NULL){
 
   # these are tallies prior to 2021
   priors <- c(
@@ -628,7 +628,7 @@ gadsum_fun <- function(gaddat, total = T, maxyr){
     ) %>% 
     enframe('var', 'priorval')
   
-  if(total)
+  if(is.null(yrsel))
     out <- gaddat %>% 
       mutate(
         nvols = nadults + nyouth
@@ -644,9 +644,9 @@ gadsum_fun <- function(gaddat, total = T, maxyr){
       mutate(val = val + priorval) %>% 
       select(-priorval)
   
-  if(!total)
+  if(!is.null(yrsel))
     out <- gaddat %>% 
-      filter(year == maxyr) %>% 
+      filter(year == yrsel) %>% 
       mutate(
         nvols = nadults + nyouth
       ) %>% 
@@ -670,3 +670,62 @@ gadsum_fun <- function(gaddat, total = T, maxyr){
    return(out)
     
 }
+
+# plot gad efforts
+# datin is summmary output from gadsum_fun w/ yrsel not null 
+gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
+
+  txt <- tibble(
+    name = c('nevent', 'nvols', 'nlbs', 'nplants', 'npartner'),
+    info = c('Event areas are prioritized by the presence of excessive litter and native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
+             paste(datin$nadults, 'adults and', datin$nyouth, 'youths helped to protect and resotre the bay this season.'),
+             'Including trash, invasive plants & marine debris.', 
+             "Native plants increase the bay's resiliency and restore crucial wildlife habitat.",
+             'Our partners play an invaluable role in recruiting volunteers to help us put in work!'
+    ), 
+    txtadd = c('EVENTS', 'VOLUNTEERS', 'LBS REMOVED', 'PLANTS INSTALLED', 'PARTNERS'),
+    icon = paste0('fa-', c('calendar', 'users', 'trash', 'tree', 'handshake-o')), 
+    txtcols = c("#08306B", "#08306B", "#F7FBFF", "#F7FBFF", "#F7FBFF")
+  )
+  
+  cols <- nrow(txt) / rows
+  
+  toplo <- datin %>% 
+    pivot_longer(everything()) %>% 
+    inner_join(txt, by = 'name') %>% 
+    unite('value', value, txtadd, sep = ' ') %>% 
+    mutate(
+      h = h,
+      w = w,
+      icon = fontawesome(icon),
+      font_family = 'fontawesome-webfont',
+      name = factor(name, levels = rev(txt$name))
+    ) %>%  
+    arrange(name) %>% 
+    mutate(
+      x = rep(seq(0, (!!w + padding) * cols - 1, !!w + padding), times = rows),
+      y = rep(seq(0, (!!h + padding) * rows - 1, !!h + padding), each = cols),
+      info = str_wrap(info, 75)
+    )
+
+  p <-  ggplot(toplo, aes(x, y, height = h, width = w, label = info)) +
+    geom_tile(aes(fill = name)) +
+    geom_text(fontface = "bold", size = 10,
+              aes(label = value, x = x - w/2.2, y = y + h/4, color = name), hjust = 0) +
+    geom_text(size = 5, lineheight = 0.7,
+              aes(color = name, label = info, x = x - w/2.2, y = y - h/6), hjust = 0) +
+    coord_fixed() +
+    scale_fill_brewer(type = "cont", palette = "Blues", direction = -1) +
+    scale_color_manual(values = toplo$txtcols) +
+    geom_text(size = 20, aes(label = icon, family = font_family,
+                             x = x + w/2.5, y = y + h/8), alpha = 0.25) +
+    theme_void() +
+    guides(
+      fill = 'none', 
+      color = 'none'
+    )
+  
+  return(p)
+  
+}
+  
