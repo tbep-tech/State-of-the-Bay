@@ -750,7 +750,7 @@ gadmap_fun <- function(datin){
     ) %>% 
     unite(lab, c('Event', 'Description'), sep = ': ', remove = F) %>% 
     mutate(
-      lab = str_wrap(lab, 70),
+      lab = str_wrap(lab, 50),
       lab = paste0('<b>', lab),
       lab = gsub(':', '</b>:', lab),
       lab = gsub('\\n', '<br/>', lab),
@@ -760,16 +760,17 @@ gadmap_fun <- function(datin){
   
   sd <- SharedData$new(tomap)
   
-  out <- bscols(list(
+  # put both elements in a list if arrange by row
+  out <- bscols(
     leaflet(sd) %>% 
       addProviderTiles(providers$CartoDB.Positron) %>% 
       addMarkers(lng = ~lng, lat = ~lat, label = ~lab),
     datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%", rownames = F,
-              options=list(deferRender=TRUE, scrollY=300, scroller=F, dom = 'ltp',
+              options=list(deferRender=TRUE, scrollY=300, scroller=F, dom = 't', pageLength = nrow(tomap),
                            columnDefs = list(list(visible=FALSE, 
                                                   targets=c(0, 6, 7, 8))))
     )
-  ))
+  )
   
   return(out)
   
