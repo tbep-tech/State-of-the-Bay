@@ -796,7 +796,33 @@ tberfsum_fun <- function(datin, yrsel = NULL){
       total = round(total / 1e6, 1), 
       total = paste0('$', total, 'M'),
       matching = round(matching / 1e6, 1), 
-      matching = paste0('$', matching, 'M')
+      matching = paste0('$', matching, 'M'),
+      n = formatC(n, format = "d", big.mark = ",")
+    )
+  
+  return(out)
+  
+}
+
+# get bmg funding summary
+# datin is bmgdat
+# yrsel not provided, get totals for all data
+# yrsel provided will get totals for yrsel
+bmgsum_fun <- function(datin, yrsel = NULL){
+  
+  if(!is.null(yrsel))
+    datin <- datin %>% 
+      filter(year == yrsel)
+  
+  out <- datin %>% 
+    summarise(
+      n = n(),
+      total = sum(total, na.rm = T)
+    ) %>% 
+    mutate(
+      total = round(total / 1e6, 1), 
+      total = paste0('$', total, 'M'), 
+      n = formatC(n, format = "d", big.mark = ",")
     )
   
   return(out)

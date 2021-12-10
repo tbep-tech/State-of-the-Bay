@@ -155,3 +155,21 @@ tberfdat <- tberfraw %>%
   )
 
 save(tberfdat, file = here('data/tberfdat.RData'))
+
+# bay mini grant funding data ---------------------------------------------
+
+bmgraw <- get_sheet_as_csv('Bay Mini-Grant_Budget Index') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+bmgdat <- bmgraw %>% 
+  filter(Status != 'Cancelled') %>% 
+  select(year = Year, title = Project.TItle, lead = Lead, total = Project.Total) %>% 
+  mutate_all(function(x) ifelse(x == '', NA, x)) %>% 
+  mutate(
+    total = gsub('\\$|,', '', total),
+    total = as.numeric(total)
+  ) %>% 
+  filter(rowSums(is.na(.)) != ncol(.))
+
+save(bmgdat, file = here('data/bmgdat.RData'))
