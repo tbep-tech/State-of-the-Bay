@@ -23,6 +23,7 @@ library(stringr)
 library(crosstalk)
 library(leaflet)
 library(DT)
+library(lubridate)
 
 drive_auth(email = 'mbeck@tbep.org')
 gs4_auth(token = drive_token())

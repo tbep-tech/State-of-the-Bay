@@ -809,3 +809,69 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
   return(out)
   
 }
+
+
+grnttab_fun <- function(..., yrsel, fntsz = 16){
+  
+  ics <- list(
+    levs = c('newlead', 'n', 'total'),
+    labs = c('New partners', 'Total projects', 'Total funds awarded'),
+    icons = c('handshake', 'tools', 'dollar-sign')
+  )
+  
+  # datin
+  dat <- bind_rows(...)
+  
+  nototab <- dat %>% 
+    filter(year != yrsel)
+  
+  # find new partners
+  totab <- dat %>% 
+    filter(year == yrsel) %>% 
+    summarise(
+      newlead = sum(!lead %in% nototab$lead), 
+      total = sum(total, na.rm = T), 
+      n = n()
+    ) %>% 
+    pivot_longer(cols = everything()) %>% 
+    mutate(
+      metric = factor(name, levels = ics$levs, labels = ics$labs), 
+      icons = factor(name, levels = ics$levs, labels = ics$icons),
+      icons = as.character(icons), 
+      value = formatC(value, format = "d", big.mark = ","), 
+      value = case_when(
+        name == 'total' ~ paste0('$', value), 
+        T ~value
+      )
+    ) %>% 
+    arrange(metric) %>% 
+    select(name, icons, metric, value)
+  
+  out <- reactable(
+    totab, 
+    columns = list(
+      icons = colDef(show = F),
+      name = colDef(show = F),
+      metric = colDef(
+        minWidth = 300,
+        name = '',
+        cell = icon_sets(totab, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
+        align = 'right'
+      ), 
+      value = colDef(
+        name = as.character(yrsel), 
+        format = colFormat(separators = TRUE), 
+        align = 'center'
+      )
+    ), 
+    style = list(fontSize = paste0(fntsz, 'px')),
+    borderless = T, 
+    resizable = T, 
+    theme = reactableTheme(
+      headerStyle = list(borderColor = 'white')
+    )
+  )
+  
+  return(out)
+  
+}
