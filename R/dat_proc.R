@@ -133,3 +133,25 @@ gaddat <- datraw %>%
   select(year, everything())
 
 save(gaddat, file = here('data/gaddat.RData'))
+
+# tberf funding data ------------------------------------------------------
+
+tberfraw <- get_sheet_as_csv('TBERF_Budget_Index') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+tberfdat <- tberfraw %>% 
+  select(year = Year, title = Title, lead = Lead, total = `Project.Total`, matching = `Matching.Funds`) %>% 
+  filter(lead != '') %>% 
+  mutate(
+    total = gsub('\\$|,', '', total), 
+    total = as.numeric(total), 
+    matching = gsub('\\$|,', '', matching), 
+    matching = as.numeric(matching), 
+    lead = case_when(
+      lead == 'Eckerd' ~ 'Eckerd College', 
+      T ~ lead
+    )
+  )
+
+save(tberfdat, file = here('data/tberfdat.RData'))
