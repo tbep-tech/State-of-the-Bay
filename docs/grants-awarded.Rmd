@@ -4,9 +4,11 @@
 source(here::here('R/setup.R'))
 load(file = here('data/tberfdat.RData'))
 load(file = here('data/bmgdat.RData'))
+load(file = here('data/dcgdat.RData'))
 maxyr <- 2021
-tberfsum <- tberfsum_fun(tberfdat)
-bmgsum <- bmgsum_fun(bmgdat)
+tberfsum <- grntsum_fun(tberfdat)
+bmgsum <- grntsum_fun(bmgdat)
+dcgsum <- grntsum_fun(dcgdat, rnd = 'k')
 ```
 
 ## Grants Awarded
@@ -15,4 +17,4 @@ To date, TBERF has received `r tberfsum['total']` in funding and `r tberfsum['ma
 
 Funded by sales from of the Tampa Bay Estuary Specialty License Plate, also known as the "Tarpon Tag", Bay Mini-Grants provide competitive cash awards (up to \$5,000) to community organizations for projects that help restore and protect Tampa Bay. To achieve Program CCMP goals, specific Bay Mini-Grant priority actions are announced annually. Expanding the use of green infrastructure and understanding emerging contaminants have both been recent Bay Mini-Grant priorities. Since 2000, sales from the Tarpon Tag specialty license plate have collectively awarded `r bmgsum['total']` to more than `r bmgsum['n']` community-based restoration projects in the bay through TBEP's Bay Mini-Grant program.
 
-Established during the COVID-19 pandemic, the Digital Challenge Grant program was created to provide safer-at-home income opportunities for digital content creators, science communicators, graphic designers, and educators. In its first year, 10 creators were awarded more than \$6k in project funding.
+Established during the COVID-19 pandemic, the Digital Challenge Grant program was created to provide safer-at-home income opportunities for digital content creators, science communicators, graphic designers, and educators. In its first year, `r dcgsum['n']` creators were awarded `r dcgsum['total']` in project funding.

@@ -173,3 +173,25 @@ bmgdat <- bmgraw %>%
   filter(rowSums(is.na(.)) != ncol(.))
 
 save(bmgdat, file = here('data/bmgdat.RData'))
+
+# digital challenge grant -------------------------------------------------
+
+dcgraw <- get_sheet_as_csv('Digital_Challenge_Grants') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+dcgdat <- dcgraw %>% 
+  filter(grepl('^PO\\s', Task.Name)) %>% 
+  select(lead = Task.Name, year = Start, total = Grant.Budget) %>% 
+  mutate_all(function(x) ifelse(x == '', NA, x)) %>% 
+  mutate(
+    year = mdy(year), 
+    year = year(year),
+    total = gsub('\\$|,', '', total),
+    total = as.numeric(total), 
+    lead = gsub('^.*:\\s*', '', lead)
+  )
+
+save(dcgdat, file = here('data/dcgdat.RData'))
+
+

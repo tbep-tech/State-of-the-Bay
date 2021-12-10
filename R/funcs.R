@@ -776,55 +776,36 @@ gadmap_fun <- function(datin){
   
 }
   
-# get tberf funding summary
-# datin is tberfdat
+# get grant funding summary
+# datin is tberfdat, bmgdat, or dcgdat
 # yrsel not provided, get totals for all data
 # yrsel provided will get totals for yrsel
-tberfsum_fun <- function(datin, yrsel = NULL){
+grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
   
-  if(!is.null(yrsel))
-    datin <- datin %>% 
-      filter(year == yrsel)
-
-  out <- datin %>% 
-    summarise(
-      n = n(),
-      total = sum(total, na.rm = T), 
-      matching = sum(matching, na.rm = T), 
-    ) %>% 
-    mutate(
-      total = round(total / 1e6, 1), 
-      total = paste0('$', total, 'M'),
-      matching = round(matching / 1e6, 1), 
-      matching = paste0('$', matching, 'M'),
-      n = formatC(n, format = "d", big.mark = ",")
-    )
+  rnd <- match.arg(rnd)
   
-  return(out)
-  
-}
-
-# get bmg funding summary
-# datin is bmgdat
-# yrsel not provided, get totals for all data
-# yrsel provided will get totals for yrsel
-bmgsum_fun <- function(datin, yrsel = NULL){
+  txt <- c(1e6, 1e3)
+  names(txt) <- c('M', 'k')
+  rndv <- txt[rnd]
   
   if(!is.null(yrsel))
     datin <- datin %>% 
       filter(year == yrsel)
   
   out <- datin %>% 
+    pivot_longer(cols = matches('total|matching')) %>% 
+    group_by(name) %>% 
     summarise(
       n = n(),
-      total = sum(total, na.rm = T)
+      value = sum(value, na.rm = T)
     ) %>% 
     mutate(
-      total = round(total / 1e6, 1), 
-      total = paste0('$', total, 'M'), 
+      value = round(value / rndv, 1), 
+      value = paste0('$', value, rnd),
       n = formatC(n, format = "d", big.mark = ",")
-    )
-  
+    ) %>% 
+    pivot_wider()
+
   return(out)
   
 }
