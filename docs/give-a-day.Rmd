@@ -21,45 +21,10 @@ gaddat %>%
   gadsum_plo
 ```
 
-A map of all Give a Day locations shows where the events have occurred.
+A map of all Give a Day locations shows where the events have occurred.  Select a row on the table to highlight the map location.
 
 ```{r}
-tomap <- gaddat %>% 
-  filter(!is.na(lng)) %>% 
-  mutate(
-    Volunteers = nadults + nyouth
-  ) %>% 
-  select(
-    Event = event, 
-    Year = year, 
-    Volunteers, 
-    `Lbs. of trash removed` = nlbs, 
-    `Plants installed` = nplants, 
-    lng = lng, 
-    lat = lat, 
-    Description = descrip
-  ) %>% 
-  unite(lab, c('Event', 'Description'), sep = ': ', remove = F) %>% 
-  mutate(
-    lab = str_wrap(lab, 70),
-    lab = gsub('\\n', '~', lab), 
-    lab = HTML(lab)
-    ) %>% 
-  as.data.frame()
-
-sd <- SharedData$new(tomap)
-
-# Use SharedData like a dataframe with Crosstalk-enabled widgets
-bscols(list(
-  leaflet(sd) %>% 
-    addProviderTiles(providers$CartoDB.Positron) %>% 
-    addMarkers(lng = ~lng, lat = ~lat, label = ~lab),
-  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
-            options=list(deferRender=TRUE, scrollY=300, scroller=F, 
-                         columnDefs = list(list(visible=FALSE, 
-                                      targets=c(1, 7, 8 , 9))))
-            )
-  )
-)
+gaddat %>% 
+  gadmap_fun
 ```
 

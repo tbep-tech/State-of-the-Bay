@@ -728,4 +728,50 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
   return(p)
   
 }
+
+# create a crosstalk widget of map and table
+# datin is gaddat
+gadmap_fun <- function(datin){
+  
+  tomap <- datin %>% 
+    filter(!is.na(lng)) %>% 
+    mutate(
+      Volunteers = nadults + nyouth
+    ) %>% 
+    select(
+      Event = event, 
+      Year = year, 
+      Volunteers, 
+      `Lbs. of trash removed` = nlbs, 
+      `Plants installed` = nplants, 
+      lng = lng, 
+      lat = lat, 
+      Description = descrip
+    ) %>% 
+    unite(lab, c('Event', 'Description'), sep = ': ', remove = F) %>% 
+    mutate(
+      lab = str_wrap(lab, 70),
+      lab = paste0('<b>', lab),
+      lab = gsub(':', '</b>:', lab),
+      lab = gsub('\\n', '<br/>', lab),
+      lab = lapply(lab, HTML)
+    ) %>% 
+    as.data.frame()
+  
+  sd <- SharedData$new(tomap)
+  
+  out <- bscols(list(
+    leaflet(sd) %>% 
+      addProviderTiles(providers$CartoDB.Positron) %>% 
+      addMarkers(lng = ~lng, lat = ~lat, label = ~lab),
+    datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%", rownames = F,
+              options=list(deferRender=TRUE, scrollY=300, scroller=F, dom = 'ltp',
+                           columnDefs = list(list(visible=FALSE, 
+                                                  targets=c(0, 6, 7, 8))))
+    )
+  ))
+  
+  return(out)
+  
+}
   
