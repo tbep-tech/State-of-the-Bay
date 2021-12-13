@@ -1,3 +1,24 @@
+#' plot chloropyll annual avg as plotly
+chlplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
+  
+  p <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
+    ggtitle(NULL) +
+    scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
+  
+  p <- plotly::ggplotly(p, width = width, height = height) %>% 
+    plotly::layout(legend = list(title = ''))
+  
+  p$x$data[[2]] <- NULL
+  p$x$data[[2]] <- NULL
+  p$x$data[[2]]$name <- 'Management target'
+  p$x$data[[2]]$legendgroup <- 'Management target'
+  
+  out <- p
+  
+  return(out)
+  
+}
+
 #' plot total load as tn, hyd, or ratio, annual or monthly
 ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F, 
                       levs = c('All Segments (- N. BCB)', 'Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Remainder Lower Tampa Bay'),

@@ -30,24 +30,24 @@ Water Quality Report Card data page: https://tbep.org/water-quality-report-card/
 ## Old Tampa Bay
 
 ```{r, out.width = '100%'}
-show_segplotly(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 600)
+chlplotly_plo(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 300)
 ```
 
 ## Hillsborough Bay
 
 ```{r, out.width = '100%'}
-show_segplotly(epcdata, bay_segment = 'HB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 600)
+chlplotly_plo(epcdata, bay_segment = 'HB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 300)
 ```
 
 ## Middle Tampa Bay
 
 ```{r, out.width = '100%'}
-show_segplotly(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 600)
+chlplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 300)
 ```
 
 ## Lower Tampa Bay
 
 ```{r, out.width = '100%'}
-show_segplotly(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 600)
+chlplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 300)
 ```
   
