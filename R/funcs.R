@@ -8,11 +8,11 @@ wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
   
   p1 <- plotly::ggplotly(p1, width = width, height = height) 
-  
-  p1$x$data[[2]] <- NULL
-  p1$x$data[[2]] <- NULL
-  p1$x$data[[2]]$name <- 'Management target'
-  p1$x$data[[2]]$legendgroup <- 'Management target'
+
+  p1$x$data[[4]] <- NULL
+  p1$x$data[[3]] <- NULL
+  # p1$x$data[[2]]$name <- 'Management target'
+  # p1$x$data[[2]]$legendgroup <- 'Management target'
   
   # la
   
@@ -21,10 +21,10 @@ wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
   
   p2 <- plotly::ggplotly(p2, width = width, height = height) 
-  p2$x$data[[2]] <- NULL
-  p2$x$data[[2]] <- NULL
-  p2$x$data[[2]]$name <- 'Management target'
-  p2$x$data[[2]]$legendgroup <- 'Management target'
+  p2$x$data[[4]] <- NULL
+  p2$x$data[[3]] <- NULL
+  # p2$x$data[[2]]$name <- 'Management target'
+  # p2$x$data[[2]]$legendgroup <- 'Management target'
   p2$x$data[[1]]$showlegend <- FALSE
   p2$x$data[[2]]$showlegend <- FALSE
   
@@ -42,7 +42,7 @@ wqsum_fun <- function(datin, maxyr){
   
   cats <- avedat %>% 
     anlz_attain %>% 
-    filter(yr == maxyr) %>% 
+    filter(yr == !!maxyr) %>% 
     mutate(
       action = case_when(
         outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>',
