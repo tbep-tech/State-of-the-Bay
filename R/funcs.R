@@ -1,20 +1,87 @@
-#' plot chloropyll annual avg as plotly
-chlplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
+#' plot chlorophyll and la annual avg as plotly
+wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   
-  p <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
+  # chla
+  
+  p1 <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
     ggtitle(NULL) +
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
   
-  p <- plotly::ggplotly(p, width = width, height = height) %>% 
+  p1 <- plotly::ggplotly(p1, width = width, height = height) 
+  
+  p1$x$data[[2]] <- NULL
+  p1$x$data[[2]] <- NULL
+  p1$x$data[[2]]$name <- 'Management target'
+  p1$x$data[[2]]$legendgroup <- 'Management target'
+  
+  # la
+  
+  p2 <- show_thrplot(datin, bay_segment = bay_segment, thr = "la", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
+    ggtitle(NULL) +
+    scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
+  
+  p2 <- plotly::ggplotly(p2, width = width, height = height) 
+  p2$x$data[[2]] <- NULL
+  p2$x$data[[2]] <- NULL
+  p2$x$data[[2]]$name <- 'Management target'
+  p2$x$data[[2]]$legendgroup <- 'Management target'
+  p2$x$data[[1]]$showlegend <- FALSE
+  p2$x$data[[2]]$showlegend <- FALSE
+  
+  out <- plotly::subplot(p1, p2, nrows = 2, shareX = T, titleY = TRUE) %>%
     plotly::layout(legend = list(title = ''))
   
-  p$x$data[[2]] <- NULL
-  p$x$data[[2]] <- NULL
-  p$x$data[[2]]$name <- 'Management target'
-  p$x$data[[2]]$legendgroup <- 'Management target'
+  return(out)
   
-  out <- p
+}
+
+# get list of water quality results for a given year
+wqsum_fun <- function(datin, maxyr){
   
+  avedat <- anlz_avedat(datin, partialyr = F) 
+  
+  cats <- avedat %>% 
+    anlz_attain %>% 
+    filter(yr == maxyr) %>% 
+    mutate(
+      action = case_when(
+        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>'
+      )
+    ) %>% 
+    select(bay_segment, action)
+  
+  trgs <- targets %>% 
+    select(bay_segment, chla_target, la_target) %>% 
+    pivot_longer(cols = -matches('bay_segment'), names_to = 'var', values_to = 'target') %>% 
+    mutate(var = gsub('\\_target$', '', var))
+  
+  mets <- avedat %>%
+    .$ann %>% 
+    dplyr::filter(yr == maxyr) %>%
+    mutate(var = gsub('^mean\\_', '', var)) %>% 
+    filter(!var %in% 'sdm') %>% 
+    dplyr::left_join(trgs, by = c('bay_segment', 'var')) %>%
+    dplyr::mutate(
+      trg = dplyr::case_when(
+        val < target ~ 'met', 
+        val >= target ~ 'not met'
+      )
+    ) %>% 
+    select(bay_segment, var, trg) %>% 
+    pivot_wider(names_from = 'var', values_from = 'trg')
+  
+  out <- cats %>% 
+    full_join(mets, by = 'bay_segment') %>% 
+    t %>% 
+    as.data.frame
+  
+  names(out) <- out[1, ]
+  
+  out <- out %>% 
+    apply(2, as.list)
+ 
   return(out)
   
 }
