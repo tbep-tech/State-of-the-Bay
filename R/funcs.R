@@ -296,6 +296,55 @@ crkrct_tab <- function(dat, tidalcreeks, colfun){
   
 }
 
+# get list of tbni results for a given year
+tbnisum_fun <- function(datin, maxyr){
+
+  # get score intervals for tbni
+  perc <- formals(anlz_tbniave)$perc %>% 
+    eval
+  
+  # get segments results for current year
+  tbnidsc <- anlz_tbniave(datin) %>% 
+    filter(Year == maxyr) %>% 
+    select(bay_segment, scr = Segment_TBNI, outcome) 
+  
+  # get bay wide average
+  tbniall <-  tibble(
+      bay_segment = 'all', 
+      scr = round(mean(tbnidsc$scr), 0)
+    ) %>% 
+    mutate(
+      outcome = findInterval(scr, perc),
+      outcome = factor(outcome, levels = c('0', '1', '2'), labels = c('red', 'yellow', 'green')),
+      outcome = as.character(outcome)
+    )
+  
+  # combine segment and baywide, create action html
+  tbnidsc <- tbnidsc %>% 
+    bind_rows(tbniall) %>% 
+    mutate(
+      action = case_when(
+        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>'
+      )
+    )
+  
+  # format as list of lists
+  out <- tbnidsc %>% 
+    t %>% 
+    as.data.frame
+  
+  names(out) <- out[1, ]
+  
+  out <- out %>% 
+    apply(2, as.list)
+  
+  return(out)
+  
+}
+
+
 # reactable table function that works for supra/intertidal and subtidal
 lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', firstwidth = 240, estout = F){
   

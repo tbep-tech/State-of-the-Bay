@@ -6,26 +6,31 @@ source(here::here('R/setup.R'))
 
 maxyr <- 2020
 tbniscr <- anlz_tbniscr(fimdata)
-tbniave <- anlz_tbniave(tbniscr)
 
-tbnidsc <- tbniave %>% 
-  filter(Year == maxyr) %>% 
-  select(bay_segment, Segment_TBNI) %>% 
-  tibble::deframe()
+# summaries for inline
+sums <- tbnisum_fun(tbniscr, maxyr)
 ```
 
 ## Tampa Bay Nekton Index
 
 The nekton index, which is similar to the water quality scorecard, uses data from the State’s Fisheries Independent Monitoring Program (FWC - FWRI) to track trends for representative species. With samples dating back to 1998, the long-term record can be related to water quality and habitat characteristics to identify factors affecting health of bay fisheries. The index evaluates catch data relative to habitat use, species composition and diversity, and feeding dynamics to understand trends in the fish community.
 
-An annual "snapshot" of ecological health helps fisheries managers target efforts to improve habitat or other factor. The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions suggest the fish community is in a healthy state, with all four major bay segments receiving "green" scores the past four years.  Long-term trends in nekton index scores by bay segment are shown below.
+An annual "snapshot" of ecological health helps fisheries managers target efforts to improve habitat or other factor. Nekton index scores can be translated into actionable management categories with narrative interpretations. Each action category has a description to provide guidance to managers:
+
+<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports. 
+
+<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Review monitoring data and identify additional research/monitoring needs. Begin/continue TAC and Management Board development of specific management recommendations.
+
+<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>: Finalize development and implement appropriate management actions to get nekton community back on track.
+  
+The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions suggest the fish community is in a healthy state, with all four major bay segments receiving "green" scores the past four years.  Long-term trends in nekton index scores by bay segment are shown below.
 
 ```{r}
 p <- show_tbniscr(tbniscr, family = fml, width = 800, height = 350, plotly = T)
 div(p, align = 'center')
 ```
 
-Results in 2020 showed that all bay segments received a "Green" stay the course outcome, excluding Hillsborough Bay which received a "Yellow" caution outcome.  The bay segment average nekton index score in 2020 was `r tbnidsc['OTB']` for Old Tampa Bay, `r tbnidsc['HB']` for Hillsborough Bay, `r tbnidsc['MTB']` for Middle Tampa Bay, and `r tbnidsc['LTB']` for Lower Tampa Bay.
+In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (nekton index score of `r sums$OTB$scr`), Hillsborough Bay received an action category of `r sums$HB$action` (nekton index score of `r sums$HB$scr`), Middle Tampa Bay received an action category of `r sums$MTB$action` (nekton index score of `r sums$MTB$scr`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (nekton index score of `r sums$LTB$scr`)
 
 ```{r}
 p <- show_tbnimatrix(tbniscr, width = 350, height = 600, plotly = T, family = fml)
