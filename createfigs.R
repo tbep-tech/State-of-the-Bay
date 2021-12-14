@@ -15,6 +15,7 @@ fml <- "Lato"
 
 # wq matrix map -----------------------------------------------------------
 
+maxyr <- 2021
 txtcol <- 'black'
 p <- show_sitemap(epcdata, yrsel = maxyr) +
   theme(
@@ -63,8 +64,9 @@ dev.off()
 
 # tbbi report card --------------------------------------------------------
 
+maxyrc <- 2019
 tbbiscr <- anlz_tbbiscr(benthicdata)
-p <- show_tbbimatrix(tbbiscr, family = fml) +
+p <- show_tbbimatrix(tbbiscr, family = fml, yrrng = c(1993, maxyr)) +
   theme(
     text = element_text(family = fml),
     axis.text.y = element_text(family = fml)

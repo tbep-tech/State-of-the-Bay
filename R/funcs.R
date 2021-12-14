@@ -345,6 +345,36 @@ tbnisum_fun <- function(datin, maxyr){
 }
 
 
+# get list of tbni results for a given year
+tbbisum_fun <- function(datin, maxyr, seg){
+  
+  tbbimed <- anlz_tbbimed(datin, bay_segment = seg, yrrng = c(1993, maxyr))
+  
+  tbbidsc <- tbbimed %>% 
+    filter(yr == maxyr) %>% 
+    select(bay_segment, cat = TBBICat) %>% 
+    mutate(
+      cat = case_when(
+        cat == 'Good' ~ '<span style="color: #006400; text-shadow: 0 0 3px #333;"><b>Good</b></span>',
+        cat == 'Fair' ~ '<span style="color: #f9ff33; text-shadow: 0 0 3px #333;"><b>Fair</b></span>', 
+        cat == 'Poor' ~ '<span style="color: #ff3333; text-shadow: 0 0 3px #333;"><b>Poor</b></span>'
+      )
+    )
+  
+  # format as list of lists
+  out <- tbbidsc %>% 
+    t %>% 
+    as.data.frame
+  
+  names(out) <- out[1, ]
+  
+  out <- out %>% 
+    apply(2, as.list)
+  
+  return(out)
+  
+}
+
 # reactable table function that works for supra/intertidal and subtidal
 lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', firstwidth = 240, estout = F){
   
