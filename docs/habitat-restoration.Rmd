@@ -38,6 +38,6 @@ To continue the improvements that have occurred, the Habitat Master Plan (2020 U
 
 Restoration opportunities by segment: https://github.com/tbep-tech/hmpu-workflow
 
-Habitat restoration table (needs to be updated with past 2-3 years of GPRA data): https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing 
+Habitat restoration table: https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing 
 
 Habitat restoration projects (and associated database) in the Tampa Bay Watershed: https://www.tampabay.wateratlas.usf.edu/restoration/
