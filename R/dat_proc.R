@@ -64,7 +64,8 @@ datraw <- get_sheet_as_csv('Comms. Metrics Sheet') %>%
 
 parents <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Be Floridian FB', 'TBEP LinkTree', 'TBEP Unsplash', 
              'TBEP Twitter', 'Constant Contact', 'TBEP YouTube', 'GSC: TBEP.ORG', 'GSC: Be Floridian', 
-             'GA: tbep.org', 'TBEP: Google My Business', 'Reddit', 'Outreach Materials Request')
+             'GA: tbep.org', '#LTB Hashtags on IG', 'TBEP: Google My Business', 
+             'Reddit', 'Outreach Materials Request')
 
 comdat <- datraw %>% 
   mutate(
@@ -75,7 +76,7 @@ comdat <- datraw %>%
   ) %>% 
   fill(parent) %>% 
   filter(!PLATFORM %in% parents) %>% 
-  select(-contains('Change')) %>% 
+  select(-contains(c('Change', 'Column'))) %>% 
   pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('PLATFORM|parent')) %>% 
   separate(date, into = c('month', 'year'), sep = '\\.') %>% 
   mutate(
