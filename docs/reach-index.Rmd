@@ -29,8 +29,3 @@ coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = F)
 coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F)
 ```
 
-### Tarpon Tag
-
-```{r}
-coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F)
-```
