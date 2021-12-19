@@ -542,51 +542,86 @@ rstdat_tab <- function(rstdat, maxyr){
 
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
-reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', 'TBEP IG', 'TBEP YouTube', 'TBEP Unsplash', 'Constant Contact'), 
+coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
                       maxyr, fntsz = 16, chg = TRUE){
   
-  platform <- match.arg(platform)
+  category <- match.arg(category)
+  
+  cats <- list(
+    `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
+    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP Twitter', 'TBEP YouTube'), 
+    `Email Marketing` = c('Constant Contact'), 
+    `Tarpon Tag` = c('Tarpon Tag')
+  )
   
   ics <- list(
-    `Be Floridian FB` = list(  
-      fct = c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans'),
-      icons = c('volume-up', 'heart', 'mouse-pointer', 'users')
-      ), 
-    `TBEP Facebook` = list(
-      fct = c('Total Impressions', 'Total Engagements', 'Post Link Clicks', 'Total Fans'),
-      icons = c('volume-up', 'heart', 'mouse-pointer', 'users') 
-      ), 
+    `GA: tbep.org` = list(
+      metric = c('Unique Page Views'), 
+      icons = c('eye')
+    ),
+    `GSC: TBEP.ORG` = list(
+      metric = c('Total Clicks'), 
+      icons = c('mouse-pointer')
+    ),
     `TBEP IG` = list(
-      fct = c('Total Impressions', 'Total Engagements', 'Profile Actions', 'Followers'),
-      icons = c('volume-up', 'heart', 'mouse-pointer', 'users') 
+      metric = c('Engagements', 'Total Followers'),
+      icons = c('heart', 'users') 
+    ),
+    `TBEP Facebook` = list(
+      metric = c('Engagements', 'Total Fans'),
+      icons = c( 'heart', 'users') 
+    ), 
+    `TBEP Twitter` = list(
+      metric = c('Engagements', 'Followers'), 
+      icons = c('heart', 'users')
       ),
     `TBEP YouTube` = list(
-      fct = c('Total Views', 'Watch Time (Hours)', 'Subscriber gain/loss'),
-      icons = c('film', 'clock', 'users')
+      metric = c('Total Views', 'Subscriber gain/loss'),
+      icons = c('film', 'users')
       ), 
-    `TBEP Unsplash` = list(
-      fct = c('All Time Views', 'All Time Downloads'),
-      icons = c('', '')
-      ),
     `Constant Contact` = list(
-      fct = c('Net new contacts', 'Number of Campaigns Sent', 'Click Rate', 'Open Rate'), 
-      icons = c('', '', '', '')
+      metric = c('Net new contacts'), 
+      icons = c('users')
+      ), 
+    `Tarpon Tag` = list(
+      metric = c('Statewide Registrations'), 
+      icons = c('car')
+      )
+    ) %>% 
+    lapply(data.frame) %>% 
+    enframe('platform', 'value') %>% 
+    unnest('value') %>% 
+    mutate(
+      tab_name = gsub('^TBEP\\s', '', platform), 
+      tab_name = case_when(
+        tab_name == 'IG' ~ 'Instagram', 
+        grepl('^GA|^GSC', tab_name) ~ 'Website', 
+        tab_name == 'Constant Contact' ~ 'Email Marketing',
+        T ~ tab_name
+      ), 
+      tab_metric = gsub('^Total\\s', '', metric), 
+      tab_metric = case_when(
+        metric == 'Unique Page Views' ~ 'Page Views', 
+        metric == 'Subscriber gain/loss' ~ 'Subscribers', 
+        metric == 'Net new contacts' ~ 'Contacts', 
+        T ~ tab_metric
       )
     )
   
-  fct <- ics[[platform]]$fct
-  icons <- ics[[platform]]$icons
-  
+  platform <- cats[[category]]
+  toflt <- ics %>% 
+    filter(platform %in% !!platform)
+
   # table as change
   if(chg){
     
     cmpyr <- maxyr - 1
   
     sumdat <- comdat %>% 
-      filter(platform %in% !!platform) %>% 
-      filter(metric %in% fct) %>% 
+      filter(platform %in% toflt$platform) %>% 
+      filter(metric %in% toflt$metric) %>% 
       filter(year %in% c(maxyr, cmpyr)) %>% 
-      group_by(metric, year) %>%
+      group_by(platform, metric, year) %>%
       summarise(
         val = sum(val), 
         .groups = 'drop'
@@ -596,6 +631,8 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
         maxyr = !!as.character(maxyr), 
         cmpyr = !!as.character(cmpyr)
       ) %>% 
+      left_join(toflt, by = c('platform', 'metric')) %>% 
+      select(tab_name, tab_metric, icons, cmpyr, maxyr) %>% 
       mutate(
         `% change` = (maxyr - cmpyr) / cmpyr, 
         # `% change` = round(`% change`, 0), 
@@ -607,20 +644,21 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
           `% change` > 0 ~ 'darkgreen', 
           `% change` < 0 ~ 'red'
         ),
-        metric = factor(metric, levels = fct),
-        icons = factor(metric, levels = fct, labels = icons), 
-        icons = as.character(icons)
-      ) %>% 
-      arrange(metric)
-    
+        tab_name = ifelse(duplicated(tab_name), '', tab_name)
+      ) 
+
     out <- reactable(
       sumdat, 
       columns = list(
+        tab_name = colDef(
+          name = ''#,
+          # minWidth = 100
+        ),
         icons = colDef(show = F),
         chgicon = colDef(show = F), 
         chgcols = colDef(show = F),
-        metric = colDef(
-          minWidth = 300,
+        tab_metric = colDef(
+          # minWidth = 300,
           name = '',
           cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
           align = 'right'
@@ -643,6 +681,7 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
       style = list(fontSize = paste0(fntsz, 'px')),
       borderless = T, 
       resizable = T, 
+      sortable = F,
       theme = reactableTheme(
         headerStyle = list(borderColor = 'white')
       )
@@ -651,12 +690,12 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
   }
     
   if(!chg){
-    
+
     sumdat <- comdat %>% 
-      filter(platform %in% !!platform) %>% 
-      filter(metric %in% fct) %>% 
+      filter(platform %in% toflt$platform) %>% 
+      filter(metric %in% toflt$metric) %>% 
       filter(year %in% !!maxyr) %>% 
-      group_by(metric, year) %>%
+      group_by(platform, metric, year) %>%
       summarise(
         val = sum(val), 
         .groups = 'drop'
@@ -665,18 +704,21 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
       rename(
         maxyr = !!as.character(maxyr)
       ) %>% 
+      left_join(toflt, by = c('platform', 'metric')) %>% 
+      select(tab_name, tab_metric, icons, maxyr) %>% 
       mutate(
-        metric = factor(metric, levels = fct),
-        icons = factor(metric, levels = fct, labels = icons), 
-        icons = as.character(icons)
-      ) %>% 
-      arrange(metric)
+        tab_name = ifelse(duplicated(tab_name), '', tab_name)
+      )
     
     out <- reactable(
       sumdat, 
       columns = list(
         icons = colDef(show = F),
-        metric = colDef(
+        tab_name = colDef(
+          name = '',
+          minWidth = 100
+        ),
+        tab_metric = colDef(
           minWidth = 300,
           name = '',
           cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
@@ -691,6 +733,7 @@ reach_tab <- function(comdat, platform = c('Be Floridian FB', 'TBEP Facebook', '
       style = list(fontSize = paste0(fntsz, 'px')),
       borderless = T, 
       resizable = T, 
+      sortable = F,
       theme = reactableTheme(
         headerStyle = list(borderColor = 'white')
       )
