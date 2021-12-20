@@ -1,12 +1,13 @@
 #' plot chlorophyll and la annual avg as plotly
 wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   
-  # chla
+  extrafont::loadfonts(device = 'win', quiet = T)
   
+  # chla
   p1 <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
     ggtitle(NULL) +
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
-  
+
   p1 <- plotly::ggplotly(p1, width = width, height = height) 
 
   p1$x$data[[4]] <- NULL
@@ -89,7 +90,9 @@ wqsum_fun <- function(datin, maxyr){
 #' plot total load as tn, hyd, or ratio, annual or monthly
 ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F, 
                       levs = c('All Segments (- N. BCB)', 'Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Remainder Lower Tampa Bay'),
-                      width = NULL, height = NULL){
+                      width = NULL, height = NULL, family){
+  
+  extrafont::loadfonts(device = 'win', quiet = T)
   
   # ref lines
   lndf <- data.frame(
@@ -160,11 +163,12 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
   }
 
   plts <- grep('^p\\d$', ls(), value = TRUE) 
-  
+
   out <- subplot(mget(plts), shareX = T, nrows = length(levs), shareY = F, titleY = T) %>%
     layout(
       xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)'),
-      plot_bgcolor = 'rgba(0,128,110, 0.1)' 
+      plot_bgcolor = 'rgba(0,128,110, 0.1)', 
+      font = list(family = family)
       # yaxis = list(gridcolor = '#FFFFFF')
     )
   
@@ -173,7 +177,9 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
 }
 
 #' plot pop and tn/hy ratio
-ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
+ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
+  
+  extrafont::loadfonts(device = 'win', quiet = T)
   
   toplo <- totanndat %>% 
     filter(grepl('^All\\sSegments', bay_segment)) %>% 
@@ -192,7 +198,7 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
     overlaying = "y",
     side = "right"
   )
-  
+
   out <- plot_ly(toplo, width = width, height = height) %>% 
     add_trace(x = ~yr, y = ~pop, color = I('tomato1'), type = 'bar', showlegend = T, name = 'Pop.') %>%
     add_trace(x = ~yr, y = ~tnhy, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
@@ -215,82 +221,99 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL){
         zerolinecolor = '#ffff',
         zerolinewidth = 2,
         gridcolor = 'ffff'
-      )
+      ), 
+      font = list(family = family)
     )
   
   return(out)
   
 }
 
-#' color function for tidal creek reactable table cells
-colfun <- function(x){
+#' copy from tbeptools, but have to include extrafont for some reason
+show_tdlcrkmatrixsep <- function(dat, class = c('3M', '2'), score = c('Prioritize', 'Investigate', 'Caution', 'Monitor'), family = NA){
   
-  out <- case_when(
-    x == 'No Data' ~ 'lightblue', 
-    x == 'Monitor' ~ '#00ff00', 
-    x == 'Caution' ~ 'yellow', 
-    x == 'Investigate' ~ 'orange', 
-    x == 'Prioritize' ~ 'coral'
+  extrafont::loadfonts(device = 'win', quiet = T)
+  
+  # sanity checks
+  if(any(!class %in% c('3M', '2', '3F', '1')))
+    stop('class must be from 3M, 2, 3F, 1')
+  
+  if(any(!score %in% c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
+    stop('score must be from Prioritize, Investigate, Caution, Monitor')
+  
+  # named color vector
+  cols <- list(Monitor = 'green', Caution = 'yellow', Investigate = 'orange', Prioritize = 'coral')
+  
+  # overall score categories
+  toplo2 <- dat %>%
+    dplyr::filter(class %in% !!class) %>%
+    dplyr::filter(score %in% !!score) %>%
+    dplyr::select(-id, -JEI, -class) %>%
+    dplyr::mutate(
+      name  = dplyr::case_when(
+        name == '' ~ 'no name',
+        T ~ name
+      )
+    ) %>%
+    tidyr::unite('id', wbid, name, sep = ', ') %>%
+    dplyr::mutate(
+      score = factor(score, levels =  rev(c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
+    ) %>%
+    dplyr::filter(!duplicated(id)) %>%
+    dplyr::arrange(score, id) %>%
+    dplyr::mutate(
+      id = factor(id, levels = id)
+    )
+  
+  # individual year counts
+  toplo1 <- toplo2 %>%
+    tidyr::gather('indyr', 'count', monitor, caution, investigate, prioritize) %>%
+    dplyr::mutate(
+      count = dplyr::case_when(
+        is.na(count) ~ 0L,
+        T ~ count
+      ),
+      indyr = factor(indyr, levels = rev(c('prioritize', 'investigate', 'caution', 'monitor')), labels = rev(c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
+    )
+  
+  # theme
+  pthm <- theme_grey(base_family = family) +
+    theme(
+    legend.position = 'top',
+    axis.text.y = element_text(size  = 6),
+    panel.background = element_blank(),
+    axis.text.x = element_text(size = 8)
   )
   
-  return(out)
+  # plot for individual year counts
+  p1 <- ggplot2::ggplot(toplo1, ggplot2::aes(y = id, x = indyr, fill = indyr, alpha = count)) +
+    ggplot2::scale_fill_manual(values = cols, guide = 'none') +
+    ggplot2::geom_tile(colour = NA) +
+    ggplot2::scale_alpha_continuous('Years', range = c(0, 1), limits = c(0, 10), breaks = c(0, 5, 10)) +
+    ggplot2::scale_x_discrete(expand = c(0,0)) +
+    ggplot2::scale_y_discrete(expand = c(0,0)) +
+    ggplot2::labs(
+      x = 'Individual year results',
+      y = 'Creek Id, name'
+    ) +
+    pthm
   
-}
-
-#' tidal creek reactable table
-crkrct_tab <- function(dat, tidalcreeks, colfun){
-    
-  totab <- dat %>% 
-    inner_join(tidalcreeks, by = c('id', 'wbid', 'JEI', 'class', 'name')) %>% 
-    mutate(`Length (km)` = round(Creek_Length_m / 1000, 2)) %>% 
-    filter(score != 'No Data') %>% 
-    select(Name= name, wbid, JEI, `Length (km)`, monitor, caution, investigate, prioritize, score)
-
-  out <- reactable(totab, 
-            columns = list(
-              score = colDef(
-                style = function(value){
-                  list(background = colfun(value))
-                }), 
-              `Length (km)` = colDef(
-                aggregate = 'sum', 
-                format = colFormat(digits = 2),
-                cell = function(value) {
-                  
-                  width <- paste0(value / max(totab$`Length (km)`, na.rm = T) * 100, "%")
-                  value <- format(value, width = 9, justify = "right")
-                  bar <- div(
-                    class = "bar-chart",
-                    style = list(marginRight = "6px"),
-                    div(class = "bar", style = list(width = width, backgroundColor = "#958984"))
-                  )
-                  div(class = "bar-cell", span(class = "number", value), bar)
-                }
-              ), 
-              # wbid = colDef(
-              #   aggregate = 'count'
-              # ), 
-              # JEI = colDef(
-              #   aggregate = 'count'
-              # ),
-              monitor = colDef(
-                aggregate = 'sum'
-              ), 
-              caution = colDef(
-                aggregate = 'sum'
-              ),  
-              investigate = colDef(
-                aggregate = 'sum'
-              ),  
-              prioritize = colDef(
-                aggregate = 'sum'
-              )
-              
-            ), 
-            groupBy = 'score',
-            filterable = T, pageSizeOptions = c(10, 20, nrow(totab)), defaultPageSize = 10,
-            showPageSizeOptions = T, compact = T
-  )
+  # plot for overall score categories
+  p2 <- ggplot2::ggplot(toplo2, ggplot2::aes(y = id, x = 'Final category', fill = score)) +
+    ggplot2::scale_fill_manual(values = cols, guide = ggplot2::guide_legend(reverse = T)) +
+    ggplot2::geom_tile(colour = 'black') +
+    ggplot2::scale_x_discrete(expand = c(0,0)) +
+    ggplot2::scale_y_discrete(expand = c(0,0)) +
+    pthm +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_blank(),
+      legend.title = ggplot2::element_blank(),
+      legend.position = 'right',
+      axis.title = ggplot2::element_blank()
+    )
+  
+  # combine
+  out <- p1 + p2 + plot_layout(ncol = 2, widths = c(1, 0.2))
   
   return(out)
   

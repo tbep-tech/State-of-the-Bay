@@ -2,8 +2,6 @@
 output:
   html_document:
     css: "styles.css"
-    includes: 
-      in_header: header.html  
 ---
 
 ```{r setup, warning = F, message = F, echo = F}
@@ -66,6 +64,6 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 ## Lower Tampa Bay
 
 ```{r, out.width = '100%'}
-wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
+wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = 'sans', width = 1000, height = 500)
 ```
   

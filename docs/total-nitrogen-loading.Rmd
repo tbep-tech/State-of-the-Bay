@@ -15,14 +15,14 @@ In 2011, the Florida Department of Environmental Protection approved regulatory 
 
 ```{r}
 p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'), 
-          addlns = T, width = 600, height = 500)
+          addlns = T, width = 600, height = 500, family = fml)
 div(p, align = 'center')
 ```
 
 Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading also continues to decrease over time. The amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020). 
 
 ```{r}
-p <- ldrat_plo(totanndat, popdat, width = 900, height = 400)
+p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
 div(p, align = 'center')
 ```
 
