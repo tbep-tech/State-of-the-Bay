@@ -18,6 +18,29 @@ epcdata <- read_importwq(xlsx, download_latest = T)
 sums <- wqsum_fun(epcdata, maxyr)
 ```
 
+<script>
+window.addEventListener('message', function (event) {
+
+    // Need to check for safety as we are going to process only our messages
+    // So Check whether event with data(which contains any object) contains our message here its "FrameHeight"
+   if (event.data == "FrameHeight") {
+
+        //event.source contains parent page window object 
+        //which we are going to use to send message back to main page here "abc.com/page"
+
+        //parentSourceWindow = event.source;
+
+        //Calculate the maximum height of the page
+        var body = document.body, html = document.documentElement;
+        var height = Math.max(body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+       // Send height back to parent page "abc.com/page"
+        event.source.postMessage({ "FrameHeight": height }, "*");       
+    }
+});
+</script>
+
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2006.
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Environmental Protection Commission of Hillsborough County.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations and water column light attenuation.  Chlorophyll provides a measure of algae growth in the water column and light attenuation provides a measure of potential shading from algae growth that can limit seagrass growth.  Excess nutrient pollution from atmospheric, wastewater, and stormwater sources can cause excess algae growth. The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
