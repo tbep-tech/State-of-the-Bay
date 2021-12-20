@@ -1021,7 +1021,7 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 }
 
 
-grnttab_fun <- function(..., yrsel, fntsz = 16){
+grnttab_fun <- function(..., yrsel, fntsz = 17){
   
   ics <- list(
     levs = c('newlead', 'n', 'total'),

@@ -12,21 +12,23 @@
 /* Whole document: */
 
 body{
-  font-family: 'Lato';
+  font-family: 'Roboto';
+  font-size: 17px;
+  font-weight: 400;
 }
 
 /* header styles */
 
 h1,h2,h3 {
-  font-family: 'Lato';
-  font-weight: 300;
-  color: #958984;
+  font-family: 'Roboto';
+  font-weight: 600;
+  color: #004F7E;
 }
 
 h4,h5 {
-  font-family: 'Lato';
-  font-weight: 300;
-  color: #958984;
+  font-family: 'Roboto';
+  font-weight: 600;
+  color: #004F7E;
   font-style: italic;
 }
 
@@ -35,7 +37,7 @@ h4,h5 {
 .navbar {
   background-color:#00806E;
   border-color: black;
-  font-family: 'Lato'; /* main tab fonts */
+  font-family: 'Roboto'; /* main tab fonts */
   font-weight: 300;
 }
 
@@ -54,7 +56,7 @@ h4,h5 {
 /* sidebar */
 
 .sidebar {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
@@ -74,39 +76,39 @@ h4,h5 {
 /* sub sections */
 
 .level3 {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
 
 .chart-title {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   font-style: italic;
   color: #958984;
 }
 
 .nav-tabs {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   font-style: italic;
   color: #958984;
 }
 
 .control-label {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
 
 .shiny-text-output {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
 
 .material-switch {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
@@ -157,7 +159,7 @@ h4,h5 {
 /* leaflet */
 
 .leaflet-control { /* leaflet legends, control boxes */
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
 }
@@ -165,7 +167,7 @@ h4,h5 {
 /* figure captions */
 
 .caption {
-  font-family: 'Lato';
+  font-family: 'Roboto';
   font-weight: 300;
   color: #958984;
   font-style: italic;

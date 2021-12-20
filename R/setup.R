@@ -29,7 +29,7 @@ drive_auth(email = 'mbeck@tbep.org')
 gs4_auth(token = drive_token())
 
 loadfonts(device = 'win', quiet = T)
-fml <- "Lato"
+fml <- "Roboto"
 
 source(here('R/funcs.R'))
 
