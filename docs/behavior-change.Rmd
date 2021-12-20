@@ -1,12 +1,14 @@
-<!-- # Informed, Engaged, Responsible Community -->
+---
+output:
+  html_document:
+    css: "styles.css"
+---
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/comdat.RData'))
 maxyr <- 2021
 ```
-
-## Behavior Change 
 
 Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair, or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed.
 

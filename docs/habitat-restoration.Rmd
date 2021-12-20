@@ -4,8 +4,6 @@ output:
     css: "styles.css"
 ---
 
-<!-- # Thriving Habitats and Abundant Wildlife -->
-
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
@@ -13,8 +11,6 @@ maxyr <- 2021
 # https://docs.google.com/spreadsheets/d/1IkGidfU4SQJ_ZtOEqfn8licNCuWGlq_MtGuWWuIL1Js/edit#gid=2008440809
 rstdat <- read_sheet('1IkGidfU4SQJ_ZtOEqfn8licNCuWGlq_MtGuWWuIL1Js', sheet = 'FullDatabase')
 ```
-
-## Restoration Projects to Improve Tampa Bay’s Natural Systems
 
 Habitat restoration is an attempt to restore important services provided by natural systems. These ecological services can include providing fish nurseries; improving water quality; reducing erosion; and storm surge protection. This can involve a variety of habitat types, from salt marshes to pine flatwoods. 
 

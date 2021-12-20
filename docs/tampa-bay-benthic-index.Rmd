@@ -1,4 +1,8 @@
-<!-- # Clean Waters & Sediments -->
+---
+output:
+  html_document:
+    css: "styles.css"
+---
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
@@ -11,8 +15,6 @@ tbbiscr <- anlz_tbbiscr(benthicdata)
 # summaries for inline
 sums <- tbbisum_fun(tbbiscr, maxyr, seg)
 ```
-
-## Tampa Bay Benthic Index
 
 Benthic invertebrates are a group of relatively small organisms (microscopic to visible to the naked eye) that live the majority of their life cycles in or near bay bottom sediments. They are a food source for small fish and crustaceans and may provide some water quality benefits through sediment removal via filtration during feeding (similar to oysters). Tampa Bay supports many different benthic organisms. The type of benthos varies depending on the salinity, sediment type, temperature, dissolved oxygen, and presence of excess nutrients and/or toxic contaminants. 
 

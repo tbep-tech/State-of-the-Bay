@@ -4,8 +4,6 @@ output:
     css: "styles.css"
 ---
 
-<!-- # Thriving Habitats and Abundant Wildlife -->
-
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
@@ -19,8 +17,6 @@ sprest <- lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', t
   select(val, chgper) %>% 
   tibble::deframe()
 ```
-
-## How are Tampa Bay’s Natural Habitats Changing?
 
 Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or lost during development activities. Once the value of these habitats was recognized, protections were put in place and monitoring began on a regular basis to understand the effectiveness of different conservation and restoration activities.
 

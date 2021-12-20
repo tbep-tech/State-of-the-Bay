@@ -1,4 +1,8 @@
-<!-- # Clean Waters & Sediments -->
+---
+output:
+  html_document:
+    css: "styles.css"
+---
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
@@ -13,8 +17,6 @@ epcdata <- read_importwq(xlsx, download_latest = T)
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
 ```
-
-## Water Quality Decision Matrix
 
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2006.
 

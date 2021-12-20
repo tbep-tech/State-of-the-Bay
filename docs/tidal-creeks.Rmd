@@ -1,4 +1,8 @@
-<!-- # Clean Waters & Sediments -->
+---
+output:
+  html_document:
+    css: "styles.css"
+---
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
@@ -11,8 +15,6 @@ sumdat <- dat %>%
   pull(score) %>% 
   table
 ```
-
-## Tidal Creeks
 
 Tidal creeks or tributaries are essential habitats in the Tampa Bay estuary and are important focal points for understanding watershed inputs that affect water quality. A fundamental goal of the Tampa Bay Estuary Program is to develop effective nutrient management strategies to support the ecological function of tidal tributaries. In partnership with Sarasota Bay NEP, Coastal & Heartland NEP, and local government and agency stakeholders, a tidal creek assessment framework was developed to evaluate the environmental health of these valuable ecosystems. 
 

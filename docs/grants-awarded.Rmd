@@ -1,4 +1,8 @@
-<!-- # Informed, Engaged, Responsible Community -->
+---
+output:
+  html_document:
+    css: "styles.css"
+---
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
@@ -10,8 +14,6 @@ tberfsum <- grntsum_fun(tberfdat)
 bmgsum <- grntsum_fun(bmgdat)
 dcgsum <- grntsum_fun(dcgdat, rnd = 'k')
 ```
-
-## Grants Awarded
 
 To date, TBERF has received `r tberfsum['total']` in funding and `r tberfsum['matching']` in matching funds to support `r tberfsum['n']` grants within the Tampa Bay watershed.
 
