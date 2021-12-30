@@ -3,11 +3,9 @@ library(tbeptools)
 library(dplyr)
 library(tidyr)
 library(tibble)
-library(extrafont)
 library(patchwork)
 library(ggmap)
 library(sf)
-library(extrafont)
 library(readxl)
 library(ggfx)
 library(grid)
@@ -19,6 +17,7 @@ library(reactablefmtr)
 library(googlesheets4)
 library(googledrive)
 library(emojifont)
+library(showtext)
 library(stringr)
 library(crosstalk)
 library(leaflet)
@@ -28,9 +27,14 @@ library(lubridate)
 drive_auth(email = 'mbeck@tbep.org')
 gs4_auth(token = drive_token())
 
-loadfonts(device = 'win', quiet = T)
-fml <- "Roboto"
+font_add_google("Roboto", "roboto")#, regular = 'C:/Windows/Fonts/Roboto.ttf')
+fml <- "rock"
+
+showtext_auto()
+showtext_opts(dpi = 96)
+
+knitr::opts_chunk$set(message = F, echo = F, warning = F, fig.align = 'center')
 
 source(here('R/funcs.R'))
 
-knitr::opts_chunk$set(message = F, echo = F, warning = F, fig.align = 'center')
+

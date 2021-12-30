@@ -20,7 +20,7 @@ A `r yrsel` year in review is below:
 ```{r, out.width = '100%'}
 gaddat %>% 
   gadsum_fun(yrsel = yrsel) %>% 
-  gadsum_plo
+  gadsum_plo()
 ```
 
 A map of all Give a Day locations shows where the events have occurred.  Select a row on the table to highlight the map location.

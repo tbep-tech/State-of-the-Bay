@@ -30,8 +30,8 @@ show_tdlcrk(dat)
 
 The current assessment period (2021) indicates that `r sumdat['Prioritize']` creeks had a "Prioritize" score, `r sumdat['Investigate']` had an "Investigate" score, `r sumdat['Caution']` had a "Caution" score, and `r sumdat['Monitor']` had a "Monitor" score.  The remaining `r sumdat['No Data']` creeks in the Tampa Bay watershed had insufficient data for the current assessment period to assign a category.  The plot below shows a breakdown of scores for all creeks, with the final score in the right column and the number of survey years in each category used to calculate the final score in the remaining columns. 
 
-```{r, fig.height = 6, fig.width = 4, out.width = '80%'}
-show_tdlcrkmatrixsep(dat, family = fml, class = c('3M', '2', '3F', '1'))
+```{r, out.width = '80%', fig.width = 5, fig.height = 5, fig.align = 'center'}
+show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
 ```
 
 Link to tidal creeks data page: https://tbep.org/tidal-creeks/

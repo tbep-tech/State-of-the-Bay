@@ -12,6 +12,6 @@ fls <- grep('salinity\\-trends\\.Rmd$', fls, value = T, invert = T)
 
 for(fl in fls){
   cat(fl, '\n')
-  render(fl, quiet = T)
+  render(fl, quiet = T, output_options = list(dev.args = list(type = "cairo")))
 }
   

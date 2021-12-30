@@ -19,17 +19,10 @@ body{
 
 /* header styles */
 
-h1,h2,h3 {
+h1,h2,h3,h4,h5 {
   font-family: 'Roboto';
   font-weight: 600;
   color: #004F7E;
-}
-
-h4,h5 {
-  font-family: 'Roboto';
-  font-weight: 600;
-  color: #004F7E;
-  font-style: italic;
 }
 
 /* top navbar styles */

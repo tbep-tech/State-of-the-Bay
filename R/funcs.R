@@ -1,10 +1,8 @@
 #' plot chlorophyll and la annual avg as plotly
 wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   
-  extrafont::loadfonts(device = 'win', quiet = T)
-  
   # chla
-  p1 <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
+  p1 <- show_thrplot(datin, bay_segment = bay_segment, thr = "chla", yrrng =  yrrng, txtlab = F, labelexp = F) +
     ggtitle(NULL) +
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
 
@@ -17,7 +15,7 @@ wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   
   # la
   
-  p2 <- show_thrplot(datin, bay_segment = bay_segment, thr = "la", yrrng =  yrrng, family = family, txtlab = F, labelexp = F) +
+  p2 <- show_thrplot(datin, bay_segment = bay_segment, thr = "la", yrrng =  yrrng, txtlab = F, labelexp = F) +
     ggtitle(NULL) +
     scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
   
@@ -30,7 +28,10 @@ wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   p2$x$data[[2]]$showlegend <- FALSE
   
   out <- plotly::subplot(p1, p2, nrows = 2, shareX = T, titleY = TRUE) %>%
-    plotly::layout(legend = list(title = ''))
+    plotly::layout(
+      legend = list(title = ''),
+      font = list(family = family)
+      )
   
   return(out)
   
@@ -91,8 +92,6 @@ wqsum_fun <- function(datin, maxyr){
 ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F, 
                       levs = c('All Segments (- N. BCB)', 'Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Remainder Lower Tampa Bay'),
                       width = NULL, height = NULL, family){
-  
-  extrafont::loadfonts(device = 'win', quiet = T)
   
   # ref lines
   lndf <- data.frame(
@@ -178,9 +177,7 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
 
 #' plot pop and tn/hy ratio
 ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
-  
-  extrafont::loadfonts(device = 'win', quiet = T)
-  
+
   toplo <- totanndat %>% 
     filter(grepl('^All\\sSegments', bay_segment)) %>% 
     select(yr = year, tnhy) %>% 
@@ -224,96 +221,6 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
       ), 
       font = list(family = family)
     )
-  
-  return(out)
-  
-}
-
-#' copy from tbeptools, but have to include extrafont for some reason
-show_tdlcrkmatrixsep <- function(dat, class = c('3M', '2'), score = c('Prioritize', 'Investigate', 'Caution', 'Monitor'), family = NA){
-  
-  extrafont::loadfonts(device = 'win', quiet = T)
-  
-  # sanity checks
-  if(any(!class %in% c('3M', '2', '3F', '1')))
-    stop('class must be from 3M, 2, 3F, 1')
-  
-  if(any(!score %in% c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
-    stop('score must be from Prioritize, Investigate, Caution, Monitor')
-  
-  # named color vector
-  cols <- list(Monitor = 'green', Caution = 'yellow', Investigate = 'orange', Prioritize = 'coral')
-  
-  # overall score categories
-  toplo2 <- dat %>%
-    dplyr::filter(class %in% !!class) %>%
-    dplyr::filter(score %in% !!score) %>%
-    dplyr::select(-id, -JEI, -class) %>%
-    dplyr::mutate(
-      name  = dplyr::case_when(
-        name == '' ~ 'no name',
-        T ~ name
-      )
-    ) %>%
-    tidyr::unite('id', wbid, name, sep = ', ') %>%
-    dplyr::mutate(
-      score = factor(score, levels =  rev(c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
-    ) %>%
-    dplyr::filter(!duplicated(id)) %>%
-    dplyr::arrange(score, id) %>%
-    dplyr::mutate(
-      id = factor(id, levels = id)
-    )
-  
-  # individual year counts
-  toplo1 <- toplo2 %>%
-    tidyr::gather('indyr', 'count', monitor, caution, investigate, prioritize) %>%
-    dplyr::mutate(
-      count = dplyr::case_when(
-        is.na(count) ~ 0L,
-        T ~ count
-      ),
-      indyr = factor(indyr, levels = rev(c('prioritize', 'investigate', 'caution', 'monitor')), labels = rev(c('Prioritize', 'Investigate', 'Caution', 'Monitor')))
-    )
-  
-  # theme
-  pthm <- theme_grey(base_family = family) +
-    theme(
-    legend.position = 'top',
-    axis.text.y = element_text(size  = 6),
-    panel.background = element_blank(),
-    axis.text.x = element_text(size = 8)
-  )
-  
-  # plot for individual year counts
-  p1 <- ggplot2::ggplot(toplo1, ggplot2::aes(y = id, x = indyr, fill = indyr, alpha = count)) +
-    ggplot2::scale_fill_manual(values = cols, guide = 'none') +
-    ggplot2::geom_tile(colour = NA) +
-    ggplot2::scale_alpha_continuous('Years', range = c(0, 1), limits = c(0, 10), breaks = c(0, 5, 10)) +
-    ggplot2::scale_x_discrete(expand = c(0,0)) +
-    ggplot2::scale_y_discrete(expand = c(0,0)) +
-    ggplot2::labs(
-      x = 'Individual year results',
-      y = 'Creek Id, name'
-    ) +
-    pthm
-  
-  # plot for overall score categories
-  p2 <- ggplot2::ggplot(toplo2, ggplot2::aes(y = id, x = 'Final category', fill = score)) +
-    ggplot2::scale_fill_manual(values = cols, guide = ggplot2::guide_legend(reverse = T)) +
-    ggplot2::geom_tile(colour = 'black') +
-    ggplot2::scale_x_discrete(expand = c(0,0)) +
-    ggplot2::scale_y_discrete(expand = c(0,0)) +
-    pthm +
-    ggplot2::theme(
-      axis.text.y = ggplot2::element_blank(),
-      legend.title = ggplot2::element_blank(),
-      legend.position = 'right',
-      axis.title = ggplot2::element_blank()
-    )
-  
-  # combine
-  out <- p1 + p2 + plot_layout(ncol = 2, widths = c(1, 0.2))
   
   return(out)
   
@@ -399,7 +306,8 @@ tbbisum_fun <- function(datin, maxyr, seg){
 }
 
 # reactable table function that works for supra/intertidal and subtidal
-lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', firstwidth = 240, estout = F){
+lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', 
+                          firstwidth = 240, estout = F, family, fntsz = 16){
   
   sticky_style <- list(position = "sticky", left = 0, background = "#fff", zIndex = 1,
                        borderRight = "1px solid #eee")
@@ -478,7 +386,8 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
     defaultPageSize = nrow(sums),
     showPageSizeOptions = F,
     highlight = T,
-    wrap = F
+    wrap = F, 
+    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
   )
   
   # add caption
@@ -566,7 +475,7 @@ rstdat_tab <- function(rstdat, maxyr){
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
 coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
-                      maxyr, fntsz = 16, chg = TRUE){
+                      maxyr, fntsz = 16, chg = TRUE, family){
   
   category <- match.arg(category)
   
@@ -701,7 +610,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
           cell = icon_sets(sumdat, icon_ref = 'chgicon', icon_color_ref = "chgcols", icon_size = fntsz, number_fmt = scales::percent)
         )
       ), 
-      style = list(fontSize = paste0(fntsz, 'px')),
+      style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
       borderless = T, 
       resizable = T, 
       sortable = F,
@@ -753,7 +662,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
           align = 'center'
         )
       ), 
-      style = list(fontSize = paste0(fntsz, 'px')),
+      style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
       borderless = T, 
       resizable = T, 
       sortable = F,
@@ -906,8 +815,12 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
 
 # plot gad efforts
 # datin is summmary output from gadsum_fun w/ yrsel not null 
-gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
-
+gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){ 
+  
+  box::use(
+    emojifont[...]
+  )
+  
   txt <- tibble(
     name = c('nevent', 'nvols', 'nlbs', 'nplants', 'npartner'),
     info = c('Event areas are prioritized by the presence of excessive litter and native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
@@ -930,7 +843,7 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
     mutate(
       h = h,
       w = w,
-      icon = fontawesome(icon),
+      icon = emojifont::fontawesome(icon),
       font_family = 'fontawesome-webfont',
       name = factor(name, levels = rev(txt$name))
     ) %>%  
@@ -940,12 +853,14 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
       y = rep(seq(0, (!!h + padding) * rows - 1, !!h + padding), each = cols),
       info = str_wrap(info, 75)
     )
+browser()
 
-  p <-  ggplot(toplo, aes(x, y, height = h, width = w, label = info)) +
+  loadfonts(device = 'win', quiet = F)
+  p <- ggplot(toplo, aes(x, y, height = h, width = w, label = info)) +
     geom_tile(aes(fill = name)) +
-    geom_text(fontface = "bold", size = 10,
+    geom_text(fontface = "bold", size = 10, family = 'Stencil',
               aes(label = value, x = x - w/2.2, y = y + h/4, color = name), hjust = 0) +
-    geom_text(size = 5, lineheight = 0.7,
+    geom_text(size = 5, lineheight = 0.7, family = 'Stencil',
               aes(color = name, label = info, x = x - w/2.2, y = y - h/6), hjust = 0) +
     coord_fixed() +
     scale_fill_brewer(type = "cont", palette = "Blues", direction = -1) +
