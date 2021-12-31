@@ -20,7 +20,18 @@ Tidal creeks or tributaries are essential habitats in the Tampa Bay estuary and 
 
 The tidal creek assessment framework supports tracking of water quality management goals and can help refine restoration and management plans in priority tributaries, including those in need of hydrologic restoration that can support critical nursery habitats for sportfishes.  Similar to the water quality report card, tidal creeks are assigned to different categories that describe current conditions and inform management actions that support protection or restoration of bay habitats.
 
-Tidal creeks are assigned to one of five categories: Monitor: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks. Caution: Creek nutrients showing signs of elevated nutrient concentrations that may increase risk of eutrophic condition. Investigate: Creek nutrient concentrations above margin of safety to protect creek from potential impairment. Prioritize: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of the tributary indicating that actions are needed to identify remediative measures to reduce nutrients in the creek. No Data: Insufficient data exist to assess tidal creeks condition, additional monitoring is needed.
+Tidal creeks are assigned to one of five categories: 
+
+<span style="color:#ADD8E6; text-shadow: 0 0 3px #333;">__No Data__</span>: Data are unavailable for evaluation.
+
+<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Monitor__</span>: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
+
+<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Creek nutrients showing signs of elevated nutrient concentrations that may increase risk of eutrophic condition.
+
+<span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span>: Creek nutrient concentrations above margin of safety to protect creek from potential impairment.  
+
+<span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Prioritize__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of the tributary in at least one year indicating that actions may be needed to identify remediative measures to reduce nutrients in the creek.
+
 
 The following map shows all tidal creeks in the Tampa Bay Watershed and their scores for the 2021 assessment period. 
 
@@ -28,7 +39,7 @@ The following map shows all tidal creeks in the Tampa Bay Watershed and their sc
 show_tdlcrk(dat)
 ```
 
-The current assessment period (2021) indicates that `r sumdat['Prioritize']` creeks had a "Prioritize" score, `r sumdat['Investigate']` had an "Investigate" score, `r sumdat['Caution']` had a "Caution" score, and `r sumdat['Monitor']` had a "Monitor" score.  The remaining `r sumdat['No Data']` creeks in the Tampa Bay watershed had insufficient data for the current assessment period to assign a category.  The plot below shows a breakdown of scores for all creeks, with the final score in the right column and the number of survey years in each category used to calculate the final score in the remaining columns. 
+The current assessment period (2021) indicates that `r sumdat['Prioritize']` creeks had a <span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Prioritize__</span> score, `r sumdat['Investigate']` had an <span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span> score, `r sumdat['Caution']` had a <span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span> score, and `r sumdat['Monitor']` had a <span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Monitor__</span> score.  The remaining `r sumdat['No Data']` creeks in the Tampa Bay watershed had insufficient data for the current assessment period to assign a category.  The plot below shows a breakdown of scores for all creeks, with the final score in the right column and the number of survey years in each category used to calculate the final score in the remaining columns. 
 
 ```{r, out.width = '80%', fig.width = 5, fig.height = 5, fig.align = 'center'}
 show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
