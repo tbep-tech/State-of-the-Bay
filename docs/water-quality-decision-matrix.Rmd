@@ -7,6 +7,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 maxyr <- 2021
+sgmaxyr <- 2020
 
 # local file path
 xlsx <- here('data-raw/Results_Updated.xls')
@@ -16,9 +17,18 @@ epcdata <- read_importwq(xlsx, download_latest = T)
 
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
+sgsums <- sgsum_fun(seagrass, sgmaxyr)
 ```
 
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2006.
+
+<div id="wrapper">
+<figure>
+<img alt="seagrass" src="img/seagrass.jpg" width="450"/>
+<img alt="wheedon" src="img/wheedon.jpg" width="450"/>
+</figure>
+</div>
+<p></p>
 
 The water quality report card is produced annually to track status and trends of water quality conditions in each of the four major bay segments.  This tool provides a simple "stoplight" graphic using water quality data provided by the Environmental Protection Commission of Hillsborough County.  The report card synthesizes thousands of water quality records to understand annual and seasonal variation in chlorophyll concentrations and water column light attenuation.  Chlorophyll provides a measure of algae growth in the water column and light attenuation provides a measure of potential shading from algae growth that can limit seagrass growth.  Excess nutrient pollution from atmospheric, wastewater, and stormwater sources can cause excess algae growth. The goal of the report card is to assess water quality trends that may be harmful for bay habitats, including conditions that are favorable for seagrass growth, to inform management activities that support a healthy environment.   
 
@@ -39,7 +49,7 @@ div(p, align = 'center')
 
 In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (chlorophyll target `r sums$OTB$chla`, light attenuation target `r sums$OTB$la`), Hillsborough Bay received an action category of `r sums$HB$action` (chlorophyll target `r sums$HB$chla`, light attenuation target `r sums$HB$la`), Middle Tampa Bay received an action category of `r sums$MTB$action` (chlorophyll target `r sums$MTB$chla`, light attenuation target `r sums$MTB$la`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (chlorophyll target `r sums$LTB$chla`, light attenuation target `r sums$LTB$la`). The plots below show chlorophyll and light attenuation values for each bay segment, including the management target.
 
-Water Quality Report Card data page: https://tbep.org/water-quality-report-card/
+See additional visualization tools at the Water Quality Report Card data page: https://tbep.org/water-quality-report-card/.  Click on the tabs below to view water quality trends for each major bay segment.
 
 # {.tabset .tabset-pills}
 
@@ -64,6 +74,18 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 ## Lower Tampa Bay
 
 ```{r, out.width = '100%'}
-wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = 'sans', width = 1000, height = 500)
+wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
 ```
-  
+
+#  
+
+## Seagrasses in Tampa Bay
+
+The water quality decision matrix was developed using seagrasses as an endpoint to assess progress in achieving management goals for Tampa Bay. Seagrasses need sunlight to grow.  With improving water clarity, seagrasses can thrive in Tampa Bay.
+
+Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r sgmaxyr`, seagrasses `r sgsums$refdir` by `r sgsums$refcmp` acres.  For the most recent years of seagrass maps, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres from `r sgsums$penult` to `r sgmaxyr`.
+
+```{r, fig.height = 4.5, fig.width = 10}
+sgcov_plo(seagrass, family = fml)
+```
+

@@ -214,3 +214,8 @@ h1,h2,h3,h4,h5 {
   right: 200px;
   border-left: 1px solid #eee !important;
 }
+
+/* wrapper class for centering images */
+#wrapper{
+ text-align:center;
+}
