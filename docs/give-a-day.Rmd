@@ -17,10 +17,10 @@ Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer 
 
 A `r yrsel` year in review is below: 
 
-```{r, out.width = '100%'}
+```{r, out.width = '80%', fig.height = 14, fig.width = 14}
 gaddat %>% 
   gadsum_fun(yrsel = yrsel) %>% 
-  gadsum_plo()
+  gadsum_plo(family = fml)
 ```
 
 A map of all Give a Day locations shows where the events have occurred.  Select a row on the table to highlight the map location.

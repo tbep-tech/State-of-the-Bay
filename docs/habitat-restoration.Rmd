@@ -17,7 +17,7 @@ Habitat restoration is an attempt to restore important services provided by natu
 Habitat restoration in the Tampa Bay region has evolved over time from a simple planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on regionally significant tracts of coastal land. Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971. Tampa Bay restoration professionals often work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
 
 ```{r}
-rstdat_tab(rstdat, maxyr = maxyr)
+rstdat_tab(rstdat, maxyr = maxyr, family = fml)
 ```
 
 To continue the improvements that have occurred, the Habitat Master Plan (2020 Update) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:

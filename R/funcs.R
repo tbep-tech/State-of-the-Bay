@@ -307,7 +307,7 @@ tbbisum_fun <- function(datin, maxyr, seg){
 
 # reactable table function that works for supra/intertidal and subtidal
 lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel = '1988', topyr = '2018', 
-                          firstwidth = 240, estout = F, family, fntsz = 16){
+                          firstwidth = 240, estout = F, family, fntsz = 14){
   
   sticky_style <- list(position = "sticky", left = 0, background = "#fff", zIndex = 1,
                        borderRight = "1px solid #eee")
@@ -379,7 +379,8 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
         formatC(round(sum(values), 0), format= "d", big.mark = ",")
         
       },
-      footerStyle = list(fontWeight = "bold"),
+      footerStyle = list(fontWeight = "bold", fontSize = fntsz, fontFamily = family),
+      headerStyle = list(fontSize = fntsz, fontFamily = family),
       format = colFormat(digits = 0, separators = TRUE), 
       minWidth = 80, resizable = TRUE
     ),
@@ -398,7 +399,7 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
 }
 
 # hmpu database projects table
-rstdat_tab <- function(rstdat, maxyr){
+rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
 
   # data prep
   rstsum <- rstdat %>% 
@@ -455,9 +456,12 @@ rstdat_tab <- function(rstdat, maxyr){
         formatC(round(sum(values), 0), format= "d", big.mark = ",")
         
       },
-      footerStyle = list(fontWeight = "bold"),
+      headerStyle= list(fontSize = fntsz, fontFamily = family),
+      footerStyle = list(fontWeight = "bold", fontSize = fntsz, fontFamily = family),
       format = colFormat(digits = 0, separators = TRUE), 
-      minWidth = 80, resizable = TRUE
+      minWidth = 80,
+      style = list(fontSize = fntsz, fontFamily = family),
+      resizable = TRUE
     ),
     showPageSizeOptions = F,
     highlight = T,
@@ -475,7 +479,7 @@ rstdat_tab <- function(rstdat, maxyr){
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
 coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
-                      maxyr, fntsz = 16, chg = TRUE, family){
+                      maxyr, fntsz = 17, chg = TRUE, family){
   
   category <- match.arg(category)
   
@@ -611,6 +615,10 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
         )
       ), 
       style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      defaultColDef = colDef(
+        headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+        footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+      ),
       borderless = T, 
       resizable = T, 
       sortable = F,
@@ -663,6 +671,10 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
         )
       ), 
       style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      defaultColDef = colDef(
+        headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+        footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+      ),
       borderless = T, 
       resizable = T, 
       sortable = F,
@@ -679,7 +691,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
 
 # reactable table for comms reach statistics, constant contact only
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
-ccreach_tab <- function(comdat, maxyr, fntsz = 16){
+ccreach_tab <- function(comdat, maxyr, fntsz = 16, family){
   
   fct <- c('Net new contacts', 'Number of Campaigns Sent', 'Open Rate', 'Click Rate')
 
@@ -743,7 +755,11 @@ ccreach_tab <- function(comdat, maxyr, fntsz = 16){
         align = 'center'
       )
     ), 
-    style = list(fontSize = paste0(fntsz, 'px')),
+    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+    defaultColDef = colDef(
+      headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+    ),
     borderless = T, 
     resizable = T, 
     theme = reactableTheme(
@@ -815,7 +831,7 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
 
 # plot gad efforts
 # datin is summmary output from gadsum_fun w/ yrsel not null 
-gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){ 
+gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5, family){ 
   
   box::use(
     emojifont[...]
@@ -853,14 +869,12 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5){
       y = rep(seq(0, (!!h + padding) * rows - 1, !!h + padding), each = cols),
       info = str_wrap(info, 75)
     )
-browser()
 
-  loadfonts(device = 'win', quiet = F)
   p <- ggplot(toplo, aes(x, y, height = h, width = w, label = info)) +
     geom_tile(aes(fill = name)) +
-    geom_text(fontface = "bold", size = 10, family = 'Stencil',
+    geom_text(fontface = "bold", size = 10, family = family,
               aes(label = value, x = x - w/2.2, y = y + h/4, color = name), hjust = 0) +
-    geom_text(size = 5, lineheight = 0.7, family = 'Stencil',
+    geom_text(size = 5, lineheight = 1.7, family = family,
               aes(color = name, label = info, x = x - w/2.2, y = y - h/6), hjust = 0) +
     coord_fixed() +
     scale_fill_brewer(type = "cont", palette = "Blues", direction = -1) +
@@ -909,7 +923,7 @@ gadmap_fun <- function(datin){
   sd <- SharedData$new(tomap)
   
   # put both elements in a list if arrange by row
-  out <- bscols(
+  out <- bscols(list(
     leaflet(sd) %>% 
       addProviderTiles(providers$CartoDB.Positron) %>% 
       addMarkers(lng = ~lng, lat = ~lat, label = ~lab),
@@ -918,7 +932,7 @@ gadmap_fun <- function(datin){
                            columnDefs = list(list(visible=FALSE, 
                                                   targets=c(0, 6, 7, 8))))
     )
-  )
+  ))
   
   return(out)
   
@@ -959,7 +973,7 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 }
 
 
-grnttab_fun <- function(..., yrsel, fntsz = 17){
+grnt_tab <- function(..., yrsel, fntsz = 17, family){
   
   ics <- list(
     levs = c('newlead', 'n', 'total'),
@@ -1012,9 +1026,13 @@ grnttab_fun <- function(..., yrsel, fntsz = 17){
         align = 'center'
       )
     ), 
-    style = list(fontSize = paste0(fntsz, 'px')),
+    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
     borderless = T, 
     resizable = T, 
+    defaultColDef = colDef(
+      headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+    ),
     theme = reactableTheme(
       headerStyle = list(borderColor = 'white')
     )

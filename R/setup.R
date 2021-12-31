@@ -28,10 +28,10 @@ drive_auth(email = 'mbeck@tbep.org')
 gs4_auth(token = drive_token())
 
 font_add_google("Roboto", "roboto")#, regular = 'C:/Windows/Fonts/Roboto.ttf')
-fml <- "rock"
+fml <- "roboto"
 
 showtext_auto()
-showtext_opts(dpi = 96)
+showtext_opts(dpi = 300)
 
 knitr::opts_chunk$set(message = F, echo = F, warning = F, fig.align = 'center')
 
