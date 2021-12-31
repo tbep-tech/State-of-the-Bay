@@ -22,7 +22,7 @@ body{
 h1,h2,h3,h4,h5 {
   font-family: 'Roboto';
   font-weight: 600;
-  color: #004F7E;
+  color: #005293;
 }
 
 /* top navbar styles */
@@ -218,4 +218,28 @@ h1,h2,h3,h4,h5 {
 /* wrapper class for centering images */
 #wrapper{
  text-align:center;
+}
+
+.center {
+  display: block;
+  text-align:center;
+}
+
+/* change link colors to match wordpress */
+a:link {
+  color: #ea6f17;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #ea6f17;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0078db;
+  background-color: transparent;
+  text-decoration: none;
 }

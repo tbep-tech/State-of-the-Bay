@@ -6,20 +6,20 @@ output:
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
-load(file = here('data/comdat.RData'))
-maxyr <- 2021
 ```
 
-Pipe Up! is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair, or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed.
+<p><center><img alt="Pipe Up" src="img/pipeup.png" width="500"/></center></p>
 
-\#LoveTampaBay is a hashtag campaign supported by folks that live, work and play in Tampa Bay, with over 7k posts on Instagram. The cinematic & serene content produced by members of this digital community feeds TBEP's "Life in the Bay" video series. 
+[Pipe Up!](https://tbep.org/pipeup/) is TBEP’s latest community-based social marketing campaign, aimed at encouraging homeowners and home buyers to inspect, repair, or replace aging private lateral sewer lines to prevent sanitary sewer overflows into Tampa Bay and its watershed.
 
-TBEP keeps the "Scoop that Poop!" campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
+<p><center><img alt="Love Tampa Bay" src="img/LTB_Low-res.png" width="400"/></center></p>
 
-Each summer, TBEP encourages residents to "protect their fun" as part of the Be Floridian campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances, shares tips for individuals to reduce their nutrient footprint and encourages Florida-Friendly Landscaping practices.
+\#LoveTampaBay is a hashtag campaign supported by folks that live, work and play in Tampa Bay, with over 7k posts on Instagram. The cinematic & serene content produced by members of this digital community feeds TBEP's [Life in the Bay](https://tbep.org/lifeinthebay/) video series. 
 
-### 
+<p><center><img alt="Scoop that poop" src="img/scoopthatpooplogo_finalx.jpg" width="200"/></center></p>
 
-```{r}
-coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml)
-```
+TBEP keeps the [Scoop that Poop!](https://tbep.org/scoop-that-poop/) campaign alive by making outreach materials available to pet owners and interested campaign ambassadors upon request.
+
+<p><center><img alt="Be Floridian" src="img/BF.png" width="600"/></center></p>
+
+Each summer, TBEP encourages residents to "protect their fun" as part of the [Be Floridian](https://tbep.org/our-work/education/be-floridian/) campaign. Through inbound marketing tactics, the Program works to increase awareness of regional fertilizer ordinances, shares tips for individuals to reduce their nutrient footprint and encourages Florida-Friendly Landscaping practices.
