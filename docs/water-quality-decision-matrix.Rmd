@@ -77,7 +77,7 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
 ```
 
-#  
+#
 
 ## Seagrasses in Tampa Bay
 
@@ -89,3 +89,4 @@ Areal coverage of seagrasses are tracked semi-annually to determine if they are 
 sgcov_plo(seagrass, family = fml)
 ```
 
+See additional information about seagrass monitoring in Tampa Bay here: https://tampabay.wateratlas.usf.edu/seagrass-monitoring/. See additional visualization tools for seagrasses on our data page: https://tbep.org/seagrass-assessment/.

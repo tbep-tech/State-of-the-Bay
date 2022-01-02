@@ -37,3 +37,5 @@ In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (
 p <- show_tbnimatrix(tbniscr, width = 350, height = 600, plotly = T, family = fml)
 div(p, align = 'center')
 ```
+
+See additional visualization tools for the nekton index on our data page: https://tbep.org/tampa-bay-nekton-index/.

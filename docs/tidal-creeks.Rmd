@@ -44,4 +44,4 @@ The current assessment period (2021) indicates that `r sumdat['Prioritize']` cre
 show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
 ```
 
-Link to tidal creeks data page: https://tbep.org/tidal-creeks/
+See additional visualization tools at the tidal creeks data page: https://tbep.org/tidal-creeks/

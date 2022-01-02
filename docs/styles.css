@@ -1,13 +1,11 @@
-@import url("//fonts.googleapis.com/css?family=Lobster|Cabin:400,700");
+/* Rubik */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@600;700&display=swap');
 
 /* Frutiger Light approximate */
 @import url("//fonts.googleapis.com/css?family=Lato:100,300,500,700,900"); 
 
 /* DIN condensed approximate */
 @import url("//fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
-
-/* Fira Mono, for centering bar plots in reactable */
-@import url("//fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback");
 
 /* Whole document: */
 
@@ -19,10 +17,16 @@ body{
 
 /* header styles */
 
-h1,h2,h3,h4,h5 {
-  font-family: 'Roboto';
-  font-weight: 600;
+h1{
+  font-family: 'Rubik';
+  font-weight: 700;
   color: #005293;
+}
+
+h2,h3,h4,h5 {
+  font-family: 'Roboto';
+  font-weight: 800;
+  color: #00806E
 }
 
 /* top navbar styles */
