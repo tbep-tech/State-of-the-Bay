@@ -16,11 +16,30 @@ bmgsum <- grntsum_fun(bmgdat)
 dcgsum <- grntsum_fun(dcgdat, rnd = 'k')
 ```
 
+<p></p>
+<div id="wrapper">
+<figure>
+<img alt="TBERF logo" src="img/tb_erf-logo.png" width="150"/>
+<img alt="shovel" src="img/shovel.jpg" width="225"/>
+</figure>
+</div>
+<p></p>
+
 To date, the Tampa Bay Environmental Restoration Fund ([TBERF](https://tbep.org/our-work/restoration-research/tberf/)) has received `r tberfsum['total']` in funding and `r tberfsum['matching']` in matching funds to support `r tberfsum['n']` grants within the Tampa Bay watershed.
+
+<div id="wrapper">
+<figure>
+<img alt="BMG Leaf" src="img/Leaf_Iso.png" width="200"/>
+<img alt="Tarpon Tag" src="img/tarpontag.png" width="250"/>
+</figure>
+</div>
+<p></p>
 
 Funded by sales from of the Tampa Bay Estuary Specialty License Plate, also known as the [Tarpon Tag](https://tbep.org/get-involved/tarpon-tag/), [Bay Mini-Grants](https://tbep.org/our-work/restoration-research/bay-mini-grants/) provide competitive cash awards (up to \$5,000) to community organizations for projects that help restore and protect Tampa Bay. To achieve Program CCMP goals, specific Bay Mini-Grant priority actions are announced annually. Expanding the use of green infrastructure and understanding emerging contaminants have both been recent Bay Mini-Grant priorities. Since 2000, sales from the Tarpon Tag specialty license plate have collectively awarded `r bmgsum['total']` to more than `r bmgsum['n']` community-based restoration projects in the bay through TBEP's Bay Mini-Grant program.
 
-Established during the COVID-19 pandemic, the [Digital Challenge Grant](https://tbep.org/our-work/restoration-research/digital-challenge-grants/) program was created to provide safer-at-home income opportunities for digital content creators, science communicators, graphic designers, and educators. In its first year, `r dcgsum['n']` creators were awarded `r dcgsum['total']` in project funding.
+<center><img alt="DCG Computer" src="img/Computer_Iso.png" width="300"/></center>
+
+Established during the COVID-19 pandemic, the [Digital Challenge Grants](https://tbep.org/our-work/restoration-research/digital-challenge-grants/) program was created to provide safer-at-home income opportunities for digital content creators, science communicators, graphic designers, and educators. In its first year, `r dcgsum['n']` creators were awarded `r dcgsum['total']` in project funding.
 
 ### `r maxyr` FUNDING SUMMARY 
 
@@ -28,9 +47,9 @@ Established during the COVID-19 pandemic, the [Digital Challenge Grant](https://
 grnt_tab(tberfdat, bmgdat, dcgdat, yrsel = maxyr, family = fml)
 ```
 
-### LICENSE PLATE SALES
+### `r maxyr` LICENSE PLATE SALES
 
 ```{r}
-coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml)
+coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 

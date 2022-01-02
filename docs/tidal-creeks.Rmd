@@ -7,8 +7,10 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
+maxyr <- 2021
+
 tbcrks <- tidalcreeks[tbshed, ]
-dat <- anlz_tdlcrk(tbcrks, iwrraw, yr = 2021)
+dat <- anlz_tdlcrk(tbcrks, iwrraw, yr = maxyr)
 
 # tallies
 sumdat <- dat %>% 
@@ -32,16 +34,18 @@ Tidal creeks are assigned to one of five categories:
 
 <span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Prioritize__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of the tributary in at least one year indicating that actions may be needed to identify remediative measures to reduce nutrients in the creek.
 
-The following map shows all tidal creeks in the Tampa Bay Watershed and their scores for the 2021 assessment period. 
+## Results for `r maxyr`
+
+The following map shows all tidal creeks in the Tampa Bay Watershed and their scores for the `r maxyr` assessment period. 
 
 ```{r, out.width = '100%'}
 show_tdlcrk(dat)
 ```
 
-The current assessment period (2021) indicates that `r sumdat['Prioritize']` creeks had a <span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Prioritize__</span> score, `r sumdat['Investigate']` had an <span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span> score, `r sumdat['Caution']` had a <span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span> score, and `r sumdat['Monitor']` had a <span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Monitor__</span> score.  The remaining `r sumdat['No Data']` creeks in the Tampa Bay watershed had insufficient data for the current assessment period to assign a category.  The plot below shows a breakdown of scores for all creeks, with the final score in the right column and the number of survey years in each category used to calculate the final score in the remaining columns. 
+The current assessment period (`r maxyr`) indicates that `r sumdat['Prioritize']` creeks had a <span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Prioritize__</span> score, `r sumdat['Investigate']` had an <span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span> score, `r sumdat['Caution']` had a <span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span> score, and `r sumdat['Monitor']` had a <span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Monitor__</span> score.  The remaining `r sumdat['No Data']` creeks in the Tampa Bay watershed had insufficient data for the current assessment period to assign a category.  The plot below shows a breakdown of scores for all creeks, with the final score in the right column and the number of survey years in each category used to calculate the final score in the remaining columns. 
 
 ```{r, out.width = '80%', fig.width = 11, fig.height = 11, fig.align = 'center'}
 show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
 ```
 
-See additional visualization tools at the tidal creeks data page: https://tbep.org/tidal-creeks/
+See additional visualization tools at the tidal creeks data page: https://tbep.org/tidal-creeks/.

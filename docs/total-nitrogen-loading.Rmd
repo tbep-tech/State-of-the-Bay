@@ -15,7 +15,7 @@ In 2011, the Florida Department of Environmental Protection approved regulatory 
 
 ```{r}
 p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'), 
-          addlns = T, width = 600, height = 500, family = fml)
+          addlns = T, width = 700, height = 550, family = fml)
 div(p, align = 'center')
 ```
 
@@ -25,4 +25,6 @@ Despite an increasing population in the Tampa Bay metropolitan area, per capita 
 p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
 div(p, align = 'center')
 ```
+
+See additional visualization tools for nutrient loading data here: https://tbep-tech.github.io/load-estimates/.
 

@@ -479,7 +479,7 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
 coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
-                      maxyr, fntsz = 17, chg = TRUE, family){
+                      maxyr, fntsz = 24, chg = TRUE, showtab = TRUE, family){
   
   category <- match.arg(category)
   
@@ -539,7 +539,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       tab_metric = case_when(
         metric == 'Unique Page Views' ~ 'Page Views', 
         metric == 'Subscriber gain/loss' ~ 'Subscribers', 
-        metric == 'Net new contacts' ~ 'Contacts', 
+        metric == 'Net new contacts' ~ 'New Contacts', 
         T ~ tab_metric
       )
     )
@@ -587,7 +587,8 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       sumdat, 
       columns = list(
         tab_name = colDef(
-          name = ''#,
+          name = '',
+          show = showtab#,
           # minWidth = 100
         ),
         icons = colDef(show = F),
@@ -649,23 +650,25 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       mutate(
         tab_name = ifelse(duplicated(tab_name), '', tab_name)
       )
-    
+
     out <- reactable(
       sumdat, 
       columns = list(
         icons = colDef(show = F),
         tab_name = colDef(
           name = '',
-          minWidth = 100
+          align = 'center',
+          show = showtab#,
+          # minWidth = 100
         ),
         tab_metric = colDef(
-          minWidth = 300,
+          # minWidth = 300,
           name = '',
           cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
-          align = 'right'
+          align = 'center'
         ), 
         maxyr = colDef(
-          name = as.character(maxyr), 
+          name = '', 
           format = colFormat(separators = TRUE), 
           align = 'center'
         )
@@ -973,7 +976,7 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 }
 
 
-grnt_tab <- function(..., yrsel, fntsz = 17, family){
+grnt_tab <- function(..., yrsel, fntsz = 24, family){
   
   ics <- list(
     levs = c('newlead', 'n', 'total'),
@@ -1015,13 +1018,14 @@ grnt_tab <- function(..., yrsel, fntsz = 17, family){
       icons = colDef(show = F),
       name = colDef(show = F),
       metric = colDef(
-        minWidth = 300,
+        # minWidth = 200,
         name = '',
         cell = icon_sets(totab, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
-        align = 'right'
+        align = 'center'
       ), 
       value = colDef(
-        name = as.character(yrsel), 
+        # minWidth = 200,
+        name = '', 
         format = colFormat(separators = TRUE), 
         align = 'center'
       )
@@ -1029,6 +1033,7 @@ grnt_tab <- function(..., yrsel, fntsz = 17, family){
     style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
     borderless = T, 
     resizable = T, 
+    sortable = F,
     defaultColDef = colDef(
       headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
       footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)

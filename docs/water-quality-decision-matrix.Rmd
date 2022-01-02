@@ -25,7 +25,7 @@ Water quality in Tampa Bay has improved steadily in recent decades due to pollut
 <div id="wrapper">
 <figure>
 <img alt="seagrass" src="img/seagrass.jpg" width="450"/>
-<img alt="wheedon" src="img/wheedon.jpg" width="450"/>
+<img alt="weedon aerial" src="img/weedon.jpg" width="450"/>
 </figure>
 </div>
 <p></p>
@@ -46,6 +46,10 @@ The management category or action is based on the combination of annual outcomes
 p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, historic = T, family = fml, plotly = T, width = 300, height = 700)
 div(p, align = 'center')
 ```
+
+<center><img alt="seatrout" src="img/WQ_Action.png" width="450"/></center>
+
+## Results for `r maxyr`
 
 In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (chlorophyll target `r sums$OTB$chla`, light attenuation target `r sums$OTB$la`), Hillsborough Bay received an action category of `r sums$HB$action` (chlorophyll target `r sums$HB$chla`, light attenuation target `r sums$HB$la`), Middle Tampa Bay received an action category of `r sums$MTB$action` (chlorophyll target `r sums$MTB$chla`, light attenuation target `r sums$MTB$la`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (chlorophyll target `r sums$LTB$chla`, light attenuation target `r sums$LTB$la`). The plots below show chlorophyll and light attenuation values for each bay segment, including the management target.
 

@@ -10,24 +10,23 @@ load(file = here('data/comdat.RData'))
 maxyr <- 2021
 ```
 
-Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners actions.
+Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners' actions.
 
-
-### TBEP Website 
+### `r maxyr` TBEP Website Engagement 
 
 ```{r}
-coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml)
+coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 
-### Social Media 
+### `r maxyr` Social Media Reach
 
 ```{r}
 coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = F, family = fml)
 ```
 
-### Email Marketing
+### `r maxyr` Email Marketing
 
 ```{r}
-coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = fml)
+coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 

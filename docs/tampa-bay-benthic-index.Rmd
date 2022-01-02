@@ -22,6 +22,8 @@ The Tampa Bay Benthic Monitoring Program was started in 1993, and partners inclu
 
 The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2019, and the bay-wide median TBBI was continuously in the "Healthy" range from 2015-2017, with slight decreases in 2018 and 2019. During that time frame, the highest TBBI values were observed in lower and Middle Tampa Bay, with intermediate values observed in Old Tampa Bay and degraded values in Hillsborough Bay.
 
+## Results for `r maxyr`
+
 In `r maxyr`, Old Tampa Bay received an overall assessment of `r sums$OTB$cat` (based on the amount of site scores as degraded, intermediate, or healthy), Hillsborough Bay was `r sums$HB$cat`, Middle Tampa Bay was `r sums$MTB$cat`, and Lower Tampa Bay was `r sums$LTB$cat`.  The bay-wide assessment of benthic condition was `r sums[["All (wt)"]]$cat`.
 
 ```{r}
