@@ -423,7 +423,7 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
     summarise(
       tot= n(),
       Acres = sum(Acres, na.rm = T), 
-      Feet = sum(`Linear Ft`, na.rm = T),
+      Miles = sum(`Linear Ft`, na.rm = T) / 5280,
       .groups = 'drop'
     ) %>% 
     filter(!is.na(Category)) %>% 
@@ -431,7 +431,7 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
     mutate(
       tot = sum(tot)
     ) %>% 
-    pivot_longer(c('Acres', 'Feet'), names_to = 'var', values_to = 'val') %>% 
+    pivot_longer(c('Acres', 'Miles'), names_to = 'var', values_to = 'val') %>% 
     unite('var', Activity, var, sep = ', ') %>% 
     pivot_wider(names_from = 'var', values_from = 'val')
 
