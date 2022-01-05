@@ -94,3 +94,5 @@ sgcov_plo(seagrass, family = fml)
 ```
 
 See additional information about seagrass monitoring in Tampa Bay here: https://tampabay.wateratlas.usf.edu/seagrass-monitoring/. See additional visualization tools for seagrasses on our data page: https://tbep.org/seagrass-assessment/.
+
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
