@@ -28,3 +28,4 @@ div(p, align = 'center')
 
 See additional visualization tools for nutrient loading data here: https://tbep-tech.github.io/load-estimates/.
 
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
