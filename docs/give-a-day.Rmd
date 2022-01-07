@@ -30,3 +30,4 @@ gaddat %>%
   gadmap_fun
 ```
 
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

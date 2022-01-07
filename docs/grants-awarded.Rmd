@@ -53,3 +53,4 @@ grnt_tab(tberfdat, bmgdat, dcgdat, yrsel = maxyr, family = fml)
 coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

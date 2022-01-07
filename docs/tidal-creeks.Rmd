@@ -49,3 +49,5 @@ show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
 ```
 
 See additional visualization tools at the tidal creeks data page: https://tbep.org/tidal-creeks/.
+
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

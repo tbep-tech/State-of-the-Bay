@@ -45,3 +45,5 @@ lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = spr
 ```
 
 See additional visualization tools for land use change here: https://shiny.tbep.org/landuse-change/. See additional visualization tools for seagrass coverage data here: https://shiny.tbep.org/seagrass-analysis/.
+
+<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
