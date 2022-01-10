@@ -30,7 +30,8 @@ An annual "snapshot" of ecological health helps fisheries managers target effort
 The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions suggest the fish community is in a healthy state, with all four major bay segments receiving "green" scores the past four years.  Long-term trends in nekton index scores by bay segment are shown below.
 
 ```{r}
-p <- show_tbniscr(tbniscr, family = fml, width = 800, height = 350, plotly = T)
+p <- show_tbniscr(tbniscr, family = fml, width = 800, height = 450, plotly = T) %>% 
+  layout(margin = 200)
 div(p, align = 'center')
 ```
 
