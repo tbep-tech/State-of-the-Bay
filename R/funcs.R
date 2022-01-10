@@ -124,7 +124,7 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
       add_annotations(
         text = ~unique(bay_segment),
         x = 0.5,
-        y = 1.2,
+        y = 1.1,
         yref = "paper",
         xref = "paper",
         xanchor = "middle",
@@ -162,7 +162,7 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
   }
 
   plts <- grep('^p\\d$', ls(), value = TRUE) 
-browser()
+
   out <- subplot(mget(plts), shareX = T, nrows = length(levs), shareY = F, titleY = T) %>%
     layout(
       xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)'),

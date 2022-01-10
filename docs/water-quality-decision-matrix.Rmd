@@ -17,6 +17,9 @@ epcdata <- read_importwq(xlsx, download_latest = T)
 
 tbniscr <- anlz_tbniscr(fimdata)
 
+load(url("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData"))
+load(file = here('data/popdat.RData'))
+
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
 sgsums <- sgsum_fun(seagrass, sgmaxyr)
@@ -63,6 +66,11 @@ show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>%
 # div(p, align = 'center')
 ```
 
+```{r, out.width = '100%'}
+p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
+div(p, align = 'center')
+```
+
 # {.tabset .tabset-pills}
 
 ## Old Tampa Bay
@@ -87,14 +95,6 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 
 ```{r, out.width = '100%'}
 wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
-```
-
-## Test
-
-```{r, out.width = '100%'}
-show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>% 
-  # layout(margin = list(l = 100, r = 150))
-# div(p, align = 'center')
 ```
 
 #
