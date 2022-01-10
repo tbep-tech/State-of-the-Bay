@@ -31,7 +31,7 @@ The long-term results for the nekton index suggest the fish community is resista
 
 ```{r}
 p <- show_tbniscr(tbniscr, family = fml, width = 800, height = 450, plotly = T) %>% 
-  layout(margin = 200)
+  layout(margin = list(l = 100, r = 150))
 div(p, align = 'center')
 ```
 
