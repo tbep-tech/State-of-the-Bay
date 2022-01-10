@@ -479,7 +479,7 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
 # reactable table for comms reach statistics
 # icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
 coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
-                      maxyr, fntsz = 24, chg = TRUE, showtab = TRUE, family){
+                      maxyr, fntsz = 20, chg = TRUE, showtab = TRUE, family){
   
   category <- match.arg(category)
   
@@ -976,7 +976,7 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 }
 
 
-grnt_tab <- function(..., yrsel, fntsz = 24, family){
+grnt_tab <- function(..., yrsel, fntsz = 20, family){
   
   ics <- list(
     levs = c('newlead', 'n', 'total'),
