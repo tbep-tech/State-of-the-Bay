@@ -15,6 +15,8 @@ xlsx <- here('data-raw/Results_Updated.xls')
 # import and download if new
 epcdata <- read_importwq(xlsx, download_latest = T)
 
+tbniscr <- anlz_tbniscr(fimdata)
+
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
 sgsums <- sgsum_fun(seagrass, sgmaxyr)
@@ -55,6 +57,12 @@ In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (
 
 See additional visualization tools at the Water Quality Report Card data page: https://tbep.org/water-quality-report-card/.  Click on the tabs below to view water quality trends for each major bay segment.
 
+```{r, out.width = '100%'}
+show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>% 
+  # layout(margin = list(l = 100, r = 150))
+# div(p, align = 'center')
+```
+
 # {.tabset .tabset-pills}
 
 ## Old Tampa Bay
@@ -79,6 +87,14 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 
 ```{r, out.width = '100%'}
 wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
+```
+
+## Test
+
+```{r, out.width = '100%'}
+show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>% 
+  # layout(margin = list(l = 100, r = 150))
+# div(p, align = 'center')
 ```
 
 #
