@@ -10,12 +10,6 @@ source(here::here('R/setup.R'))
 maxyr <- 2020
 tbniscr <- anlz_tbniscr(fimdata)
 
-# local file path
-xlsx <- here('data-raw/Results_Updated.xls')
-
-# import and download if new
-epcdata <- read_importwq(xlsx, download_latest = T)
-
 # summaries for inline
 sums <- tbnisum_fun(tbniscr, maxyr)
 ```
@@ -39,11 +33,6 @@ The long-term results for the nekton index suggest the fish community is resista
 show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>% 
   # layout(margin = list(l = 100, r = 150))
 # div(p, align = 'center')
-```
-
-
-```{r, out.width = '100%'}
-wqplotly_plo(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
 ```
 
 ## Results for `r maxyr`

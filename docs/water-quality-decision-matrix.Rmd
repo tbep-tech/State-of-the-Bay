@@ -15,11 +15,6 @@ xlsx <- here('data-raw/Results_Updated.xls')
 # import and download if new
 epcdata <- read_importwq(xlsx, download_latest = T)
 
-tbniscr <- anlz_tbniscr(fimdata)
-
-load(url("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData"))
-load(file = here('data/popdat.RData'))
-
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
 sgsums <- sgsum_fun(seagrass, sgmaxyr)
@@ -59,17 +54,6 @@ div(p, align = 'center')
 In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (chlorophyll target `r sums$OTB$chla`, light attenuation target `r sums$OTB$la`), Hillsborough Bay received an action category of `r sums$HB$action` (chlorophyll target `r sums$HB$chla`, light attenuation target `r sums$HB$la`), Middle Tampa Bay received an action category of `r sums$MTB$action` (chlorophyll target `r sums$MTB$chla`, light attenuation target `r sums$MTB$la`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (chlorophyll target `r sums$LTB$chla`, light attenuation target `r sums$LTB$la`). The plots below show chlorophyll and light attenuation values for each bay segment, including the management target.
 
 See additional visualization tools at the Water Quality Report Card data page: https://tbep.org/water-quality-report-card/.  Click on the tabs below to view water quality trends for each major bay segment.
-
-```{r, out.width = '100%'}
-show_tbniscr(tbniscr, family = fml, width = 1000, height = 450, plotly = T)#%>% 
-  # layout(margin = list(l = 100, r = 150))
-# div(p, align = 'center')
-```
-
-```{r, out.width = '100%'}
-p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
-div(p, align = 'center')
-```
 
 # {.tabset .tabset-pills}
 
