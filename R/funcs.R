@@ -548,6 +548,11 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
   toflt <- ics %>% 
     filter(platform %in% !!platform)
 
+  # filter tarpon tag to dec, since it's a running tally, not new registrations
+  if(platform == 'Tarpon Tag')
+    comdat <- comdat %>% 
+      filter(month == 'dec')
+    
   # table as change
   if(chg){
     
