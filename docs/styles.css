@@ -5,13 +5,14 @@
 @import url("//fonts.googleapis.com/css?family=Lato:100,300,500,700,900"); 
 
 /* DIN condensed approximate */
-@import url("//fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 /* Whole document: */
 
 body{
   font-family: 'Roboto';
   font-size: 17px;
+  color: #5C524F;
   font-weight: 400;
 }
 
@@ -24,7 +25,7 @@ h1{
 }
 
 h2,h3,h4,h5 {
-  font-family: 'Roboto';
+  font-family: 'Lato';
   font-weight: 800;
   color: #00806E
 }
