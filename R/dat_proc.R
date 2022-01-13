@@ -143,11 +143,13 @@ tberfraw <- get_sheet_as_csv('TBERF_Budget_Index') %>%
   read.table(sep = ',', header = T)
 
 tberfdat <- tberfraw %>% 
-  select(year = Year, title = Title, lead = Lead, total = `Project.Total`, matching = `Matching.Funds`) %>% 
+  select(year = Year, title = Title, lead = Lead, total = `Project.Totals`, admin_total = `Admin.Totals`, matching = `Matching.Funds`) %>% 
   filter(lead != '') %>% 
   mutate(
     total = gsub('\\$|,', '', total), 
     total = as.numeric(total), 
+    admin_total = gsub('\\$|,', '', admin_total),
+    admin_total = as.numeric(admin_total), 
     matching = gsub('\\$|,', '', matching), 
     matching = as.numeric(matching), 
     lead = case_when(

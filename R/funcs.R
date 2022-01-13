@@ -489,7 +489,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
     `Email Marketing` = c('Constant Contact'), 
     `Tarpon Tag` = c('Tarpon Tag')
   )
-  
+
   ics <- list(
     `GA: tbep.org` = list(
       metric = c('Unique Page Views'), 
@@ -949,6 +949,9 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
   
   rnd <- match.arg(rnd)
   
+  if(any(!names(datin) %in% c("year", "title", "lead", "total", "admin_total", "matching")))
+    stop('Check input names...')
+  
   txt <- c(1e6, 1e3)
   names(txt) <- c('M', 'k')
   rndv <- txt[rnd]
@@ -956,6 +959,15 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
   if(!is.null(yrsel))
     datin <- datin %>% 
       filter(year == yrsel)
+
+  # add admin costs to tberf
+  if('admin_total' %in% names(datin))
+    datin <- datin %>% 
+      mutate(
+        admin_total = ifelse(is.na(admin_total), 0, admin_total),
+        total = total + admin_total,
+      ) %>% 
+      select(-admin_total)
   
   out <- datin %>% 
     pivot_longer(cols = matches('total|matching')) %>% 
@@ -986,6 +998,18 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
   
   # datin
   dat <- bind_rows(...)
+  
+  # check input columns
+  if(any(!names(dat) %in% c("year", "title", "lead", "total", "admin_total", "matching")))
+    stop('Check input names...')
+  
+  # add admin costs to tberf
+  dat <- dat %>% 
+    mutate(
+      admin_total = ifelse(is.na(admin_total), 0, admin_total),
+      total = total + admin_total,
+    ) %>% 
+    select(-admin_total)
   
   nototab <- dat %>% 
     filter(year != yrsel)
