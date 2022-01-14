@@ -784,45 +784,24 @@ ccreach_tab <- function(comdat, maxyr, fntsz = 16, family){
 # yrsel provided will get totals for yrsel
 gadsum_fun <- function(gaddat, yrsel = NULL){
 
-  # these are tallies prior to 2021
-  priors <- c(
-      nevent = 14,
-      npartner = 15,
-      nvols = 581, # not differentiated between adult/youth
-      nlbs = 1736,
-      nplants = 216
-    ) %>% 
-    enframe('var', 'priorval')
+  out <- gaddat
   
-  if(is.null(yrsel))
-    out <- gaddat %>% 
-      mutate(
-        nvols = nadults + nyouth
-      ) %>% 
-      select(-event, -descrip, -lat, -lng, -nadults, -nyouth) %>% 
-      pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
-      group_by(var) %>% 
-      summarise(
-        val = sum(val, na.rm = T), 
-        .groups = 'drop'
-      ) %>% 
-      full_join(priors, by = 'var') %>% 
-      mutate(val = val + priorval) %>% 
-      select(-priorval)
-  
+  # filter by year if provided
   if(!is.null(yrsel))
-    out <- gaddat %>% 
-      filter(year == yrsel) %>% 
-      mutate(
-        nvols = nadults + nyouth
-      ) %>% 
-      select(-event, -descrip, -lat, -lng) %>% 
-      pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
-      group_by(var) %>% 
-      summarise(
-        val = sum(val, na.rm = T), 
-        .groups = 'drop'
-      )
+    out <- out %>% 
+      filter(year == yrsel)
+
+  out <- out %>% 
+    mutate(
+      nvols = nadults + nyouth
+    ) %>% 
+    select(-nadults, -nyouth) %>% 
+    pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
+    group_by(var) %>% 
+    summarise(
+      val = sum(val, na.rm = T), 
+      .groups = 'drop'
+    )
   
   # final formatting  
   out <- out %>% 

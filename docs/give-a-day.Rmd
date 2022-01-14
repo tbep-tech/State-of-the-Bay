@@ -23,11 +23,4 @@ gaddat %>%
   gadsum_plo(family = fml)
 ```
 
-A map of all Give a Day locations shows where the events have occurred.  Select a row on the table to highlight the map location.
-
-```{r}
-gaddat %>% 
-  gadmap_fun
-```
-
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
