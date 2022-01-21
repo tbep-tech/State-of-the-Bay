@@ -18,9 +18,9 @@ sumdat <- dat %>%
   table
 ```
 
-Tidal creeks or tributaries are essential habitats in the Tampa Bay estuary and are important focal points for understanding watershed inputs that affect water quality. A fundamental goal of the Tampa Bay Estuary Program is to develop effective nutrient management strategies to support the ecological function of tidal tributaries. In partnership with Sarasota Bay NEP, Coastal & Heartland NEP, and local government and agency stakeholders, a tidal creek assessment framework was developed to evaluate the environmental health of these valuable ecosystems. 
+Tidal creeks or tributaries are essential habitats in the Tampa Bay estuary and are important focal points for understanding watershed inputs that affect water quality. A fundamental goal of the Tampa Bay Estuary Program is to develop effective nutrient management strategies to support the ecological function of tidal tributaries. In partnership with Sarasota Bay Estuary Program, Coastal & Heartland National Estuary Partnership, and local government and agency stakeholders, a tidal creek assessment framework was developed to evaluate the environmental health of these valuable ecosystems. 
 
-The tidal creek assessment framework supports tracking of water quality management goals and can help refine restoration and management plans in priority tributaries, including those in need of hydrologic restoration that can support critical nursery habitats for sportfishes.  Similar to the water quality report card, tidal creeks are assigned to different categories that describe current conditions and inform management actions that support protection or restoration of bay habitats.
+The tidal creek assessment framework supports tracking of water quality management goals and can help refine restoration and management plans in priority tributaries, including those in need of hydrologic restoration that can support critical nursery habitats for sportfishes.  Similar to the water quality report card and nekton index, tidal creeks are assigned to different categories that describe current conditions and inform management actions that support protection or restoration of bay habitats.
 
 Tidal creeks are assigned to one of five categories: 
 
