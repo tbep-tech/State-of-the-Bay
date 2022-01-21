@@ -87,7 +87,7 @@ wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml,
 
 The water quality decision matrix was developed using seagrasses as an endpoint to assess progress in achieving management goals for Tampa Bay. Seagrasses need sunlight to grow.  With improving water clarity, seagrasses can thrive in Tampa Bay.
 
-Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r sgmaxyr`, seagrasses `r sgsums$refdir` by `r sgsums$refcmp` acres.  For the most recent years of seagrass maps, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres from `r sgsums$penult` to `r sgmaxyr`. Most significant seagrass losses were in Old Tampa Bay, a region that has not been meeting water quality targets in recent years.
+Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r sgmaxyr`, seagrasses `r sgsums$refdir` by `r sgsums$refcmp` acres.  For the most recent years of seagrass maps, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres from `r sgsums$penult` to `r sgmaxyr`. Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.
 
 ```{r, fig.height = 4.5, fig.width = 10}
 sgcov_plo(seagrass, family = fml)
