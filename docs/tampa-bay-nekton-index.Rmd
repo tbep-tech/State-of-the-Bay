@@ -14,12 +14,12 @@ tbniscr <- anlz_tbniscr(fimdata)
 sums <- tbnisum_fun(tbniscr, maxyr)
 ```
 
-The nekton index, which is similar to the water quality scorecard, uses data from the State’s Fisheries Independent Monitoring Program (FWC - FWRI) to track trends for representative species. With samples dating back to 1998, the long-term record can be related to water quality and habitat characteristics to identify factors affecting health of bay fisheries. The index evaluates catch data relative to habitat use, species composition and diversity, and feeding dynamics to understand trends in the fish community.
+The nekton index, which is similar to the water quality scorecard, uses data from the State of Florida’s Fisheries Independent Monitoring Program (FWC - FWRI) to track trends for representative fish and invertebrate species. With samples dating back to 1998, the long-term record can be related to water quality and habitat characteristics to identify factors affecting health of bay fisheries. The index evaluates catch data relative to habitat use, species composition and diversity, and feeding dynamics to understand trends in the fish community.
 
 <center><img alt="seatrout" src="img/seatrout.jpg" width="450"/></center>
 <p></p>
 
-An annual "snapshot" of ecological health helps fisheries managers target efforts to improve habitat or other factor. Nekton index scores can be translated into actionable management categories with narrative interpretations. Each action category has a description to provide guidance to managers:
+An annual "snapshot" of ecological health helps fisheries managers target efforts to improve habitat or other factors. Nekton index scores can be translated into actionable management categories with narrative interpretations. Each action category has a description to provide guidance to managers:
 
 <span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports. 
 
