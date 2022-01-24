@@ -30,7 +30,7 @@ Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or los
 
 When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the `r subest['Seagrasses']`% gain in seagrasses from 1988 to `r submax`; 2) the gains in both emergent tidal wetlands (`r sprest['Mangrove Forests']`% gain in mangroves, `r sprest['Salt Marshes']`% gain in salt marshes) and freshwater wetlands (`r sprest['Non-Forested Freshwater Wetlands']`% gain) between 1990 and `r sprmax`; and 3) the `r sprest['Native Uplands']`% loss in native upland habitats from 1990 to `r sprmax`. 
 
-The increasing trend in seagrass coverage is a testament to improved bay water quality. While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
+The increasing trend in seagrass coverage is a testament to improved bay water quality. While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats. Seagrass losses in Old Tampa Bay accompanied by increases in attached algae are being studied to understand the importance of these changes.
 
 ```{r}
 lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = F, family = fml)
@@ -42,6 +42,6 @@ The intertidal habitat gains demonstrate the effectiveness of publicly-funded ha
 lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = sprmax, estout = F, family = fml)
 ```
 
-See additional visualization tools for land use change here: https://shiny.tbep.org/landuse-change/. See additional visualization tools for seagrass coverage data here: https://shiny.tbep.org/seagrass-analysis/.
+See additional visualization tools for land use change here: https://shiny.tbep.org/landuse-change/. See additional visualization tools for seagrass coverage data here: https://shiny.tbep.org/seagrass-analysis/. See additional visualization tools for seagrass species change here: https://shiny.tbep.org/seagrasstransect-dash/. 
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
