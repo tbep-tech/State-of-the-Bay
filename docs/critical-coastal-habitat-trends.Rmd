@@ -32,13 +32,11 @@ When viewed as a whole, the most significant and meaningful trends in the TBEP h
 
 The increasing trend in seagrass coverage is a testament to improved bay water quality. While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats.
 
-The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects and state and federal wetland regulatory programs. Increases in salt barrens may also reflect a landward expansion associated with sea level rise. 
-
 ```{r}
 lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = F, family = fml)
 ```
 
-However, a `r sprest['Developed']`% increase for developed lands and `r sprest['Restorable']`% loss for restorable lands in the watershed is a concern for continued habitat restoration and protection. A loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
+The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects and state and federal wetland regulatory programs. Increases in salt barrens may also reflect a landward expansion associated with sea level rise. However, a `r sprest['Developed']`% increase for developed lands and `r sprest['Restorable']`% loss for restorable lands in the watershed is a concern for continued habitat restoration and protection. A loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
 
 ```{r}
 lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = sprmax, estout = F, family = fml)
