@@ -153,14 +153,13 @@ bmgraw <- get_sheet_as_csv('Bay Mini-Grant_Budget Index') %>%
   read.table(sep = ',', header = T)
 
 bmgdat <- bmgraw %>% 
-  filter(Status != 'Cancelled') %>% 
-  select(year = Year, title = Project.TItle, lead = Lead, total = Project.Total) %>% 
+  select(year = Year, title = Project.TItle, lead = Lead, total = Tarpon.Tag.Funds) %>% 
   mutate_all(function(x) ifelse(x == '', NA, x)) %>% 
   mutate(
     total = gsub('\\$|,', '', total),
     total = as.numeric(total)
   ) %>% 
-  filter(rowSums(is.na(.)) != ncol(.))
+  filter(year >= 2000)
 
 save(bmgdat, file = here('data/bmgdat.RData'))
 
