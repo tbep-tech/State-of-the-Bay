@@ -53,4 +53,26 @@ grnt_tab(tberfdat, bmgdat, dcgdat, yrsel = maxyr, family = fml)
 coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 
+## TOTALS TO DATE {.tabset .tabset-pills}
+
+The following shows totals to date for each of the grant programs coordinated by TBEP and our partners.  Click on each tab to view the summary plot.
+
+### Tampa Bay Environmental Restoration Fund
+
+```{r, out.width = '100%'}
+grntsum_plo(tberfdat, family = fml, width = 1000, height = 400)
+```
+
+### Bay Mini Grants
+
+```{r, out.width = '100%'}
+grntsum_plo(bmgdat, family = fml, width = 1000, height = 400)
+```
+
+### License Plate Sales
+
+```{r, out.width = '100%'}
+grntsum_plo(comdat, family = fml, width = 1000, height = 400)
+```
+
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

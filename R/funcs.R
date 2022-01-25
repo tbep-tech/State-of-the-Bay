@@ -971,6 +971,72 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
   
 }
 
+# plotly graphic of running totals for grants
+# currently works for license plate sales (comdat), bay mini grants (bmgdat), and tberf (tberfdat)
+grntsum_plo <- function(datin, family, width, height){
+  
+  ylb <- 'Annual total awarded'
+  tickprf <- '$'
+  
+  # comdat input
+  if('platform' %in% names(datin)){
+    
+    ylb <- 'Monthly statewide registrations'
+    tickprf <- NULL
+    
+    toplo <- comdat %>% 
+      filter(platform == 'Tarpon Tag') %>% 
+      filter(metric == 'Statewide Registrations') %>% 
+      mutate(dy = 1) %>% 
+      unite('date', year, month, dy, sep ='-') %>% 
+      mutate(date = ymd(date))
+    
+  }
+  
+  # tberf input
+  if('admin_total' %in% names(datin)){
+    
+    datin <- datin %>% 
+      mutate(
+        admin_total = ifelse(is.na(admin_total), 0, admin_total),
+        total = total + admin_total,
+      ) %>% 
+      select(-admin_total)
+    
+  }
+  
+  # tberf or bmg input
+  if(!'platform' %in% names(datin)){
+    
+    toplo <- datin %>% 
+      group_by(year) %>% 
+      summarise(
+        val = sum(total, na.rm = T), 
+        .groups = 'drop'
+      ) %>% 
+      rename(date = year)
+    
+  }
+  
+  p <- plot_ly(data = toplo, x =  ~date, width = width, height = height) %>% 
+    add_trace(y = ~`val`, mode = 'lines+markers', type = 'scatter', 
+              marker = list(color = '#00806E', size = 15), 
+              line = list(color = '#5C4A42', width = 2, dash = 'dot')
+    ) %>% 
+    layout(
+      xaxis = list(
+        title = NA
+      ), 
+      yaxis = list(
+        title = ylb, 
+        tickprefix = tickprf
+      ), 
+      font = list(family = family, size = 18)
+    )
+  
+  return(p)
+  
+}
 
 grnt_tab <- function(..., yrsel, fntsz = 20, family){
   
