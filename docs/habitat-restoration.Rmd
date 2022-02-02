@@ -39,14 +39,14 @@ To continue the improvements that have occurred, the Habitat Master Plan ([2020 
 
 * 600 acres of uplands, including coastal hammocks and pine flatwoods
 
-## Additional Resources
+## Resources
 
-2020 Tampa Bay Habitat Master Plan Update: https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view
+* [2020 Tampa Bay Habitat Master Plan Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view)
 
-Restoration opportunities by segment: https://github.com/tbep-tech/hmpu-workflow
+* [Restoration opportunities by segment](https://github.com/tbep-tech/hmpu-workflow)
 
-Habitat restoration table: https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing 
+* [Habitat restoration table](https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing)
 
-Habitat restoration projects (and associated database) in the Tampa Bay Watershed: https://www.tampabay.wateratlas.usf.edu/restoration/
+* [Habitat restoration projects (and associated database) in the Tampa Bay Watershed](https://www.tampabay.wateratlas.usf.edu/restoration/)
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
