@@ -512,7 +512,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       icons = c('heart', 'users')
       ),
     `TBEP YouTube` = list(
-      metric = c('Total Views', 'Subscriber gain/loss'),
+      metric = c('Total Views', 'Total Subscribers'),
       icons = c('film', 'users')
       ), 
     `Constant Contact` = list(
@@ -538,7 +538,6 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       tab_metric = gsub('^Total\\s', '', metric), 
       tab_metric = case_when(
         metric == 'Unique Page Views' ~ 'Page Views', 
-        metric == 'Subscriber gain/loss' ~ 'Subscribers', 
         metric == 'Net new contacts' ~ 'New Contacts', 
         T ~ tab_metric
       )
@@ -695,6 +694,140 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
   
   return(out)  
 
+}
+
+# create trends plot for different comms data
+comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
+                        metric, fntsz = 17, family, width, height){
+  
+  cats <- list(
+    `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
+    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP Twitter', 'TBEP YouTube'), 
+    `Email Marketing` = c('Constant Contact'), 
+    `Tarpon Tag` = c('Tarpon Tag')
+  )
+  
+  ics <- list(
+    `GA: tbep.org` = list(
+      metric = c('Unique Page Views'), 
+      icons = c('eye')
+    ),
+    `GSC: TBEP.ORG` = list(
+      metric = c('Total Clicks'), 
+      icons = c('mouse-pointer')
+    ),
+    `TBEP IG` = list(
+      metric = c('Engagements', 'Total Followers'),
+      icons = c('heart', 'users') 
+    ),
+    `TBEP Facebook` = list(
+      metric = c('Engagements', 'Total Fans'),
+      icons = c( 'heart', 'users') 
+    ), 
+    `TBEP Twitter` = list(
+      metric = c('Engagements', 'Followers'), 
+      icons = c('heart', 'users')
+    ),
+    `TBEP YouTube` = list(
+      metric = c('Total Views', 'Total Subscribers'),
+      icons = c('film', 'users')
+    ), 
+    `Constant Contact` = list(
+      metric = c('Net new contacts'), 
+      icons = c('users')
+    ), 
+    `Tarpon Tag` = list(
+      metric = c('Statewide Registrations'), 
+      icons = c('car')
+    )
+  ) %>% 
+  lapply(data.frame) %>% 
+  enframe('platform', 'value') %>% 
+  unnest('value') %>% 
+  mutate(
+    tab_name = gsub('^TBEP\\s', '', platform), 
+    tab_name = case_when(
+      tab_name == 'IG' ~ 'Instagram', 
+      grepl('^GA|^GSC', tab_name) ~ 'Website', 
+      tab_name == 'Constant Contact' ~ 'Email Marketing',
+      T ~ tab_name
+    ), 
+    tab_metric = gsub('^Total\\s', '', metric), 
+    tab_metric = case_when(
+      metric == 'Unique Page Views' ~ 'Page Views', 
+      metric == 'Net new contacts' ~ 'New Contacts', 
+      T ~ tab_metric
+    )
+  )
+
+  platform <- cats[[category]]
+  toflt <- ics %>% 
+    filter(platform %in% !!platform)
+  
+  if(category == 'Social Media'){
+    
+    if(metric != 'users')
+      userplo <- toflt %>% 
+        filter(icons != 'users')
+    
+    if(metric == 'users')
+      userplo <- toflt %>% 
+        filter(icons == 'users')
+    
+    userplo <- userplo %>% 
+      group_by(platform, metric, tab_name, tab_metric) %>% 
+      nest() %>% 
+      mutate(
+        data = purrr::pmap(list(platform, metric, tab_name, tab_metric), function(platform, metric, tab_name, tab_metric){
+          
+          pltin <- platform
+          metin <- metric
+          
+          toplo <- comdat %>%
+            filter(platform %in% pltin) %>%
+            filter(metric %in% metin) %>%
+            mutate(
+              date = ymd(paste(year, month, '01', sep = '-'))
+            )
+          
+          p <- plot_ly(data = toplo, x =  ~date, showlegend = F, width = width, height = height) %>%
+            add_trace(y = ~`val`, mode = 'lines+markers', type = 'scatter', name = tab_name,
+                      marker = list(color = '#00806E', size = 10),
+                      line = list(color = '#5C4A42', width = 2, dash = 'dot')
+            ) %>%
+            add_annotations(
+              text = tab_name,
+              x = 0.5,
+              y = 1.1,
+              yref = "paper",
+              xref = "paper",
+              xanchor = "middle",
+              yanchor = "top",
+              showarrow = FALSE,
+              font = list(size = fntsz)
+            ) %>% 
+            layout(
+              xaxis = list(
+                title = NA
+              ),
+              yaxis = list(
+                title = tab_metric,
+                tickprefix = NULL
+              ),
+              font = list(family = family, size = fntsz - 1)
+            )
+          
+          return(p)
+          
+        })
+      )
+    
+    p <- subplot(userplo$data[[2]], userplo$data[[1]], userplo$data[[3]], userplo$data[[4]], nrows = 4, shareX = T, titleY = T)
+    
+  }
+  
+  return(p)
+  
 }
 
 # reactable table for comms reach statistics, constant contact only
