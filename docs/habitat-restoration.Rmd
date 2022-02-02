@@ -14,6 +14,15 @@ rstdat <- read_sheet('1IkGidfU4SQJ_ZtOEqfn8licNCuWGlq_MtGuWWuIL1Js', sheet = 'Fu
 
 Habitat restoration attempts to restore important services provided by natural systems. These ecological services can include providing fish nurseries; improving water quality; reducing erosion; and protection against storm surge. Habitat restoration is done for a variety of habitat types, from salt marshes to pine flatwoods. 
 
+<p>
+<center>
+<figure>
+<img alt="safety harbor restoration" src="img/safetyharbor.png" style="width:80%"/>
+<figcaption>Habitat restoration at Safety Harbor</figcaption>
+</figure>
+</center>
+<p>
+
 Habitat restoration in the Tampa Bay region has evolved over time from simple projects including planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on critical coastal land. Nearly 5,000 acres of habitat restoration has occurred in the Tampa Bay watershed since 1971. Tampa Bay restoration professionals work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
 
 ```{r}
