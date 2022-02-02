@@ -24,6 +24,11 @@ coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml, sho
 
 #### TOTALS TO DATE 
 
+```{r}
+p <- comssum_plo(comdat, category = 'Website', family = fml, width = 800, height = 350)
+div(p, align = 'center')
+```
+
 ### Social Media Reach
 
 #### `r maxyr` SUMMARY
@@ -37,14 +42,14 @@ coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = F, family = fml
 ##### Followers
 
 ```{r}
-p <- comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, width = 700, height = 600)
+p <- comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, width = 800, height = 600)
 div(p, align = 'center')
 ```
 
 ##### Engagement
 
 ```{r}
-p <- comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, width = 700, height = 600)
+p <- comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, width = 800, height = 600)
 div(p, align = 'center')
 ```
 
@@ -57,5 +62,10 @@ coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = 
 ```
 
 #### TOTALS TO DATE 
+
+```{r}
+p <- comssum_plo(comdat, category = 'Email Marketing', family = fml, width = 800, height = 175)
+div(p, align = 'center')
+```
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

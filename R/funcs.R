@@ -698,7 +698,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
 
 # create trends plot for different comms data
 comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email Marketing', 'Tarpon Tag'), 
-                        metric, fntsz = 17, family, width, height){
+                        metric = NULL, fntsz = 17, family, width, height){
   
   cats <- list(
     `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
@@ -755,7 +755,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     tab_metric = gsub('^Total\\s', '', metric), 
     tab_metric = case_when(
       metric == 'Unique Page Views' ~ 'Page Views', 
-      metric == 'Net new contacts' ~ 'New Contacts', 
+      metric == 'Net new contacts' ~ 'Net New Contacts', 
       T ~ tab_metric
     )
   )
@@ -764,7 +764,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
   toflt <- ics %>% 
     filter(platform %in% !!platform)
   
-  if(category == 'Social Media'){
+  if(category %in% c('Social Media')){
     
     if(metric != 'users')
       userplo <- toflt %>% 
@@ -826,6 +826,53 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     
   }
   
+  if(category %in% c('Website', 'Email Marketing')){
+    
+    userplo <- toflt %>% 
+      group_by(platform, metric, tab_name, tab_metric) %>% 
+      nest() %>% 
+      mutate(
+        data = purrr::pmap(list(platform, metric, tab_name, tab_metric), function(platform, metric, tab_name, tab_metric){
+          
+          pltin <- platform
+          metin <- metric
+          
+          toplo <- comdat %>%
+            filter(platform %in% pltin) %>%
+            filter(metric %in% metin) %>%
+            mutate(
+              date = ymd(paste(year, month, '01', sep = '-'))
+            )
+          
+          p <- plot_ly(data = toplo, x =  ~date, showlegend = F, width = width, height = height) %>%
+            add_trace(y = ~`val`, mode = 'lines+markers', type = 'scatter', name = tab_name,
+                      marker = list(color = '#00806E', size = 10),
+                      line = list(color = '#5C4A42', width = 2, dash = 'dot')
+            ) %>%
+            layout(
+              xaxis = list(
+                title = NA
+              ),
+              yaxis = list(
+                title = tab_metric,
+                tickprefix = NULL
+              ),
+              font = list(family = family, size = fntsz - 1)
+            )
+          
+          return(p)
+          
+        })
+      )
+    
+    if(category == 'Website')
+      p <- subplot(userplo$data[[1]], userplo$data[[2]], nrows = 2, shareX = T, titleY = T)
+    
+    if(category == 'Email Marketing')
+      p <- subplot(userplo$data[[1]], nrows = 1, shareX = T, titleY = T)
+    
+  }
+
   return(p)
   
 }
