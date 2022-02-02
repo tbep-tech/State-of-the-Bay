@@ -12,22 +12,36 @@ maxyr <- 2021
 
 Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners' actions.
 
-### `r maxyr` TBEP Website Engagement 
+## {.tabset .tabset-pills}
+
+### TBEP Website Engagement 
+
+#### `r maxyr` SUMMARY 
 
 ```{r}
 coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
 
-### `r maxyr` Social Media Reach
+#### TOTALS TO DATE 
+
+### Social Media Reach
+
+#### `r maxyr` SUMMARY
 
 ```{r}
 coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = F, family = fml)
 ```
 
-### `r maxyr` Email Marketing
+#### TOTALS TO DATE 
+
+### Email Marketing
+
+#### `r maxyr` SUMMARY
 
 ```{r}
 coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = fml, showtab = F)
 ```
+
+#### TOTALS TO DATE 
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
