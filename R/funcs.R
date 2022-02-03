@@ -1452,9 +1452,9 @@ sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1982){
 
 # alluvial plot function, for HMPU targets
 # https://www.data-to-viz.com/graph/sankey.html
-alluvout2 <- function(datin, fluccs, family, maxyr, width, height){
+alluvout2 <- function(datin, fluccs, family, maxyr, width, height, mrg){
   
-  ttl <- paste('True change analysis, watershed land use from 1990 to', maxyr, '(right)')
+  ttl <- paste('True change analysis, watershed land use from 1990 (left) to', maxyr, '(right)')
   
   if(any(grepl('^Seagrass', datin$source)))
     ttl <- paste('True change analysis, subtidal habitats (all categories) from 1988 (left) to', maxyr, '(right)')
@@ -1479,7 +1479,7 @@ alluvout2 <- function(datin, fluccs, family, maxyr, width, height){
     summarise(Acres = sum(Acres), .groups = 'drop') %>% 
     select(source = source, target = target, value = Acres) %>% 
     data.frame(stringsAsFactors = F)
-  sumdat$target <- paste(sumdat$target, " ", sep="")
+  sumdat$source <- paste(sumdat$source, " ", sep="")
   
   # From these flows we need to create a node data frame: it lists every entities involved in the flow
   nodes <- data.frame(name=c(as.character(sumdat$source), as.character(sumdat$target)) %>% unique())
@@ -1489,7 +1489,7 @@ alluvout2 <- function(datin, fluccs, family, maxyr, width, height){
   sumdat$IDtarget=match(sumdat$target, nodes$name)-1
   
   # custom color scale
-  cols <- c('#004F7E', '#00806E', '#427355', '#958984', '#5C4A42') %>% 
+  cols <- c('#004F7E', '#00806E', '#427355', '#958984', '#5C4A42', 'grey') %>% 
     colorRampPalette
   ncol <- sumdat[, c('source', 'target')] %>% 
     unlist() %>% 
@@ -1501,13 +1501,32 @@ alluvout2 <- function(datin, fluccs, family, maxyr, width, height){
     paste(collapse = '", "') %>% 
     paste('d3.scaleOrdinal(["', ., '"])')
   
+  # margins for long text labels
+  mrgs <- list(0, mrg, 0, 0)
+  names(mrgs) <- c('top', 'right', 'bottom', 'left')
+  
   out <- sankeyNetwork(Links = sumdat, Nodes = nodes,
                        Source = "IDsource", Target = "IDtarget", colourScale = colin,
                        Value = "value", NodeID = "name", height = height, width = width, fontFamily = family,
-                       sinksRight=FALSE, units = 'acres', nodeWidth=50, fontSize=13, nodePadding=10)
+                       sinksRight = F, units = 'acres', nodeWidth=50, fontSize=13, nodePadding=10, 
+                       margin = mrgs)
   
   # add caption
   out <- htmlwidgets::prependContent(out, h5(class = "title", ttl))
+
+  out <- htmlwidgets::onRender(
+    out,
+    '
+    function(out,x){
+    // select all our node text
+    d3.select(out)
+    .selectAll(".node text")
+    .filter(function(d) { return d.name.endsWith(" "); })
+    .attr("x", x.options.nodeWidth - 55)
+    .attr("text-anchor", "end");
+    }
+    '
+  )
   
   return(out)
   
