@@ -7,7 +7,6 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 maxyr <- 2021
-sgmaxyr <- 2020
 
 # local file path
 xlsx <- here('data-raw/Results_Updated.xls')
@@ -17,7 +16,6 @@ epcdata <- read_importwq(xlsx, download_latest = T)
 
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
-sgsums <- sgsum_fun(seagrass, sgmaxyr)
 ```
 
 Water quality in Tampa Bay has improved steadily in recent decades due to pollution reduction projects and restoration of bay habitats. Tampa Bay has generally met water quality standards in each bay segment, excluding Old Tampa Bay, since 2006.
@@ -80,19 +78,5 @@ wqplotly_plo(epcdata, bay_segment = 'MTB', yrrng = c(1975, maxyr), family = fml,
 ```{r, out.width = '100%'}
 wqplotly_plo(epcdata, bay_segment = 'LTB', yrrng = c(1975, maxyr), family = fml, width = 1000, height = 500)
 ```
-
-#
-
-## Seagrasses in Tampa Bay
-
-The water quality decision matrix was developed using seagrasses as an endpoint to assess progress in achieving management goals for Tampa Bay. Seagrasses need sunlight to grow.  With improving water clarity, seagrasses can thrive in Tampa Bay.
-
-Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r sgmaxyr`, seagrasses `r sgsums$refdir` by `r sgsums$refcmp` acres.  For the most recent years of seagrass maps, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres from `r sgsums$penult` to `r sgmaxyr`. Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.
-
-```{r, fig.height = 4.5, fig.width = 10}
-sgcov_plo(seagrass, family = fml)
-```
-
-See additional information about seagrass monitoring in Tampa Bay here: https://tampabay.wateratlas.usf.edu/seagrass-monitoring/. See additional visualization tools for seagrasses on our data page: https://tbep.org/seagrass-assessment/.
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
