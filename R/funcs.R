@@ -548,7 +548,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
     filter(platform %in% !!platform)
 
   # filter tarpon tag to dec, since it's a running tally, not new registrations
-  if(platform == 'Tarpon Tag')
+  if('Tarpon Tag' %in% platform)
     comdat <- comdat %>% 
       filter(month == 'dec')
     
@@ -651,6 +651,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       ) %>% 
       left_join(toflt, by = c('platform', 'metric')) %>% 
       select(tab_name, tab_metric, icons, maxyr) %>% 
+      arrange(tab_name, desc(tab_metric)) %>% 
       mutate(
         tab_name = ifelse(duplicated(tab_name), '', tab_name)
       )
@@ -765,6 +766,9 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     filter(platform %in% !!platform)
   
   if(category %in% c('Social Media')){
+
+    cols <- c('#00806E', '#004F7E', '#5C4A42', '#958984')
+    names(cols) <- c('Facebook', 'Instagram', 'Twitter', 'YouTube')
     
     if(metric != 'users')
       userplo <- toflt %>% 
@@ -773,7 +777,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     if(metric == 'users')
       userplo <- toflt %>% 
         filter(icons == 'users')
-    
+
     userplo <- userplo %>% 
       group_by(platform, metric, tab_name, tab_metric) %>% 
       nest() %>% 
@@ -782,6 +786,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
           
           pltin <- platform
           metin <- metric
+          col <- cols[tab_name]
           
           toplo <- comdat %>%
             filter(platform %in% pltin) %>%
@@ -790,22 +795,22 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
               date = ymd(paste(year, month, '01', sep = '-'))
             )
           
-          p <- plot_ly(data = toplo, x =  ~date, showlegend = F, width = width, height = height) %>%
+          p <- plot_ly(data = toplo, x =  ~date, width = width, height = height) %>%
             add_trace(y = ~`val`, mode = 'lines+markers', type = 'scatter', name = tab_name,
-                      marker = list(color = '#00806E', size = 10),
+                      marker = list(color = col, size = 10),
                       line = list(color = '#5C4A42', width = 2, dash = 'dot')
             ) %>%
-            add_annotations(
-              text = tab_name,
-              x = 0.5,
-              y = 1.1,
-              yref = "paper",
-              xref = "paper",
-              xanchor = "middle",
-              yanchor = "top",
-              showarrow = FALSE,
-              font = list(size = fntsz)
-            ) %>% 
+            # add_annotations(
+            #   text = tab_name,
+            #   x = 0.5,
+            #   y = 1.1,
+            #   yref = "paper",
+            #   xref = "paper",
+            #   xanchor = "middle",
+            #   yanchor = "top",
+            #   showarrow = FALSE,
+            #   font = list(size = fntsz)
+            # ) %>% 
             layout(
               xaxis = list(
                 title = NA

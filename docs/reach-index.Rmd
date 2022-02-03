@@ -12,6 +12,8 @@ maxyr <- 2021
 
 Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners' actions.
 
+The TBEP tracks the impact of our social media output using various metrics. Number of followers, users, or views of our content is one way we can assess how the community engages in our online platforms. The number of engagements is another metric that we track, which includes "likes", "retweets", or other common interactions on social media.  The tables and plots below summarize this information for our various platforms. 
+
 ## {.tabset .tabset-pills}
 
 ### TBEP Website Engagement 
@@ -25,7 +27,7 @@ coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml, sho
 #### TOTALS TO DATE 
 
 ```{r}
-p <- comssum_plo(comdat, category = 'Website', family = fml, width = 800, height = 350)
+p <- comssum_plo(comdat, category = 'Website', family = fml, width = 800, height = 400)
 div(p, align = 'center')
 ```
 
@@ -64,7 +66,7 @@ coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = 
 #### TOTALS TO DATE 
 
 ```{r}
-p <- comssum_plo(comdat, category = 'Email Marketing', family = fml, width = 800, height = 175)
+p <- comssum_plo(comdat, category = 'Email Marketing', family = fml, width = 800, height = 200)
 div(p, align = 'center')
 ```
 
