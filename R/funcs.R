@@ -341,10 +341,20 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
     rename(maxyr = !!topyr) %>% 
     mutate(
       chg = maxyr -  chgyr,
-      chgper = 100 * (maxyr - chgyr) / chgyr
+      chgper = 100 * (maxyr - chgyr) / chgyr, 
+      chgicon = case_when(
+        chgper >= 0 ~ 'arrow-circle-up', 
+        chgper < 0 ~ 'arrow-circle-down'
+      ), 
+      chgcols = case_when(
+        chgper >= 0 & HMPU_TARGETS != 'Developed' ~ '#008000E6', 
+        chgper < 0 & HMPU_TARGETS != 'Developed' ~ '#e00000E6',
+        chgper >= 0 & HMPU_TARGETS == 'Developed' ~ '#e00000E6', 
+        chgper < 0 & HMPU_TARGETS == 'Developed' ~ '#008000E6'
+      )
     ) %>% 
     rename(val = HMPU_TARGETS)
-  
+
   names(sums)[names(sums) == 'chgyr'] <- yrsel
   names(sums)[names(sums) == 'maxyr'] <- topyr
   
@@ -357,17 +367,26 @@ lngtrmtab_fun <- function(datin, colnm, typ = c('subtidal', 'supratidal'), yrsel
   if(estout)
     return(totab)
   
+  # get color from totab, but has to be indexed and include all args
+  stylefunc <- function(value, index, name) {
+    col <- totab[index, 'chgcols'][[1]]
+    list(color = col, fontWeight = 'bold')
+  } 
+  
   out <- reactable(
     totab, 
     columns = list(
+      chgcols = colDef(show = F),
       val = colDef(name = colnm, footer = 'Total', minWidth = firstwidth, class = 'sticky left-col-1-bord', headerClass = 'sticky left-col-1-bord', footerClass = 'sticky left-col-1-bord'), 
       chg = colDef(name = paste0(yrsel, '-', topyr, ' change'), minWidth = 140,
-                   style = jsfun, class = 'sticky right-col-2', headerClass = 'sticky right-col-2', footerClass = 'sticky right-col-2'
+                   style = stylefunc, class = 'sticky right-col-2', headerClass = 'sticky right-col-2', footerClass = 'sticky right-col-2'
       ), 
       chgper = colDef(name = '% change', minWidth = 85,
-                      style = jsfun,
+                      style = stylefunc,
                       format = colFormat(suffix = '%', digits = 0), 
-                      class = 'sticky right-col-1', headerClass = 'sticky right-col-1', footerClass = 'sticky right-col-1'
+                      align = 'right',
+                      class = 'sticky right-col-1', headerClass = 'sticky right-col-1', footerClass = 'sticky right-col-1', 
+                      cell = icon_sets(totab, icon_ref = 'chgicon', icon_position = 'right', icon_color_ref = 'chgcols')
                       
       )
     ),
