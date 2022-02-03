@@ -9,10 +9,18 @@ source(here::here('R/setup.R'))
 
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/acres.RData"))
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtacres.RData"))
+load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RData"))
+load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.RData"))
+fluccs <- read.csv('https://github.com/tbep-tech/hmpu-workflow/raw/master/data/FLUCCShabsclass.csv', stringsAsFactors = F)
 
 submax <- '2020'
 sprmax <- '2020'
 
+# chgdat and subtchgdat must remove all columns that are terminal year comparisons
+chgdat <- chgdat %>% 
+  filter(grepl('1990$', source))
+subtchgdat <- subtchgdat %>% 
+  filter(grepl('1988$', source))
 subest <- lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = T) %>% 
   select(val, chgper) %>% 
   tibble::deframe() %>% 
@@ -38,10 +46,18 @@ The increasing trend in seagrass coverage is a testament to improved bay water q
 lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = F, family = fml)
 ```
 
+```{r}
+alluvout2(subtchgdat, fluccs, family = fml, maxyr = submax, width = 1000, height = 800)
+```
+
 The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects (see Habitat Restoration tab) and state and federal wetland regulatory programs. Increases in salt barrens may also reflect a landward expansion associated with sea level rise. However, a `r sprest['Developed']`% increase for developed lands and `r sprest['Restorable']`% loss for restorable lands in the watershed is a concern for continued habitat restoration and protection. A loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
 
 ```{r}
 lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = sprmax, estout = F, family = fml)
+```
+
+```{r}
+alluvout2(chgdat, fluccs, family = fml, maxyr = sprmax, width = 1000, height = 800)
 ```
 
 See additional visualization tools for land use change here: https://shiny.tbep.org/landuse-change/. See additional visualization tools for seagrass coverage data here: https://shiny.tbep.org/seagrass-analysis/. See additional visualization tools for seagrass species change here: https://shiny.tbep.org/seagrasstransect-dash/. 
