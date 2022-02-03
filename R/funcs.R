@@ -120,11 +120,11 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
       )
     
     p <- plot_ly(toplo, height = height, width = width)  %>% 
-      add_trace(x = ~dt, y = ~yv, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = F) %>% #, marker = list(opacity = 1, size = 4)) %>% 
+      add_trace(x = ~dt, y = ~yv, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = F, name = levs[lev]) %>% #, marker = list(opacity = 1, size = 4)) %>% 
       add_annotations(
         text = ~unique(bay_segment),
         x = 0.5,
-        y = 1.2,
+        y = 1.175,
         yref = "paper",
         xref = "paper",
         xanchor = "middle",
