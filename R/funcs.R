@@ -573,10 +573,15 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
     filter(platform %in% !!platform)
 
   # filter tarpon tag to dec, since it's a running tally, not new registrations
-  if('Tarpon Tag' %in% platform)
+  if(category == 'Tarpon Tag')
     comdat <- comdat %>% 
       filter(month == 'dec')
-    
+  
+  # filter social media users to dec, since it's a running tally, not new users
+  if(category == 'Social Media')
+    comdat <- comdat %>% 
+      filter(!(month != 'dec' & metric %in% c('Total Followers', 'Total Fans', 'Followers', 'Total Subscribers')))
+
   # table as change
   if(chg){
     
