@@ -428,22 +428,26 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
       Category = `Habitat Type (basic ESA categories)(existing databases)`, 
       Acres, 
       Activity = `Basic Activity (Enhance/Rest)`, 
+      `Linear Miles` = `Linear Miles`,
       `Linear Ft` = `Linear Feet`
-      ) %>% 
+    ) %>% 
+    rowwise() %>% 
     mutate(
       Category = case_when(
         Category == 'estuarine' ~ 'Estuarine', 
         Category == 'Upland' ~ 'Uplands',
         grepl('^Mix', Category) ~ 'Mixed', 
         T ~ Category
-      )
+      ), 
+      Miles = sum(`Linear Miles`,  `Linear Ft` / 5280, na.rm = T)
     ) %>% 
+    ungroup() %>% 
     filter(Year <= maxyr) %>% 
     group_by(Category, Activity) %>% 
     summarise(
       tot= n(),
       Acres = sum(Acres, na.rm = T), 
-      Miles = sum(`Linear Ft`, na.rm = T) / 5280,
+      Miles = sum(Miles, na.rm = T),
       .groups = 'drop'
     ) %>% 
     filter(!is.na(Category)) %>% 
@@ -453,7 +457,8 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
     ) %>% 
     pivot_longer(c('Acres', 'Miles'), names_to = 'var', values_to = 'val') %>% 
     unite('var', Activity, var, sep = ', ') %>% 
-    pivot_wider(names_from = 'var', values_from = 'val')
+    pivot_wider(names_from = 'var', values_from = 'val') %>% 
+    select(Category, tot, `Restoration, Acres`, `Restoration, Miles`, `Enhancement, Acres`, `Enhancement, Miles`)
 
   # yrrng
   yrs <- rstdat %>% 
