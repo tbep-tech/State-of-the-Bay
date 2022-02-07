@@ -51,7 +51,8 @@ div(p, align = 'center')
 ##### Engagement
 
 ```{r}
-p <- comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, width = 800, height = 600)
+p <- comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, width = 800, height = 600) %>% 
+  
 div(p, align = 'center')
 ```
 

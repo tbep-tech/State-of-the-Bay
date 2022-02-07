@@ -27,7 +27,10 @@ The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic
 In `r maxyr`, Old Tampa Bay received an overall assessment of `r sums$OTB$cat` (based on the amount of site scores as degraded, intermediate, or healthy), Hillsborough Bay was `r sums$HB$cat`, Middle Tampa Bay was `r sums$MTB$cat`, and Lower Tampa Bay was `r sums$LTB$cat`.  The bay-wide assessment of benthic condition was `r sums[["All (wt)"]]$cat`.
 
 ```{r}
-p <- show_tbbimatrix(tbbiscr, width = 350, height = 600, plotly = T, family = fml, bay_segment = seg)
+p <- show_tbbimatrix(tbbiscr, width = 350, height = 600, plotly = T, family = fml, bay_segment = seg) %>% 
+    plotly::config(
+      toImageButtonOptions = plocnf
+    )
 div(p, align = 'center')
 ```
 

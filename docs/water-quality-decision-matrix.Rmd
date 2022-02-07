@@ -41,7 +41,10 @@ Tracking the attainment of bay segment specific targets for chlorophyll and ligh
 The management category or action is based on the combination of annual outcomes for chlorophyll and light attenuation.   
 
 ```{r}
-p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, historic = T, family = fml, plotly = T, width = 300, height = 700)
+p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, historic = T, family = fml, plotly = T, width = 300, height = 700) %>% 
+    plotly::config(
+      toImageButtonOptions = plocnf
+    )
 div(p, align = 'center')
 ```
 

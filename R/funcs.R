@@ -31,7 +31,13 @@ wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
     plotly::layout(
       legend = list(title = ''),
       font = list(family = family)
+      ) %>% 
+    config(
+      toImageButtonOptions = list(
+        format = "svg",
+        filename = "myplot"
       )
+    )
   
   return(out)
   
@@ -169,6 +175,12 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
       plot_bgcolor = 'rgba(0,128,110, 0.1)', 
       font = list(family = family)
       # yaxis = list(gridcolor = '#FFFFFF')
+    ) %>% 
+    plotly::config(
+      toImageButtonOptions = list(
+        format = "svg",
+        filename = "myplot"
+      )
     )
   
   return(out)
@@ -220,6 +232,12 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
         gridcolor = 'ffff'
       ), 
       font = list(family = family)
+    ) %>% 
+    plotly::config(
+      toImageButtonOptions = list(
+        format = "svg",
+        filename = "myplot"
+      )
     )
   
   return(out)
@@ -908,6 +926,14 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     
   }
 
+  p <- p %>% 
+    plotly::config(
+      toImageButtonOptions = list(
+        format = "svg",
+        filename = "myplot"
+      )
+    )
+    
   return(p)
   
 }
@@ -1247,6 +1273,12 @@ grntsum_plo <- function(datin, family, width, height){
         tickprefix = tickprf
       ), 
       font = list(family = family, size = 18)
+    ) %>% 
+    plotly::config(
+      toImageButtonOptions = list(
+        format = "svg",
+        filename = "myplot"
+      )
     )
   
   return(p)
