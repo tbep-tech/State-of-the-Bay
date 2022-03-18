@@ -14,7 +14,7 @@ tbniscr <- anlz_tbniscr(fimdata)
 sums <- tbnisum_fun(tbniscr, maxyr)
 ```
 
-The nekton index, which is similar to the water quality scorecard, uses data from the State of Florida’s Fisheries Independent Monitoring Program (FWC - FWRI) to track trends for representative fish and invertebrate species. With samples dating back to 1998, the long-term record can be related to water quality and habitat characteristics to identify factors affecting health of bay fisheries. The index evaluates catch data relative to habitat use, species composition and diversity, and feeding dynamics to understand trends in the fish community.
+The Tampa Bay Nekton Index (TBNI), which is similar to the water quality scorecard, uses data from the State of Florida’s Fisheries Independent Monitoring Program (FWC - FWRI) to track trends for representative fish and invertebrate species. With samples dating back to 1998, the long-term record can be related to water quality and habitat characteristics to identify factors affecting health of bay fisheries. The index evaluates catch data relative to habitat use, species composition and diversity, and feeding dynamics to understand trends in the fish community.
 
 <center><img alt="seatrout" src="img/seatrout.jpg" width="450"/></center>
 <p></p>
