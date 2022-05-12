@@ -1030,13 +1030,13 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
   # filter by year if provided
   if(!is.null(yrsel))
     out <- out %>% 
-      filter(year == yrsel)
+      filter(year %in% yrsel)
 
   out <- out %>% 
     mutate(
       nvols = nadults + nyouth
     ) %>% 
-    select(-nadults, -nyouth) %>% 
+    # select(-nadults, -nyouth) %>% 
     pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
     group_by(var) %>% 
     summarise(
@@ -1064,7 +1064,7 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5, family){
   box::use(
     emojifont[...]
   )
-  
+
   txt <- tibble(
     name = c('nevent', 'nvols', 'nlbs', 'nplants', 'npartner'),
     info = c('Event areas are prioritized by the presence of excessive litter & native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
