@@ -1067,10 +1067,10 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5, family){
   
   txt <- tibble(
     name = c('nevent', 'nvols', 'nlbs', 'nplants', 'npartner'),
-    info = c('Event areas are prioritized by the presence of excessive litter and native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
-             paste(datin$nadults, 'adults and', datin$nyouth, 'youths helped to protect and resotre the bay this season.'),
+    info = c('Event areas are prioritized by the presence of excessive litter & native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
+             paste(datin$nadults, 'adults &', datin$nyouth, 'youths helped to protect and restore the bay this season.'),
              'Including trash, invasive plants & marine debris.', 
-             "Native plants increase the bay's resiliency and restore crucial wildlife habitat.",
+             "Native plants increase the bay's resiliency a& restore crucial wildlife habitat.",
              'Our partners play an invaluable role in recruiting volunteers to help us put in work!'
     ), 
     txtadd = c('EVENTS', 'VOLUNTEERS', 'LBS REMOVED', 'PLANTS INSTALLED', 'PARTNERS'),
