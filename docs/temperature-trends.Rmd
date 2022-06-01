@@ -3,7 +3,7 @@ output:
   html_document
 ---
 
-# Tampa Bay salinity trends {.tabset}
+# Tampa Bay temperature trends {.tabset}
 
 ```{r setup, message = F, warning = F, results = 'hide', echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = F, message = F, echo = F, fig.path = 'figures/')
@@ -18,24 +18,21 @@ library(sf)
 yrsel <- 2021
 yrmin <- 1980
 
-annrng <- c(15, 40)
-morng <- c(8, 45)
-
 # local file path
 xlsx <- here('data-raw/Results_Updated.xls')
 
 # import and download if new
-saldat <- read_importwq(xlsx, download_latest = F) %>% 
+tempdat <- read_importwq(xlsx, download_latest = F) %>% 
   filter(yr <= yrsel & yr >= yrmin)
 
-# monthly salinity
-moout <- saldat %>%
-  dplyr::select(yr, mo, bay_segment, epchc_station, Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth) %>%
+# monthly temperature
+moout <- tempdat %>%
+  dplyr::select(yr, mo, bay_segment, epchc_station, Temp_Water_Top_degC, Temp_Water_Mid_degC, Temp_Water_Bottom_degC) %>%
   dplyr::rowwise() %>% 
-  dplyr::mutate(sal = mean(c(Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth), na.rm = T)) %>% 
+  dplyr::mutate(temp = mean(c(Temp_Water_Top_degC, Temp_Water_Mid_degC, Temp_Water_Bottom_degC), na.rm = T)) %>% 
   dplyr::ungroup() %>% 
-  dplyr::select(-Sal_Top_ppth, -Sal_Mid_ppth, -Sal_Bottom_ppth) %>% 
-  tidyr::gather('var', 'val',sal) %>%
+  dplyr::select(-Temp_Water_Top_degC, -Temp_Water_Mid_degC, -Temp_Water_Bottom_degC) %>% 
+  tidyr::gather('var', 'val', temp) %>%
   dplyr::group_by(bay_segment, yr, mo, var) %>%
   dplyr::summarise(
     val = mean(val, na.rm = T), 
@@ -48,7 +45,7 @@ moout <- saldat %>%
   ) %>% 
   dplyr::arrange(var, yr, mo, bay_segment)
 
-# annual salinity
+# annual temperature
 anout <- moout %>%
   dplyr::group_by(yr, bay_segment, var) %>%
   dplyr::summarise(
@@ -59,15 +56,14 @@ anout <- moout %>%
   ) %>% 
   dplyr::arrange(var, yr, bay_segment)
 
-
-# station monthly salinity
-stamoout <- saldat %>%
-  dplyr::select(yr, mo, bay_segment, epchc_station, Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth) %>%
+# station monthly temperature
+stamoout <- tempdat %>%
+  dplyr::select(yr, mo, bay_segment, epchc_station, Temp_Water_Top_degC, Temp_Water_Mid_degC, Temp_Water_Bottom_degC) %>%
   dplyr::rowwise() %>% 
-  dplyr::mutate(sal = mean(c(Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth), na.rm = T)) %>% 
+  dplyr::mutate(temp = mean(c(Temp_Water_Top_degC, Temp_Water_Mid_degC, Temp_Water_Bottom_degC), na.rm = T)) %>% 
   dplyr::ungroup() %>% 
-  dplyr::select(-Sal_Top_ppth, -Sal_Mid_ppth, -Sal_Bottom_ppth) %>% 
-  tidyr::gather('var', 'val',sal) %>%
+  dplyr::select(-Temp_Water_Top_degC, -Temp_Water_Mid_degC, -Temp_Water_Bottom_degC) %>% 
+  tidyr::gather('var', 'val', temp) %>%
   dplyr::group_by(bay_segment, epchc_station, yr, mo, var) %>%
   dplyr::summarise(
     val = mean(val, na.rm = T), 
@@ -80,7 +76,7 @@ stamoout <- saldat %>%
   ) %>% 
   dplyr::arrange(var, yr, mo, bay_segment, epchc_station)
 
-# station annual salinity
+# station annual temperature
 staanout <- stamoout %>%
   dplyr::group_by(yr, bay_segment, epchc_station, var) %>%
   dplyr::summarise(
@@ -107,7 +103,7 @@ annplo <- anout %>%
         geom_line(linetype = 'solid', size = 0.75,  color = 'red') +
         geom_errorbar(aes(ymin = vallo, ymax = valhi),  color = 'red') +
         scale_y_continuous(limits = annrng) + 
-        labs(y = 'Salinity (ppth, +/- 95% CI)', subtitle = bay_segment) +
+        labs(y = 'Water temp. (C, +/- 95% CI)', subtitle = bay_segment) +
         theme(axis.title.x = element_blank(),
               # panel.grid.minor=element_blank(),
               panel.grid.major=element_blank(),
@@ -156,7 +152,7 @@ moplo <- moout %>%
         geom_point(data = toplo1, aes(x = mo, y = val, group = yr, colour = names(cols)[1]), position = position_jitter(width = 0.2), size = 1) +
         geom_point(data = toplo2, aes(x = mo, y = val, group = yr, fill = names(cols)[2]), pch = 21, color = cols[2], size = 3, alpha = 0.7) +
         scale_y_continuous(limits = morng) + 
-        labs(y = 'Salinity (ppth)', subtitle = bay_segment) +
+        labs(y = 'Water temp. (C)', subtitle = bay_segment) +
         theme(axis.title.x = element_blank(),
               # panel.grid.minor=element_blank(),
               panel.grid.major=element_blank(),
@@ -189,7 +185,7 @@ staannplo <- staanout %>%
         geom_line(linetype = 'solid', size = 0.75,  color = 'red') +
         geom_errorbar(aes(ymin = vallo, ymax = valhi),  color = 'red') +
         scale_y_continuous(limits = annrng) + 
-        labs(y = 'Salinity (ppth, +/- 95% CI)', subtitle = epchc_station) +
+        labs(y = 'Water temp. (C, +/- 95% CI)', subtitle = epchc_station) +
         theme(axis.title.x = element_blank(),
               # panel.grid.minor=element_blank(),
               panel.grid.major=element_blank(),
@@ -238,7 +234,7 @@ stamoplo <- stamoout %>%
         geom_point(data = toplo1, aes(x = mo, y = val, group = yr, colour = names(cols)[1]), position = position_jitter(width = 0.2), size = 1) +
         geom_point(data = toplo2, aes(x = mo, y = val, group = yr, fill = names(cols)[2]), pch = 21, color = cols[2], size = 3, alpha = 0.7) +
         scale_y_continuous(limits = morng) + 
-        labs(y = 'Salinity (ppth)', subtitle = epchc_station) +
+        labs(y = 'Water temp. (C)', subtitle = epchc_station) +
         theme(axis.title.x = element_blank(),
               # panel.grid.minor=element_blank(),
               panel.grid.major=element_blank(),

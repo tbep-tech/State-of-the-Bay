@@ -22,3 +22,4 @@ State of the Bay pages:
 Additional content: 
 
 * [Salinity trends](https://tbep-tech.github.io/State-of-the-Bay/docs/salinity-trends)
+* [Temperature trends](https://tbep-tech.github.io/State-of-the-Bay/docs/temperature-trends)
