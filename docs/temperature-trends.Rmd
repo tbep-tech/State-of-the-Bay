@@ -126,8 +126,8 @@ moplo <- moout %>%
   mutate(
     plos = purrr::pmap(list(bay_segment, data), function(bay_segment, data){
   
-      yrsel <- yrsel
-      yrrng <- c(1973, yrsel - 1)
+      yrsel <- seq(yrsel - 4, yrsel)
+      yrrng <- c(1973, min(yrsel))
       
       # toplo1 is all but current year
       toplo1 <- data %>%
@@ -136,7 +136,7 @@ moplo <- moout %>%
       # toplo2 is current year
       toplo2 <- data %>%
         dplyr::filter(yr %in% yrsel)
-
+browser()
       # colors and legend names
       cols <- c("black", "red")
       names(cols)[1] <- case_when(
@@ -145,7 +145,7 @@ moplo <- moout %>%
         yrsel > yrrng[1] & yrsel < yrrng[2] ~ paste(paste(yrrng[1], yrsel - 1, sep = '-'), paste(yrsel + 1, yrrng[2], sep = '-'), sep = ', '),
         T ~ paste(yrrng, collapse = '-')
       )
-      names(cols)[2] <- as.character(yrsel)
+      names(cols)[2] <- paste(c(min(yrsel), max(yrsel)), collapse = '-')
     
       p <- ggplot() +
         geom_boxplot(data = data, aes(x = factor(mo), y = val, colour = names(cols)[1]), outlier.colour = NA) +
@@ -208,8 +208,8 @@ stamoplo <- stamoout %>%
   mutate(
     plos = purrr::pmap(list(epchc_station, data), function(epchc_station, data){
       
-      yrsel <- yrsel
-      yrrng <- c(1973, yrsel - 1)
+      yrsel <- seq(yrsel - 4, yrsel)
+      yrrng <- c(1973, min(yrsel))
       
       # toplo1 is all but current year
       toplo1 <- data %>%
@@ -227,7 +227,7 @@ stamoplo <- stamoout %>%
         yrsel > yrrng[1] & yrsel < yrrng[2] ~ paste(paste(yrrng[1], yrsel - 1, sep = '-'), paste(yrsel + 1, yrrng[2], sep = '-'), sep = ', '),
         T ~ paste(yrrng, collapse = '-')
       )
-      names(cols)[2] <- as.character(yrsel)
+      names(cols)[2] <- paste(c(min(yrsel), max(yrsel)), collapse = '-')
       
       p <- ggplot() +
         geom_boxplot(data = data, aes(x = factor(mo), y = val, colour = names(cols)[1]), outlier.colour = NA) +
