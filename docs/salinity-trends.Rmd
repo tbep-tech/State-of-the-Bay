@@ -12,18 +12,20 @@ library(tbeptools)
 library(patchwork)
 library(here)
 library(mapview)
+library(leafem)
 library(sf)
+
+yrsel <- 2021
 
 # local file path
 xlsx <- here('data-raw/Results_Updated.xls')
 
 # import and download if new
-epcdata <- read_importwq(xlsx, download_latest = T)
-
-yrsel <- 2021
+saldat <- read_importwq(xlsx, download_latest = F) %>% 
+  filter(yr <= yrsel)
 
 # monthly salinity
-moout <- epcdata %>%
+moout <- saldat %>%
   dplyr::select(yr, mo, bay_segment, epchc_station, Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth) %>%
   dplyr::rowwise() %>% 
   dplyr::mutate(sal = mean(c(Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth), na.rm = T)) %>% 
@@ -137,7 +139,7 @@ moplo <- moout %>%
 
 
 # station monthly salinity
-stamoout <- epcdata %>%
+stamoout <- saldat %>%
   dplyr::select(yr, mo, bay_segment, epchc_station, Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth) %>%
   dplyr::rowwise() %>% 
   dplyr::mutate(sal = mean(c(Sal_Top_ppth, Sal_Mid_ppth, Sal_Bottom_ppth), na.rm = T)) %>% 
@@ -266,7 +268,7 @@ stations <- st_as_sf(stations, coords = c('Longitude', 'Latitude'), crs = 4326)
 ## Map
 
 ```{r, out.width = '100%', out.height = '600px'}
-mapview(tbseg, zcol = 'bay_segment', homebutton = F, layer.name = NA) %>% 
+mapview(tbseg, zcol = 'bay_segment', homebutton = F, layer.name = 'Segment') %>% 
   addStaticLabels(data = stations, label = stations$epchc_station,
                   noHide = TRUE,
                   direction = 'center',
