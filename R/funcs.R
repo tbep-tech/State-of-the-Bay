@@ -126,7 +126,7 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
       )
     
     p <- plot_ly(toplo, height = height, width = width)  %>% 
-      add_trace(x = ~dt, y = ~yv, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = F, name = levs[lev]) %>% #, marker = list(opacity = 1, size = 4)) %>% 
+      add_trace(x = ~dt, y = ~yv, color = I('#435462'), mode = 'lines+markers', type = 'scatter', showlegend = F, name = levs[lev]) %>% #, marker = list(opacity = 1, size = 4)) %>% 
       add_annotations(
         text = ~unique(bay_segment),
         x = 0.5,
@@ -172,9 +172,8 @@ ldtot_plo <- function(datin, yval = c('tn_load', 'hy_load', 'tnhy'), addlns = F,
   out <- subplot(mget(plts), shareX = T, nrows = length(levs), shareY = F, titleY = T) %>%
     layout(
       xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)'),
-      plot_bgcolor = 'rgba(0,128,110, 0.1)', 
+      plot_bgcolor = '#EEEEEE', 
       font = list(family = family)
-      # yaxis = list(gridcolor = '#FFFFFF')
     ) %>% 
     plotly::config(
       toImageButtonOptions = list(
@@ -197,40 +196,37 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
     mutate(
       pop = pop / 1e6
     )
-  
+  # browser()
   ay <- list(
     title = list(
       text = "TN vs Hydrology ratio\nTampa Bay total",
-      font = list(color = "blue")
+      font = list(color = "#435462")
     ), 
-    tickfont = list(color = "blue"),
+    tickfont = list(color = "#435462"),
     overlaying = "y",
+    gridcolor = '#EEEEEE',
     side = "right"
   )
 
   out <- plot_ly(toplo, width = width, height = height) %>% 
-    add_trace(x = ~yr, y = ~pop, color = I('tomato1'), type = 'bar', showlegend = T, name = 'Pop.') %>%
-    add_trace(x = ~yr, y = ~tnhy, color = I('blue'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
+    add_trace(x = ~yr, y = ~pop, color = I('#D9A650'), type = 'bar', showlegend = T, name = 'Pop.') %>%
+    add_trace(x = ~yr, y = ~tnhy, color = I('#435462'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
     layout(
       yaxis = list(
-        title = list(text = 'Population (millions)', font = list(color = 'red')), 
-        tickfont = list(color = 'red')
+        title = list(text = 'Population (millions)', font = list(color = '#D9A650')), 
+        tickfont = list(color = '#D9A650'),
+        zerolinecolor = '#EEEEEE',
+        zerolinewidth = 2,
+        gridcolor = '#EEEEEE'
         ),
-      yaxis2 = ay
-    ) %>% 
-    layout(
-      plot_bgcolor = 'rgba(0,128,110, 0.1)',
+      yaxis2 = ay,
       xaxis = list(
         title = NA,
         zerolinecolor = '#ffff',
         zerolinewidth = 2,
-        xaxis = list(title = NA, gridcolor = 'rgba(0,128,110, 0)')
+        tickfont = list(color = 'black')
       ),
-      yaxis = list(
-        zerolinecolor = '#ffff',
-        zerolinewidth = 2,
-        gridcolor = 'ffff'
-      ), 
+      plot_bgcolor = '#EEEEEE',
       font = list(family = family)
     ) %>% 
     plotly::config(
