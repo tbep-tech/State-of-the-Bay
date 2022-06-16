@@ -8,7 +8,7 @@ source(here('R/dat_proc.R'))
 # knit html ---------------------------------------------------------------
 
 fls <- list.files(here('docs/'), '\\.Rmd$', full.names = T)
-fls <- grep('\\-trends\\.Rmd$', fls, value = T, invert = T)
+fls <- grep('salinity|temperature', fls, value = T, invert = T)
 
 for(fl in fls){
   cat(fl, '\n')
