@@ -26,6 +26,6 @@ p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
 div(p, align = 'center')
 ```
 
-See additional visualization tools for nutrient loading data here: https://tbep-tech.github.io/load-estimates/.
+See additional visualization tools for nutrient loading data here: https://tbep.org/tampa-bay-nitrogen-loads/.
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
