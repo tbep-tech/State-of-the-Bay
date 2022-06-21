@@ -32,11 +32,11 @@ The water quality report card is produced annually to track status and trends of
 
 Tracking the attainment of bay segment specific targets for chlorophyll and light attenuation provides the framework for developing and initiating bay management actions. TBEP management actions adopted in response to the annually-assessed decision support results are shown below.
 
-<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. 
+<span style="color:#33FF3B; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. 
 
-<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations.
+<span style="color:#F9FF33; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>: Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations.
 
-<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>: Finalize development and implement appropriate management actions to get back on track.
+<span style="color:#FF3333; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>: Finalize development and implement appropriate management actions to get back on track.
 
 The management category or action is based on the combination of annual outcomes for chlorophyll and light attenuation.   
 

@@ -53,9 +53,9 @@ wqsum_fun <- function(datin, maxyr){
     filter(yr == !!maxyr) %>% 
     mutate(
       action = case_when(
-        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>',
-        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>', 
-        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>'
+        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>'
       )
     ) %>% 
     select(bay_segment, action)
@@ -268,9 +268,9 @@ tbnisum_fun <- function(datin, maxyr){
     bind_rows(tbniall) %>% 
     mutate(
       action = case_when(
-        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>',
-        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>', 
-        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>'
+        outcome == 'green' ~ '<span style="color:#33FF3B; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#F9FF33; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#FF3333; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>'
       )
     )
   
@@ -299,9 +299,9 @@ tbbisum_fun <- function(datin, maxyr, seg){
     select(bay_segment, cat = TBBICat) %>% 
     mutate(
       cat = case_when(
-        cat == 'Good' ~ '<span style="color: #006400; text-shadow: 0 0 3px #333;"><b>Good</b></span>',
-        cat == 'Fair' ~ '<span style="color: #f9ff33; text-shadow: 0 0 3px #333;"><b>Fair</b></span>', 
-        cat == 'Poor' ~ '<span style="color: #ff3333; text-shadow: 0 0 3px #333;"><b>Poor</b></span>'
+        cat == 'Good' ~ '<span style="color: #006400; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Good</b></span>',
+        cat == 'Fair' ~ '<span style="color: #f9ff33; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Fair</b></span>', 
+        cat == 'Poor' ~ '<span style="color: #ff3333; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Poor</b></span>'
       )
     )
   
