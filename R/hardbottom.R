@@ -20,6 +20,7 @@ hard <- st_make_valid(hard) %>%
   mutate(long_name = factor(long_name, levels = c('Old Tampa Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')))
   # st_buffer(dist = 30)
 
+# hard bottom
 for(lev in levels(hard$long_name)){
   
   tomap <- hard %>% 
@@ -49,4 +50,29 @@ for(lev in levels(hard$long_name)){
   print(p)
   dev.off()
 
+}
+
+# segment insets
+for(lev in levels(hard$long_name)){
+
+  seg <- tbseg %>% 
+    filter(long_name %in% lev)
+  levshrt <- seg %>% 
+    pull(bay_segment)
+  flnm <- here(paste0('figures/hardbottominset', levshrt, '.jpg'))
+  
+  p <- ggplot() +
+    annotation_map_tile(zoom = 11, type = 'cartolight') +
+    geom_sf(data = tbseg, color = NA, fill = NA) + 
+    geom_sf(data = seg, color = 'black', fill = 'grey') + 
+    theme_minimal(base_family = fml) + 
+    theme(
+      axis.text= element_blank(), 
+      axis.ticks = element_blank()
+    )
+  
+  jpeg(flnm, family = fml, height = 5, width = 5, res = 500, units = 'in')
+  print(p)
+  dev.off()
+  
 }
