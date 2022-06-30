@@ -7,7 +7,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2019
+maxyr <- 2020
 seg <- c('OTB', 'HB', 'MTB', 'LTB', 'All (wt)')
 
 tbbiscr <- anlz_tbbiscr(benthicdata)
@@ -20,7 +20,7 @@ Benthic invertebrates are a group of relatively small organisms (microscopic to 
 
 The Tampa Bay Benthic Monitoring Program was started in 1993, and partners include the Environmental Protection Commission of Hillsborough County, and Hillsborough, Manatee and Pinellas Counties. Our partners monitor benthic invertebrate population characteristics and environmental conditions that affect these organisms, including percent silt-clay, sediment contaminant levels, and dissolved oxygen.
 
-The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2019, and the bay-wide median TBBI was continuously in the "Healthy" range from 2015-2017, with slight decreases in 2018 and 2019. During that time frame, the highest TBBI values were observed in lower and Middle Tampa Bay, with intermediate values observed in Old Tampa Bay and degraded values in Hillsborough Bay.
+The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic invertebrate populations in Tampa Bay. The TBBI is scaled from 0-100 with values <73 classified as "Degraded", from 73-87 as "Intermediate", and >87 as "Healthy".  The average TBBI score increased from 1993-2020 and the bay-wide median TBBI was continuously in the "Healthy" range from 2015-2017, with slight decreases in 2018, 2019, and 2020. During that time frame, the highest TBBI values were observed in Lower and Middle Tampa Bay, with intermediate values observed in Middle Tampa Bay and degraded values in Old Tampa Bay.
 
 ## Results for `r maxyr`
 
