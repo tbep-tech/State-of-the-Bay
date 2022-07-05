@@ -21,11 +21,11 @@ The Tampa Bay Nekton Index (TBNI), which is similar to the water quality scoreca
 
 An annual "snapshot" of ecological health helps fisheries managers target efforts to improve habitat or other factors. Nekton index scores can be translated into actionable management categories with narrative interpretations. Each action category has a description to provide guidance to managers:
 
-<span style="color:#33FF3B; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports. 
+<span style="color:#2DC938; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports. 
 
-<span style="color:#F9FF33; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>: Review monitoring data and identify additional research/monitoring needs. Begin/continue TAC and Management Board development of specific management recommendations.
+<span style="color:#E9C318; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>: Review monitoring data and identify additional research/monitoring needs. Begin/continue TAC and Management Board development of specific management recommendations.
 
-<span style="color:#FF3333; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>: Finalize development and implement appropriate management actions to get nekton community back on track.
+<span style="color:#CC3231; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>: Finalize development and implement appropriate management actions to get nekton community back on track.
   
 The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions suggest the fish community is in a healthy state, with all four major bay segments receiving "green" scores the past four years.  Long-term trends in nekton index scores by bay segment are shown below.
 

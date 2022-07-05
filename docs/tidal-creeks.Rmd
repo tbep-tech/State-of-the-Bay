@@ -26,13 +26,13 @@ Tidal creeks are assigned to one of five categories:
 
 <span style="color:#ADD8E6; text-shadow: 0 0 4px #333; letter-spacing: 2px">__No Data__</span>: Data are unavailable for evaluation.
 
-<span style="color:#33FF3B; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Monitor__</span>: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
+<span style="color:#2DC938; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Monitor__</span>: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
 
-<span style="color:#F9FF33; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>: Creek nutrients showing signs of elevated nutrient concentrations that may increase risk of eutrophic condition.
+<span style="color:#E9C318; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>: Creek nutrients showing signs of elevated nutrient concentrations that may increase risk of eutrophic condition.
 
-<span style="color:#FFA500; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Investigate__</span>: Creek nutrient concentrations above margin of safety to protect creek from potential impairment.  
+<span style="color:#EE7600; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Investigate__</span>: Creek nutrient concentrations above margin of safety to protect creek from potential impairment.  
 
-<span style="color:#FF7F50; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Prioritize__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of the tributary in at least one year indicating that actions may be needed to identify remediative measures to reduce nutrients in the creek.
+<span style="color:#FF4040; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Prioritize__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of the tributary in at least one year indicating that actions may be needed to identify remediative measures to reduce nutrients in the creek.
 
 ## Results for `r maxyr`
 
