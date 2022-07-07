@@ -5,6 +5,7 @@ library(googlesheets4)
 library(googledrive)
 library(showtext)
 library(here)
+library(patchwork)
 
 # get font
 font_add_google("Roboto", "roboto")#, regular = 'C:/Windows/Fonts/Roboto.ttf')
@@ -56,15 +57,25 @@ rstsum <- rstdat %>%
   pivot_wider(names_from = 'var', values_from = 'val') %>% 
   select(HMPU_TARGETS, tot, `Restoration, Acres`, `Restoration, Miles`, `Enhancement, Acres`, `Enhancement, Miles`)
 
-# from https://github.com/tbep-tech/hmpu-workflow/blob/b58f01e167002aea81817acc7a4ec55de41a598c/R/funcs.R#L843
-# 2020 lulc and subtidal estimates
-cursum <- structure(
-  list(Category = structure(c(1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L), .Label = c("Subtidal", "Intertidal", "Supratidal"), class = "factor"), 
-  HMPU_TARGETS = c("Artificial Reefs", "Hard Bottom", "Oyster Bars", "Seagrasses", "Tidal Flats", "Living Shorelines", "Mangrove Forests", "Salt Barrens", "Salt Marshes", "Tidal Tributaries", "Total Intertidal", "Coastal Uplands", "Forested Freshwater Wetlands", "Native Uplands", "Non-Forested Freshwater Wetlands"), 
-  unis = c("ac", "ac", "ac", "ac", "ac", "mi", "ac", "ac", "ac", "mi", "ac", "ac", "ac", "ac", "ac"), 
-  `Current Extent` = c(216.557266316525, 422.528550607117, 189.961025847817, 33945.0856405873, 18425.2273981012, 11.0035505809857, 15485.2519567852, 575.066127733119, 4588.23329998141, 386.709015345442, 20648.5513844998, 3637.54967308123, 151925.283872554, 141178.515018579, 69493.645393833)), 
-  row.names = c(NA, -15L), class = c("tbl_df", "tbl", "data.frame"))
+# from https://github.com/tbep-tech/hmpu-workflow/blob/b58f01e167002aea81817acc7a4ec55de41a598c/R/funcs.R#L925
+# 2020 seagrass est added manually
+cursum <- structure(list(
+  Category = structure(c(1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L), .Label = c("Subtidal", "Intertidal", "Supratidal"), class = "factor"), 
+  HMPU_TARGETS = c("Artificial Reefs",  "Hard Bottom", "Oyster Bars", "Seagrasses", "Tidal Flats", "Living Shorelines", 
+                   "Total Intertidal", "Mangrove Forests", "Salt Barrens", "Salt Marshes", "Tidal Tributaries", 
+                   "Coastal Uplands", "Forested Freshwater Wetlands", "Native Uplands", 
+                   "Non-Forested Freshwater Wetlands"), 
+  unis = c("ac", "ac", "ac", "ac", "ac", "mi", "ac", "ac", "ac", "ac", "mi", "ac", "ac", "ac", "ac"), 
+  `Current Extent` = c(166, 423, 171, 33945.0856405873, 16220, 11.3, 20353, 15300, 496, 4557, 387, 3619, 152132, 140600, 67587)), 
+  class = "data.frame", row.names = c(NA, -15L))
 
+# restoresum
+restoresum <- structure(list(
+  HMPU_TARGETS = c("Coastal Uplands", "Forested Freshwater Wetlands", 
+                   "Mangrove Forests", "Native Uplands", "Non-Forested Freshwater Wetlands", 
+                   "Salt Barrens", "Salt Marshes", "Total Intertidal"), 
+  `total restorable` = c(1272, 159836, 2757, 43928, 159836, 2757, 1092, 3849)), 
+  row.names = c(NA, -8L), class = c("tbl_df", "tbl", "data.frame"))
 
 trgs <- data.frame(
   Category  = c("Subtidal", "Subtidal", "Subtidal", "Subtidal", "Subtidal",
@@ -102,7 +113,7 @@ prg <- rstsum %>%
   mutate(
     cat = factor(cat, 
       levels = rev(c('Current Extent', 'prgtot')), 
-      labels = rev(c('Prior Extent', '2019-2021 progress'))
+      labels = rev(c('2017 Extent', '2019-2021 progress'))
       )
   ) %>% 
   group_by(HMPU_TARGETS) %>% 
@@ -116,11 +127,15 @@ prg <- rstsum %>%
     Category = factor(Category, 
                       levels = c("Subtidal", "Intertidal", "Supratidal"),
                       labels = c("In-bay", "Coastal", "Uplands")
+    ), 
+    typ = case_when(
+      HMPU_TARGETS %in% c('Artificial Reefs', 'Hard Bottom', 'Seagrasses', 'Native Uplands', 'Forested Freshwater Wetlands') ~ 'hold', 
+      T ~ 'prog'
     )
   )
 
 labs <- prg %>% 
-  group_by(HMPU_TARGETS, Category) %>% 
+  group_by(HMPU_TARGETS, Category, typ) %>% 
   summarise(
     gain2030 = case_when(
       cat == '2019-2021 progress' ~ prg2030
@@ -146,32 +161,62 @@ labs <- prg %>%
 
 cols <-  c('#E4A41A', '#004F7E')
 
-p <- ggplot(prg, aes(y = HMPU_TARGETS, x = prg2030)) + 
-  geom_bar(aes(fill = cat), stat = 'identity') + 
-  facet_grid(Category ~ ., space = 'free', scales = 'free_y', switch = 'y') + 
-  geom_vline(xintercept = 100, linetype = 'dashed', size = 1, col = '#00806E') + 
-  geom_text(data = labs, aes(label = gain2030), hjust = 0, nudge_x = 3) +
-  scale_x_continuous(expand = c(0, 0), breaks = c(0, 50, 100)) +
-  scale_fill_manual(values = cols) +
-  guides(fill = guide_legend(reverse = T)) +
-  theme_minimal() + 
+thm <- theme_minimal() + 
   theme(
     panel.grid = element_blank(), 
     strip.placement = 'outside', 
     legend.position = 'top',
     strip.background = element_blank(), 
-    strip.text.y = element_text(angle = 90, size = 12), 
+    strip.text.y = element_text(angle = 90, size = 10), 
     strip.text.x = element_blank(),
     axis.title.x = element_text(size = 12)
-  ) + 
+  )
+
+prg1 <- prg %>% 
+  filter(typ == 'prog')
+labs1 <- labs %>% 
+  filter(typ == 'prog')
+
+p1 <- ggplot(prg1, aes(y = HMPU_TARGETS, x = prg2030)) + 
+  geom_bar(aes(fill = cat), stat = 'identity') + 
+  facet_grid(Category ~ ., space = 'free', scales = 'free_y', switch = 'y') + 
+  geom_vline(xintercept = 100, linetype = 'dashed', size = 1, col = '#00806E') + 
+  geom_text(data = labs1, aes(label = gain2030), hjust = 0, nudge_x = 1) +
+  scale_x_continuous(expand = c(0, 0), breaks = c(0, 50, 100), limits = c(0, 120)) +
+  scale_fill_manual(values = cols) +
+  guides(fill = guide_legend(reverse = T)) +
+  thm +
   labs(
     x = '% of 2030 target',
     y = NULL, 
     fill = NULL,
-    title = 'Progress towards habitat restoration goals'
+    title = 'Progress needed'
   )
 
-jpeg(here('figures/restoreprg.jpg'), family = fml, height = 4, width = 8, res = 500, units = 'in')
+prg2 <- prg %>% 
+  filter(typ == 'hold')
+labs2 <- labs %>% 
+  filter(typ == 'hold')
+
+p2 <- ggplot(prg2, aes(y = HMPU_TARGETS, x = prg2030)) + 
+  geom_bar(aes(fill = cat), stat = 'identity') + 
+  facet_grid(Category ~ ., space = 'free', scales = 'free_y', switch = 'y') + 
+  geom_vline(xintercept = 100, linetype = 'dashed', size = 1, col = '#00806E') + 
+  geom_text(data = labs2, aes(label = gain2030), hjust = 0, nudge_x = 1) +
+  scale_x_continuous(expand = c(0, 0), breaks = c(0, 50, 100), limits = c(0, 120)) +
+  scale_fill_manual(values = cols) +
+  guides(fill = guide_legend(reverse = T)) +
+  thm +
+  labs(
+    x = '% of 2030 target',
+    y = NULL, 
+    fill = NULL,
+    title = 'Hold the line'
+  )
+
+p <-  p1 + p2 + plot_layout(ncol = 1, guides = 'collect')
+
+jpeg(here('figures/restoreprg.jpg'), family = fml, height = 6, width = 8, res = 500, units = 'in')
 print(p)
 dev.off()
 
