@@ -167,7 +167,7 @@ thm <- theme_minimal() +
     strip.placement = 'outside', 
     legend.position = 'top',
     strip.background = element_blank(), 
-    strip.text.y = element_text(angle = 90, size = 10), 
+    strip.text.y = element_text(angle = 90, size = 8.5), 
     strip.text.x = element_blank(),
     axis.title.x = element_text(size = 12)
   )
@@ -214,9 +214,12 @@ p2 <- ggplot(prg2, aes(y = HMPU_TARGETS, x = prg2030)) +
     title = 'Hold the line'
   )
 
-p <-  p1 + p2 + plot_layout(ncol = 1, guides = 'collect')
+p <-  p1 + p2 + plot_layout(ncol = 1, guides = 'collect', heights = c(1, 0.72)) & 
+  theme(
+    legend.position = 'bottom'
+    )
 
-jpeg(here('figures/restoreprg.jpg'), family = fml, height = 6, width = 8, res = 500, units = 'in')
+jpeg(here('figures/restoreprg.jpg'), family = fml, height = 5, width = 8, res = 500, units = 'in')
 print(p)
 dev.off()
 
