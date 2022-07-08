@@ -129,7 +129,7 @@ prg <- rstsum %>%
                       labels = c("In-bay", "Coastal", "Uplands")
     ), 
     typ = case_when(
-      HMPU_TARGETS %in% c('Artificial Reefs', 'Hard Bottom', 'Seagrasses', 'Native Uplands', 'Forested Freshwater Wetlands') ~ 'hold', 
+      HMPU_TARGETS %in% c('Artificial Reefs', 'Hard Bottom', 'Tidal Flats', 'Native Uplands', 'Forested Freshwater Wetlands') ~ 'hold', 
       T ~ 'prog'
     )
   )
@@ -156,6 +156,14 @@ labs <- prg %>%
     gain2050 = case_when(
       gain2050 == 0 ~ '',
       T ~ paste0('+', round(gain2050, 1), '%')
+    ), 
+    prg2030 = case_when(
+      !HMPU_TARGETS %in% c('Oyster Bars', 'Living Shorelines', 'Coastal Uplands') ~ 100, 
+      T ~ prg2030
+    ), 
+    prg2050 = case_when(
+      !HMPU_TARGETS %in% c('Oyster Bars', 'Living Shorelines', 'Coastal Uplands') ~ 100, 
+      T ~ prg2050
     )
   )
 
@@ -169,7 +177,7 @@ thm <- theme_minimal() +
     strip.background = element_blank(), 
     strip.text.y = element_text(angle = 90, size = 8.5), 
     strip.text.x = element_blank(),
-    axis.title.x = element_text(size = 12)
+    axis.title.x = element_text(size = 11)
   )
 
 prg1 <- prg %>% 
@@ -181,7 +189,7 @@ p1 <- ggplot(prg1, aes(y = HMPU_TARGETS, x = prg2030)) +
   geom_bar(aes(fill = cat), stat = 'identity') + 
   facet_grid(Category ~ ., space = 'free', scales = 'free_y', switch = 'y') + 
   geom_vline(xintercept = 100, linetype = 'dashed', size = 1, col = '#00806E') + 
-  geom_text(data = labs1, aes(label = gain2030), hjust = 0, nudge_x = 1) +
+  geom_text(data = labs1, aes(label = gain2030), hjust = 0, nudge_x = 1, col = cols[1]) +
   scale_x_continuous(expand = c(0, 0), breaks = c(0, 50, 100), limits = c(0, 120)) +
   scale_fill_manual(values = cols) +
   guides(fill = guide_legend(reverse = T)) +
@@ -202,7 +210,7 @@ p2 <- ggplot(prg2, aes(y = HMPU_TARGETS, x = prg2030)) +
   geom_bar(aes(fill = cat), stat = 'identity') + 
   facet_grid(Category ~ ., space = 'free', scales = 'free_y', switch = 'y') + 
   geom_vline(xintercept = 100, linetype = 'dashed', size = 1, col = '#00806E') + 
-  geom_text(data = labs2, aes(label = gain2030), hjust = 0, nudge_x = 1) +
+  geom_text(data = labs2, aes(label = gain2030), hjust = 0, nudge_x = 1, col = cols[1]) +
   scale_x_continuous(expand = c(0, 0), breaks = c(0, 50, 100), limits = c(0, 120)) +
   scale_fill_manual(values = cols) +
   guides(fill = guide_legend(reverse = T)) +
@@ -219,7 +227,7 @@ p <-  p1 + p2 + plot_layout(ncol = 1, guides = 'collect', heights = c(1, 0.72)) 
     legend.position = 'bottom'
     )
 
-jpeg(here('figures/restoreprg.jpg'), family = fml, height = 5, width = 8, res = 500, units = 'in')
+svg(here('figures/restoreprg.svg'), family = fml, height = 5, width = 8)
 print(p)
 dev.off()
 
