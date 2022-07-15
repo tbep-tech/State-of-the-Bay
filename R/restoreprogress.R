@@ -11,8 +11,8 @@ library(patchwork)
 font_add_google("Roboto", "roboto")#, regular = 'C:/Windows/Fonts/Roboto.ttf')
 fml <- "roboto"
 
-showtext_auto()
-showtext_opts(dpi = 500)
+# showtext_auto()
+# showtext_opts(dpi = 500)
 
 # auth google drive
 drive_auth(email = 'mbeck@tbep.org')
@@ -36,7 +36,7 @@ rstsum <- rstdat %>%
     HMPU_TARGETS = case_when(
       HMPU_TARGETS == 'Uplands (Non-coastal)' ~ 'Native Uplands',
       HMPU_TARGETS == 'Non-forested Freshwater Wetlands' ~ 'Non-Forested Freshwater Wetlands', 
-      HMPU_TARGETS %in% c('Intertidal Estuarine (Other)', 'Mangrove Forests', 'Salt Barrens', 'Salt marshes') ~ 'Total Intertidal', 
+      # HMPU_TARGETS %in% c('Intertidal Estuarine (Other)', 'Mangrove Forests', 'Salt Barrens', 'Salt marshes') ~ 'Total Intertidal', 
       T ~ HMPU_TARGETS)
   ) %>% 
   ungroup() %>% 
@@ -56,6 +56,18 @@ rstsum <- rstdat %>%
   unite('var', Activity, var, sep = ', ') %>% 
   pivot_wider(names_from = 'var', values_from = 'val') %>% 
   select(HMPU_TARGETS, tot, `Restoration, Acres`, `Restoration, Miles`, `Enhancement, Acres`, `Enhancement, Miles`)
+
+# add total intertidal from GPRA
+totint <- rstsum %>% 
+  filter(HMPU_TARGETS %in% c('Intertidal Estuarine (Other)', 'Mangrove Forests', 'Salt Barrens', 'Salt marshes')) %>% 
+  mutate(HMPU_TARGETS = 'Total Intertidal') %>% 
+  group_by(HMPU_TARGETS) %>% 
+  summarise_if(is.numeric, function(x) sum(x, na.rm = T))
+
+# add totint to rstsum
+rstsum <- rstsum %>% 
+  bind_rows(totint) %>% 
+  filter(HMPU_TARGETS != 'Intertidal Estuarine (Other)')
 
 # from https://github.com/tbep-tech/hmpu-workflow/blob/b58f01e167002aea81817acc7a4ec55de41a598c/R/funcs.R#L925
 # 2020 seagrass est added manually
@@ -99,7 +111,7 @@ trgs <- data.frame(
 prg <- rstsum %>% 
   full_join(cursum, by = 'HMPU_TARGETS') %>% 
   full_join(trgs, by = c('HMPU_TARGETS', 'Category')) %>% 
-  filter(!HMPU_TARGETS %in% c('Mangrove Forests', 'Salt Barrens', 'Salt Marshes')) %>% 
+  # filter(!HMPU_TARGETS %in% c('Mangrove Forests', 'Salt Barrens', 'Salt Marshes')) %>% 
   mutate(
     prgtot = case_when(
       unis == 'ac' ~ `Restoration, Acres`,
@@ -175,7 +187,7 @@ thm <- theme_minimal() +
     strip.placement = 'outside', 
     legend.position = 'top',
     strip.background = element_blank(), 
-    strip.text.y = element_text(angle = 90, size = 8.5), 
+    strip.text.y = element_text(angle = 90, size = 10), 
     strip.text.x = element_blank(),
     axis.title.x = element_text(size = 11)
   )
@@ -222,12 +234,11 @@ p2 <- ggplot(prg2, aes(y = HMPU_TARGETS, x = prg2030)) +
     title = 'Hold the line'
   )
 
-p <-  p1 + p2 + plot_layout(ncol = 1, guides = 'collect', heights = c(1, 0.72)) & 
-  theme(
-    legend.position = 'bottom'
-    )
+svg(here('figures/restoreprg.svg'), family = fml, height = 5, width = 9)
+print(p1)
+dev.off()
 
-svg(here('figures/restoreprg.svg'), family = fml, height = 5, width = 8)
-print(p)
+svg(here('figures/restorehold.svg'), family = fml, height = 3, width = 8)
+print(p2)
 dev.off()
 
