@@ -141,7 +141,7 @@ prg <- rstsum %>%
                       labels = c("In-bay", "Coastal", "Uplands")
     ), 
     typ = case_when(
-      HMPU_TARGETS %in% c('Artificial Reefs', 'Hard Bottom', 'Tidal Flats', 'Native Uplands', 'Forested Freshwater Wetlands') ~ 'hold', 
+      HMPU_TARGETS %in% c('Artificial Reefs', 'Hard Bottom', 'Tidal Flats', 'Mangrove Forests', 'Native Uplands', 'Forested Freshwater Wetlands') ~ 'hold', 
       T ~ 'prog'
     )
   )
