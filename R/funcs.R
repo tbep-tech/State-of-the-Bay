@@ -199,7 +199,7 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
   # browser()
   ay <- list(
     title = list(
-      text = "TN vs Hydrology ratio\nTampa Bay total",
+      text = "Total Hydrologically\nNormalized TN Load\nto Tampa Bay (tons/yr)",
       font = list(color = "#435462")
     ), 
     tickfont = list(color = "#435462"),
@@ -210,7 +210,7 @@ ldrat_plo <- function(totanndat, popdat, width = NULL, height = NULL, family){
 
   out <- plot_ly(toplo, width = width, height = height) %>% 
     add_trace(x = ~yr, y = ~pop, color = I('#D9A650'), type = 'bar', showlegend = T, name = 'Pop.') %>%
-    add_trace(x = ~yr, y = ~tnhy, color = I('#435462'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'TN:hydrology') %>% 
+    add_trace(x = ~yr, y = ~tnhy, color = I('#435462'), mode = 'lines+markers', type = 'scatter', showlegend = T, yaxis = 'y2', name = 'Hydrologically\nNormalized\nTN loads') %>% 
     layout(
       yaxis = list(
         title = list(text = 'Population (millions)', font = list(color = '#D9A650')), 

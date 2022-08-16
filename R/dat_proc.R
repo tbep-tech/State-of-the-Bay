@@ -55,6 +55,17 @@ popdat <- bind_rows(legdat, acsdat) %>%
   summarise(pop = mean(pop), .groups = 'drop') %>% 
   arrange(yr)
 
+##
+# manually add 2020, 2021 (not in tidycensus yet)
+# https://www.statista.com/statistics/815278/tampa-metro-area-population/
+
+popdat <- popdat %>% 
+  bind_rows(
+    tibble(
+      yr = c(2020, 2021), 
+      pop = c(3183385, 3219514))
+  )
+
 save(popdat, file = here('data/popdat.RData'))
 
 # social media data -------------------------------------------------------
