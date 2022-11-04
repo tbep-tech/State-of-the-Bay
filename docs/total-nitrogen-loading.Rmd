@@ -19,7 +19,7 @@ p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough
 div(p, align = 'center')
 ```
 
-Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading also continues to decrease over time. The amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2020). 
+Despite an increasing population in the Tampa Bay metropolitan area, per capita TN loading also continues to decrease over time. The amount of TN delivered per unit water has also decreased over time in each of the major bay segments. To date, hydrologically-normalized total loads to Tampa Bay are at the lowest levels since they have been estimated (1985-2021). 
 
 ```{r, out.width = '100%'}
 p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
