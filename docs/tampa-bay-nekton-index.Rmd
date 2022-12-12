@@ -7,7 +7,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2020
+maxyr <- 2021
 tbniscr <- anlz_tbniscr(fimdata)
 
 # summaries for inline
@@ -27,7 +27,7 @@ An annual "snapshot" of ecological health helps fisheries managers target effort
 
 <span style="color:#CC3231; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>: Finalize development and implement appropriate management actions to get nekton community back on track.
   
-The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions suggest the fish community is in a healthy state, with all four major bay segments receiving "green" scores the past four years.  Long-term trends in nekton index scores by bay segment are shown below.
+The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions in 2021 suggest the fish community was likely affected by the summer red tide observed in Tampa Bay.  Long-term trends in nekton index scores by bay segment are shown below.
 
 ```{r, out.width = '100%'}
 p <- show_tbniscr(tbniscr, family = fml, width = 950, height = 450, plotly = T)
