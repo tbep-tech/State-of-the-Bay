@@ -56,6 +56,8 @@ dev.off()
 
 # tbni report card --------------------------------------------------------
 
+tbniscr <- anlz_tbniscr(fimdata)
+
 p <- show_tbnimatrix(tbniscr, family = fml) +
   theme(
     text = element_text(family = fml),
@@ -64,6 +66,24 @@ p <- show_tbnimatrix(tbniscr, family = fml) +
   ggtitle('Tampa Bay Nekton Index\nReport Card')
 
 jpeg('figures/tbnireport.jpg', family = fml, height = 7, width = 3, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# tbni report card detailed -------------------------------------------------------------------
+
+tbniscr <- anlz_tbniscr(fimdata)
+
+p1 <- show_tbnimatrix(tbniscr, txtsz = NULL, position = 'bottom', rev = T, family = fml) +
+  scale_y_continuous(expand = c(0,0), breaks = sort(unique(tbniscr$Year))) + 
+  coord_flip() +
+  theme(
+    axis.text.x = element_blank()
+  )
+p2 <- show_tbniscr(tbniscr, family = fml)
+
+p <- p1 + p2 + plot_layout(ncol = 1, heights = c(0.25, 1))
+
+jpeg('figures/tbnidetreport.jpg', family = fml, height = 6, width = 7, units = 'in', res = 300)
 print(p)
 dev.off()
 
