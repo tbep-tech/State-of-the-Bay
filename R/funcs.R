@@ -1366,7 +1366,7 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
 
 # seagrass coverage plot, uses seagrass data obj from tbeptools
 sgcov_plo <- function(seagrass, family){
-    
+  
   ##
   # data prep
   
@@ -1374,7 +1374,7 @@ sgcov_plo <- function(seagrass, family){
   exyrs <- seq(1950, 1953)
   
   toplo <- tibble(
-    Year = c(exyrs, seq(1982, 2020))
+    Year = c(exyrs, seq(1982, 2022))
   ) %>%
     left_join(seagrass, by = 'Year') %>%
     mutate(
@@ -1387,7 +1387,7 @@ sgcov_plo <- function(seagrass, family){
     pull(Acres) %>% 
     round(0) %>% 
     format(big.mark = ',') %>% 
-    paste(., 'acres')
+    paste(., 'acres (provisional)')
   
   # y loc for last bar label
   lasty <- seagrass %>% 
@@ -1409,9 +1409,9 @@ sgcov_plo <- function(seagrass, family){
     with_shadow(geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 1.3), sigma = 2.7, x_offset = 0, y_offset = 0) +
     geom_segment(x = 0, xend = 2, y = 38, yend = 38, col = 'red', size = 2) +
     geom_segment(x = 4, xend = 42, y = 38, yend = 38, col = 'red', size = 2) +
-    geom_segment(x = 42, xend = 44, y = 40, yend = 40, col = 'red', size = 2) +
+    geom_segment(x = 42, xend = 46, y = 40, yend = 40, col = 'red', size = 2) +
     annotate("text", label = "Seagrass Coverage Goal", x = 4, y = 40.5, color = 'red', size = 5, hjust = 0, family = family) +
-    annotate('text', x = 43, y = lasty, label = lastlab, angle = 90, hjust = 1, vjust = 0.4) + 
+    annotate('text', x = 45, y = lasty, label = lastlab, angle = 90, hjust = 1, vjust = 0.3, size = 3) + 
     scale_x_discrete(breaks = brks, labels = lbs, expand = c(0.04, 0.04)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(toplo$Acres, na.rm = T))) +
     theme_grey(base_family = family) +
@@ -1443,7 +1443,7 @@ sgcov_plo <- function(seagrass, family){
   
   # location of break, break type
   xline$y <- unit(rep(1, 4), "npc")
-  xline$x <- unit(c(0, 0.06, 1, 0.105), "npc")
+  xline$x <- unit(c(0, 0.06, 1, 0.11), "npc")
   xline$id <- c(1, 1, 2, 2)
   xline$arrow <- arrow(angle = 90, length = unit(0.07, 'inches'))
   
