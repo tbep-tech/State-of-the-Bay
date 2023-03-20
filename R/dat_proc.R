@@ -125,6 +125,8 @@ gaddat <- datraw %>%
     npartner = Number.of.Partners,
     nplants = `X..Plants.Installed`, 
     nlbs = `Lbs.of.Debris.Removed`,
+    nfeet = `Area.Improved..linear.Ft.`,
+    underserved = `Underserved.Community`
   ) %>% 
   mutate(
     year = gsub('^Give-A-Day Activities_FY', '', year), 
