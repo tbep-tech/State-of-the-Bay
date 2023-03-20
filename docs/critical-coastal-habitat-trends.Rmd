@@ -13,7 +13,7 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RDat
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.RData"))
 fluccs <- read.csv('https://github.com/tbep-tech/hmpu-workflow/raw/master/data/FLUCCShabsclass.csv', stringsAsFactors = F)
 
-submax <- '2020'
+submax <- '2022'
 sprmax <- '2020'
 
 # chgdat and subtchgdat must remove all columns that are terminal year comparisons
