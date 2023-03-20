@@ -13,15 +13,21 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RDat
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.RData"))
 fluccs <- read.csv('https://github.com/tbep-tech/hmpu-workflow/raw/master/data/FLUCCShabsclass.csv', stringsAsFactors = F)
 
+# subtidal max year
 submax <- '2022'
+
+# suptratidal max year
 sprmax <- '2020'
+
+# seagrass maximum
+sgrmax <- '2016'
 
 # chgdat and subtchgdat must remove all columns that are terminal year comparisons
 chgdat <- chgdat %>% 
   filter(grepl('1990$', source))
 subtchgdat <- subtchgdat %>% 
   filter(grepl('1988$', source))
-subest <- lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = T) %>% 
+subest <- lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = sgrmax, estout = T) %>% 
   select(val, chgper) %>% 
   tibble::deframe() %>% 
   gsub('\\-', '', .)
@@ -41,16 +47,16 @@ Prior to the 1980s, many of Tampa Bay’s habitats were damaged, reduced, or los
 
 ## Current Trends
 
-When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the `r subest['Seagrasses']`% gain in seagrasses from 1988 to `r submax`; 2) the gains in both emergent tidal wetlands (`r sprest['Mangrove Forests']`% gain in mangroves, `r sprest['Salt Marshes']`% gain in salt marshes) and freshwater wetlands (`r sprest['Non-Forested Freshwater Wetlands']`% gain) between 1990 and `r sprmax`; and 3) the `r sprest['Native Uplands']`% loss in native upland habitats from 1990 to `r sprmax`. 
+When viewed as a whole, the most significant and meaningful trends in the TBEP habitats of interest over the periods of record examined include: 1) the `r subest['Seagrasses']`% gain in seagrasses from 1988 to `r sgrmax`; 2) the gains in both emergent tidal wetlands (`r sprest['Mangrove Forests']`% gain in mangroves, `r sprest['Salt Marshes']`% gain in salt marshes) and freshwater wetlands (`r sprest['Non-Forested Freshwater Wetlands']`% gain) between 1990 and `r sprmax`; and 3) the `r sprest['Native Uplands']`% loss in native upland habitats from 1990 to `r sprmax`. 
 
-The increasing trend in seagrass coverage is a testament to improved bay water quality. While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats. Seagrass losses in Old Tampa Bay accompanied by increases in attached algae are being studied to understand the importance of these changes.
+The increasing trend in seagrass coverage is a testament to improved bay water quality. While some recent gains in seagrass coverage have been erased, the remaining seagrasses still reflect improvements in water quality over the past several decades and still serve as an important guidepost for successful restoration of those subtidal habitats. Seagrass losses in the upper bay segments accompanied by increases in attached algae are being studied to understand the importance of these changes.
 
 ```{r}
 lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = submax, estout = F, family = fml)
 ```
 
 ```{r}
-alluvout2(subtchgdat, fluccs, family = fml, maxyr = submax, width = 800, height = 800, mrg = 0)
+alluvout2(subtchgdat, fluccs, family = fml, maxyr = submax, width = 800, height = 900, mrg = 0)
 ```
 
 The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects (see Habitat Restoration tab) and state and federal wetland regulatory programs. Increases in salt barrens may also reflect a landward expansion associated with sea level rise. However, a `r sprest['Developed']`% increase for developed lands and `r sprest['Restorable']`% loss for restorable lands in the watershed is a concern for continued habitat restoration and protection. A loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
@@ -60,17 +66,17 @@ lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = spr
 ```
 
 ```{r}
-alluvout2(chgdat, fluccs, family = fml, maxyr = sprmax, width = 1000, height = 800, mrg = 95)
+alluvout2(chgdat, fluccs, family = fml, maxyr = sprmax, width = 1000, height = 900, mrg = 95)
 ```
 
 ## Seagrasses in Tampa Bay
 
 Seagrasses are used by the Tampa Bay Estuary Program to assess progress in achieving water quality goals. Seagrasses need sunlight to grow.  With improving water clarity, seagrasses can thrive in Tampa Bay.
 
-Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r submax`, seagrasses `r sgsums$refdir` by `r sgsums$refcmp` acres.  For the most recent years of seagrass maps, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres from `r sgsums$penult` to `r submax`. Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.
+Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r formals(sgsum_fun)$topyr`, seagrasses `r sgsums$topdir` by `r sgsums$topcmp` acres.  However, from `r formals(sgsum_fun)$topyr` to `r submax`, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres.  Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.
 
 ```{r, fig.height = 4.5, fig.width = 10}
-sgcov_plo(seagrass, family = fml)
+show_seagrasscoverage(seagrass, maxyr = submax, family = fml)
 ```
 
 ## Resources

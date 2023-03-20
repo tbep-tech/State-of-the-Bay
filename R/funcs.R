@@ -53,9 +53,9 @@ wqsum_fun <- function(datin, maxyr){
     filter(yr == !!maxyr) %>% 
     mutate(
       action = case_when(
-        outcome == 'green' ~ '<span style="color:#2DC938; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>',
-        outcome == 'yellow' ~ '<span style="color:#E9C318; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>', 
-        outcome == 'red' ~ '<span style="color:#CC3231; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>'
+        outcome == 'green' ~ '<span style="color:#2DC938; letter-spacing: 2px">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#E9C318; letter-spacing: 2px">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#CC3231; letter-spacing: 2px">__On Alert__</span>'
       )
     ) %>% 
     select(bay_segment, action)
@@ -268,9 +268,9 @@ tbnisum_fun <- function(datin, maxyr){
     bind_rows(tbniall) %>% 
     mutate(
       action = case_when(
-        outcome == 'green' ~ '<span style="color:#2DC938; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Stay the Course__</span>',
-        outcome == 'yellow' ~ '<span style="color:#E9C318; text-shadow: 0 0 4px #333; letter-spacing: 2px">__Caution__</span>', 
-        outcome == 'red' ~ '<span style="color:#CC3231; text-shadow: 0 0 4px #333; letter-spacing: 2px">__On Alert__</span>'
+        outcome == 'green' ~ '<span style="color:#2DC938; letter-spacing: 2px">__Stay the Course__</span>',
+        outcome == 'yellow' ~ '<span style="color:#E9C318; letter-spacing: 2px">__Caution__</span>', 
+        outcome == 'red' ~ '<span style="color:#CC3231; letter-spacing: 2px">__On Alert__</span>'
       )
     )
   
@@ -299,9 +299,9 @@ tbbisum_fun <- function(datin, maxyr, seg){
     select(bay_segment, cat = TBBICat) %>% 
     mutate(
       cat = case_when(
-        cat == 'Good' ~ '<span style="color: #2DC938; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Good</b></span>',
-        cat == 'Fair' ~ '<span style="color: #E9C318; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Fair</b></span>', 
-        cat == 'Poor' ~ '<span style="color: #CC3231; text-shadow: 0 0 4px #333; letter-spacing: 2px"><b>Poor</b></span>'
+        cat == 'Good' ~ '<span style="color: #2DC938; letter-spacing: 2px"><b>Good</b></span>',
+        cat == 'Fair' ~ '<span style="color: #E9C318; letter-spacing: 2px"><b>Fair</b></span>', 
+        cat == 'Poor' ~ '<span style="color: #CC3231; letter-spacing: 2px"><b>Poor</b></span>'
       )
     )
   
@@ -1364,124 +1364,31 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
   
 }
 
-# seagrass coverage plot, uses seagrass data obj from tbeptools
-sgcov_plo <- function(seagrass, family){
-  
-  ##
-  # data prep
-  
-  # extra years for padding
-  exyrs <- seq(1950, 1953)
-  
-  toplo <- tibble(
-    Year = c(exyrs, seq(1982, 2022))
-  ) %>%
-    left_join(seagrass, by = 'Year') %>%
-    mutate(
-      Acres = Acres / 1000
-    )
-  
-  # label for last bar 
-  lastlab <- seagrass %>% 
-    filter(Year == max(Year)) %>% 
-    pull(Acres) %>% 
-    round(0) %>% 
-    format(big.mark = ',') %>% 
-    paste(., 'acres (provisional)')
-  
-  # y loc for last bar label
-  lasty <- seagrass %>% 
-    filter(Year == max(Year)) %>% 
-    pull(Acres) %>% 
-    `/`(1000) %>% 
-    `-`(1)
-  
-  ##
-  # base ggplot
-  
-  # axis labels
-  lbs <- toplo$Year
-  lbs[lbs %in% exyrs[-1]] <- ''
-  brks <- lbs
-  lbs[as.numeric(lbs) %% 2 != 0] <- ''
-  
-  p <- ggplot(toplo, aes(x = factor(Year), y = Acres)) +
-    with_shadow(geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 1.3), sigma = 2.7, x_offset = 0, y_offset = 0) +
-    geom_segment(x = 0, xend = 2, y = 38, yend = 38, col = 'red', size = 2) +
-    geom_segment(x = 4, xend = 42, y = 38, yend = 38, col = 'red', size = 2) +
-    geom_segment(x = 42, xend = 46, y = 40, yend = 40, col = 'red', size = 2) +
-    annotate("text", label = "Seagrass Coverage Goal", x = 4, y = 40.5, color = 'red', size = 5, hjust = 0, family = family) +
-    annotate('text', x = 45, y = lasty, label = lastlab, angle = 90, hjust = 1, vjust = 0.3, size = 3) + 
-    scale_x_discrete(breaks = brks, labels = lbs, expand = c(0.04, 0.04)) +
-    scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(toplo$Acres, na.rm = T))) +
-    theme_grey(base_family = family) +
-    theme(
-      axis.line = element_line(),
-      panel.background = element_blank(),
-      axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
-      axis.title.x = element_blank(),
-      legend.position = 'none',
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_blank()
-    ) +
-    labs(
-      y = 'Seagrass Coverage (x1,000 acres)'
-    )
-  
-  ##
-  # top, bottom axis line breaks
-  
-  gt <- ggplotGrob(p)
-  
-  is_axisb <- which(gt$layout$name == "axis-b")
-  is_axist <- which(gt$layout$name == "axis-t")
-  is_axisl <- which(gt$layout$name == "axis-l")
-  is_axisr <- which(gt$layout$name == "axis-r")
-  
-  axisb <- gt$grobs[[is_axisb]]
-  xline <- axisb$children[[1]]
-  
-  # location of break, break type
-  xline$y <- unit(rep(1, 4), "npc")
-  xline$x <- unit(c(0, 0.06, 1, 0.11), "npc")
-  xline$id <- c(1, 1, 2, 2)
-  xline$arrow <- arrow(angle = 90, length = unit(0.07, 'inches'))
-  
-  axisb$children[[1]] <- xline
-  axist <- xline
-  axisl <- gt$grobs[[is_axisl]]
-  
-  gt$grobs[[is_axisb]] <- axisb
-  gt$grobs[[is_axist]] <- axist
-  gt$grobs[[is_axisr]] <- axisl$children[[1]]
-  
-  grid.newpage(); grid.draw(gt)
-  
-}
-
 # summarize seagrass results by reference year
-sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1982){
-  
-  penult <- seagrass$Year[which(seagrass$Year == sgmaxyr) - 1]
+sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1988, topyr = 2016){
   
   tocmp <- seagrass %>% 
-    filter(Year %in% c(refyr, penult, sgmaxyr)) %>% 
+    filter(Year %in% c(refyr, topyr, sgmaxyr)) %>% 
     select(Year, Acres) %>% 
     pivot_wider(names_from = 'Year', values_from = 'Acres') %>% 
     unlist()
   
   refcmp <- tocmp[as.character(sgmaxyr)] - tocmp[as.character(refyr)]
   refdir <- ifelse(sign(refcmp) == 1, 'increased', 'decreased')
+
+  topcmp <- tocmp[as.character(topyr)] - tocmp[as.character(refyr)]
+  topdir <- ifelse(sign(topcmp) == 1, 'increased', 'decreased')     
   
-  reccmp <- tocmp[as.character(sgmaxyr)] - tocmp[as.character(penult)]
+  reccmp <- tocmp[as.character(sgmaxyr)] - tocmp[as.character(topyr)]
   recdir <- ifelse(sign(reccmp) == 1, 'increased', 'decreased')
-  
+
   out <- list(
     refcmp =  formatC(round(abs(refcmp), 0), format = "d", big.mark = ","),
     refdir = refdir,
+    topcmp = formatC(round(abs(topcmp), 0), format = "d", big.mark = ","), 
+    topdir = topdir,
     reccmp =  formatC(round(abs(reccmp), 0), format = "d", big.mark = ","),
-    recdir = recdir,
-    penult = penult
+    recdir = recdir
   )
   
   return(out)

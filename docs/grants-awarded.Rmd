@@ -10,7 +10,7 @@ load(file = here('data/tberfdat.RData'))
 load(file = here('data/bmgdat.RData'))
 load(file = here('data/dcgdat.RData'))
 load(file = here('data/comdat.RData'))
-maxyr <- 2021
+maxyr <- 2022
 tberfsum <- grntsum_fun(tberfdat)
 bmgsum <- grntsum_fun(bmgdat)
 dcgsum <- grntsum_fun(dcgdat, rnd = 'k')

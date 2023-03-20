@@ -7,7 +7,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/gaddat.RData'))
-yrsel <- 2021
+yrsel <- 2022
 tots <- gadsum_fun(gaddat, yrsel = c(2019:yrsel))
 ```
 
