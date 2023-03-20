@@ -33,10 +33,10 @@ div(p, align = 'center')
 
 Human-caused pollution can contaminate aquatic sediments with various dangerous chemicals and heavy metals. As polluted water enters a waterbody, metals and other chemicals may attach to suspended solids in the water column. These solids eventually sink to the bottom and integrate into the existing sediments. Toxicological studies have shown that many of these substances can affect the growth and survival of benthic organisms.
 
-Sediment contaminant levels are assigned a letter grade (A, B, C, D, F) by averaging the scores of multiple contaminants according to the mean Probable Effects Level ratio, a measure of how likely a contaminant is to have a toxic effect on invertebrates. From 1993-2017, most sites fell within the "C" range, while some "D" and "F" graded sites were found, primarily in Hillsborough Bay, the Manatee River, and Boca Ciega Bay. 
+Sediment contaminant levels are assigned a letter grade (A, B, C, D, F) by averaging the scores of multiple contaminants according to the mean Probable Effects Level ratio, a measure of how likely a contaminant is to have a toxic effect on invertebrates. From 1993 to `r maxyr`, most sites fell within the "C" range, while some "D" and "F" graded sites were found, primarily in Hillsborough Bay, the Manatee River, and Boca Ciega Bay. 
 
-```{r, out.width = '65%'}
-knitr::include_graphics(here('figures/PEL_Map1993-2017.jpg'))
+```{r, out.width = '100%'}
+show_sedimentpelmap(sedimentdata, yrrng = c(1993, maxyr))
 ```
 
 Link to benthic data page: https://tbep.org/tampa-bay-benthic-index/
