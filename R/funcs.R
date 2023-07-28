@@ -438,19 +438,19 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
   # data prep
   rstsum <- rstdat %>% 
     select(
-      Year = `Year Reported`, 
-      Category = `Habitat Type (basic ESA categories)(existing databases)`, 
+      Year = `Federal_Fiscal_Year`, 
+      Category = `GeneralHabitat`, 
       Acres, 
-      Activity = `Basic Activity (Enhance/Rest)`, 
-      `Linear Miles` = `Linear Miles`,
-      `Linear Ft` = `Linear Feet`
+      Activity = `GeneralActivity`, 
+      `Linear Miles` = `Miles`,
+      `Linear Ft` = `Feet`
     ) %>% 
     rowwise() %>% 
     mutate(
       Category = case_when(
         Category == 'estuarine' ~ 'Estuarine', 
-        Category == 'Upland' ~ 'Uplands',
-        grepl('^Mix', Category) ~ 'Mixed', 
+        grepl('^Upland', Category) ~ 'Uplands',
+        grepl('^Mix|^Other', Category) ~ 'Mixed', 
         T ~ Category
       ), 
       Miles = sum(`Linear Miles`,  `Linear Ft` / 5280, na.rm = T)
@@ -476,7 +476,7 @@ rstdat_tab <- function(rstdat, maxyr, fntsz = 14, family){
 
   # yrrng
   yrs <- rstdat %>% 
-    pull(`Year Reported`) %>% 
+    pull(`Federal_Fiscal_Year`) %>% 
     min(na.rm = T) %>% 
     c(., maxyr)
   
