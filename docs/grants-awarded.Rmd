@@ -2,6 +2,7 @@
 output:
   html_document:
     css: "styles.css"
+    self_contained: false
 ---
 
 ```{r setup, warning = F, message = F, echo = F}
