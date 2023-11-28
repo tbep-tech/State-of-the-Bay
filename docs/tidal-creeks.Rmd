@@ -49,6 +49,6 @@ The current assessment period (`r maxyr`) indicates that `r sumdat['Prioritize']
 show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
 ```
 
-See additional visualization tools at the tidal creeks data page: https://tbep.org/tidal-creeks/.
+See additional visualization tools at the tidal creeks data page: [https://tbep.org/tidal-creeks/](https://tbep.org/tidal-creeks/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

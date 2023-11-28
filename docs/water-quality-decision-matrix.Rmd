@@ -46,13 +46,13 @@ p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, histori
 div(p, align = 'center')
 ```
 
-<center><img alt="seatrout" src="img/WQ_Action.png" width="450"/></center>
+<center><img alt="Water quality action" src="img/WQ_Action.png" width="450"/></center>
 
 ## Results for `r maxyr`
 
 In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (chlorophyll target `r sums$OTB$chla`, light attenuation target `r sums$OTB$la`), Hillsborough Bay received an action category of `r sums$HB$action` (chlorophyll target `r sums$HB$chla`, light attenuation target `r sums$HB$la`), Middle Tampa Bay received an action category of `r sums$MTB$action` (chlorophyll target `r sums$MTB$chla`, light attenuation target `r sums$MTB$la`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (chlorophyll target `r sums$LTB$chla`, light attenuation target `r sums$LTB$la`). The plots below show chlorophyll and light attenuation values for each bay segment, including the management target.
 
-See additional visualization tools at the Water Quality Report Card data page: https://tbep.org/water-quality-report-card/.  Click on the tabs below to view water quality trends for each major bay segment.
+See additional visualization tools at the Water Quality Report Card data page: [https://tbep.org/water-quality-report-card/](https://tbep.org/water-quality-report-card){target="_parent"}. Click on the tabs below to view water quality trends for each major bay segment.
 
 # {.tabset .tabset-pills}
 

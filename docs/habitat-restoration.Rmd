@@ -36,7 +36,7 @@ Habitat restoration in the Tampa Bay region has evolved over time from simple pr
 rstdat_tab(rstdat, maxyr = maxyr, family = fml)
 ```
 
-To continue the improvements that have occurred, the Habitat Master Plan ([2020 Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view)) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
+To continue the improvements that have occurred, the Habitat Master Plan ([2020 Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view){target="_parent"}) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
 
 * 50 acres of oyster reefs
 
@@ -48,12 +48,12 @@ To continue the improvements that have occurred, the Habitat Master Plan ([2020 
 
 ## Resources
 
-* [2020 Tampa Bay Habitat Master Plan Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view)
+* [2020 Tampa Bay Habitat Master Plan Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view){target="_parent"}
 
-* [Restoration opportunities by segment](https://github.com/tbep-tech/hmpu-workflow)
+* [Restoration opportunities by segment](https://github.com/tbep-tech/hmpu-workflow){target="_parent"}
 
-* [Habitat restoration table](https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing)
+* [Habitat restoration table](https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing){target="_parent"}
 
-* [Habitat restoration projects (and associated database) in the Tampa Bay Watershed](https://www.tampabay.wateratlas.usf.edu/restoration/)
+* [Habitat restoration projects (and associated database) in the Tampa Bay Watershed](https://www.tampabay.wateratlas.usf.edu/restoration/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

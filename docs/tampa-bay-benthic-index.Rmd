@@ -40,6 +40,6 @@ Sediment contaminant levels are assigned a letter grade (A, B, C, D, F) by avera
 show_sedimentpelmap(sedimentdata, yrrng = c(1993, maxyr))
 ```
 
-Link to benthic data page: https://tbep.org/tampa-bay-benthic-index/
+Link to benthic data page: [https://tbep.org/tampa-bay-benthic-index/](https://tbep.org/tampa-bay-benthic-index/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

@@ -82,9 +82,9 @@ show_seagrasscoverage(seagrass, maxyr = submax, family = fml)
 
 ## Resources
 
-* [Visualization tools for land use change](https://shiny.tbep.org/landuse-change/) 
-* [Seagrass monitoring in Tampa Bay](https://tampabay.wateratlas.usf.edu/seagrass-monitoring/)
-* [Data products for seagrass](https://tbep.org/seagrass-assessment/)
-* [Visualization tool for seagrass change](https://shiny.tbep.org/seagrass-analysis/)
+* [Visualization tools for land use change](https://shiny.tbep.org/landuse-change/){target="_parent"} 
+* [Seagrass monitoring in Tampa Bay](https://tampabay.wateratlas.usf.edu/seagrass-monitoring/){target="_parent"}
+* [Data products for seagrass](https://tbep.org/seagrass-assessment/){target="_parent"}
+* [Visualization tool for seagrass change](https://shiny.tbep.org/seagrass-analysis/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

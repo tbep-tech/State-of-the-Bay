@@ -12,7 +12,7 @@ load(url("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RD
 load(file = here('data/popdat.RData'))
 ```
 
-In 2011, the Florida Department of Environmental Protection approved regulatory thresholds for nutrients that apply to major segments of Tampa Bay.  These criteria describe a point at which nutrient loadings may have a negative impact on environmental resources.  These thresholds are defined for ratios of total nitrogen (nutrient load) to the volume of water (hydrologic load) entering the bay, accounting for annual variation in rainfall.  Each year, the [Tampa Bay Nitrogen Management Consortium](https://tbep.org/our-work/boards-committees/nitrogen-management-consortium/) assesses if conditions are within allowable limits.  This is accomplished through regular synthesis and reporting of load estimates by the Tampa Bay Estuary Program.  To date, nitrogen and hydrologic load ratios continue to decline throughout the Bay, indicating that the Nitrogen Management Consortium has been effective at reducing the amount of nutrients per unit of water input into Tampa Bay. 
+In 2011, the Florida Department of Environmental Protection approved regulatory thresholds for nutrients that apply to major segments of Tampa Bay.  These criteria describe a point at which nutrient loadings may have a negative impact on environmental resources.  These thresholds are defined for ratios of total nitrogen (nutrient load) to the volume of water (hydrologic load) entering the bay, accounting for annual variation in rainfall.  Each year, the [Tampa Bay Nitrogen Management Consortium](https://tbep.org/our-work/boards-committees/nitrogen-management-consortium/){target="_parent"} assesses if conditions are within allowable limits.  This is accomplished through regular synthesis and reporting of load estimates by the Tampa Bay Estuary Program.  To date, nitrogen and hydrologic load ratios continue to decline throughout the Bay, indicating that the Nitrogen Management Consortium has been effective at reducing the amount of nutrients per unit of water input into Tampa Bay. 
 
 ```{r}
 p <- ldtot_plo(totanndat, yval = 'tnhy', levs = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'), 
@@ -27,6 +27,6 @@ p <- ldrat_plo(totanndat, popdat, width = 900, height = 400, family = fml)
 div(p, align = 'center')
 ```
 
-See additional visualization tools for nutrient loading data here: https://tbep.org/tampa-bay-nitrogen-loads/.
+See additional visualization tools for nutrient loading data here: [https://tbep.org/tampa-bay-nitrogen-loads/](https://tbep.org/tampa-bay-nitrogen-loads/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

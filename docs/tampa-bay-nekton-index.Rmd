@@ -46,6 +46,6 @@ div(p, align = 'center')
 
 <center><img alt="seatrout" src="img/Nekton_Action.png" width="450"/></center>
 
-See additional visualization tools for the nekton index on our data page: https://tbep.org/tampa-bay-nekton-index/.
+See additional visualization tools for the nekton index on our data page: [https://tbep.org/tampa-bay-nekton-index/](https://tbep.org/tampa-bay-nekton-index/){target="_parent"}
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
