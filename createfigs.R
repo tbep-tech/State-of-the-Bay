@@ -89,7 +89,7 @@ dev.off()
 
 # tbbi report card --------------------------------------------------------
 
-maxyr <- 2021
+maxyr <- 2022
 tbbiscr <- anlz_tbbiscr(benthicdata)
 p <- show_tbbimatrix(tbbiscr, family = fml, yrrng = c(1993, maxyr)) +
   theme(
