@@ -31,7 +31,7 @@ An annual "snapshot" of ecological health helps fisheries managers target effort
 The long-term results for the nekton index suggest the fish community is resistant to large-scale changes and resilient to episodic disturbance. For example, "Yellow" cautionary scores were observed in the mid-2000s and 2010/11 when red tide conditions and cold snaps may have affected the bay fish community. Recent conditions in 2021 and 2022 suggest the fish community was likely affected by the summer red tide observed in Tampa Bay.  Long-term trends in nekton index scores by bay segment are shown below.
 
 ```{r, out.width = '100%'}
-p <- show_tbniscr(tbniscr, family = fml, width = 950, height = 450, plotly = T)
+p <- show_tbniscr(tbniscr, family = fml, width = 800, height = 450, plotly = T)
 div(p, align = 'center')
 ```
 
