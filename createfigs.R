@@ -21,7 +21,7 @@ fml <- "Lato"
 
 # wq matrix map -----------------------------------------------------------
 
-maxyr <- 2021
+maxyr <- 2022
 txtcol <- 'black'
 p <- show_sitemap(epcdata, yrsel = maxyr) +
   theme(
