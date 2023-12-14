@@ -8,7 +8,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2021
+maxyr <- 2022
 seg <- c('OTB', 'HB', 'MTB', 'LTB', 'All (wt)')
 
 tbbiscr <- anlz_tbbiscr(benthicdata)
