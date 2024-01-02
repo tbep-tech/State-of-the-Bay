@@ -8,15 +8,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2022
-# https://docs.google.com/spreadsheets/d/1z9R66bdRiM77IdXNGE_dAoiw98dMeyNNRX8qz0-s4pU/edit#gid=499627586
-rstdat <- read_sheet('1z9R66bdRiM77IdXNGE_dAoiw98dMeyNNRX8qz0-s4pU')
-totacr <- rstdat %>% 
-  filter(`GeneralActivity` == 'Restoration') %>% 
-  pull(Acres) %>% 
-  sum(na.rm = T) %>% 
-  round(0) %>% 
-  formatC(format="d", big.mark=",")
+maxyr <- 2023
 ```
 
 Habitat restoration attempts to restore important services provided by natural systems. These ecological services can include providing fish nurseries; improving water quality; reducing erosion; and protection against storm surge. Habitat restoration is done for a variety of habitat types, from salt marshes to pine flatwoods. 
@@ -30,10 +22,10 @@ Habitat restoration attempts to restore important services provided by natural s
 </center>
 <p>
 
-Habitat restoration in the Tampa Bay region has evolved over time from simple projects including planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on critical coastal land. Approximately `r totacr` acres of habitat restoration has occurred in the Tampa Bay watershed since 1971. Tampa Bay restoration professionals work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
+Habitat restoration in the Tampa Bay region has evolved over time from simple projects including planting of red mangroves west of the Howard Frankland bridge in 1971 to major landscape-scale ecosystem restoration projects such as Rock Ponds, that involved 1,043 acres of landform changes on critical coastal land. Below is a summary of restoration efforts in `r maxyr` and all projects to date in the Tampa Bay watershed since 1971. Tampa Bay restoration professionals work to create or restore a mosaic of habitats to reflect the variety seen in natural systems.
 
-```{r}
-rstdat_tab(rstdat, maxyr = maxyr, family = fml)
+```{r, out.width = '70%'}
+knitr::include_graphics('https://tbep-tech.github.io/habitat-report-card/tabs/gentab.png')
 ```
 
 To continue the improvements that have occurred, the Habitat Master Plan ([2020 Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view){target="_parent"}) includes a target of restoring 3,150 acres of wetlands and uplands by 2030:
@@ -51,8 +43,6 @@ To continue the improvements that have occurred, the Habitat Master Plan ([2020 
 * [2020 Tampa Bay Habitat Master Plan Update](https://drive.google.com/file/d/1Hp0l_qtbxp1JxKJoGatdyuANSzQrpL0I/view){target="_parent"}
 
 * [Restoration opportunities by segment](https://github.com/tbep-tech/hmpu-workflow){target="_parent"}
-
-* [Habitat restoration table](https://drive.google.com/file/d/1zVx18P6lrPuVR6ANMAetBRXwxCGeCN9b/view?usp=sharing){target="_parent"}
 
 * [Habitat restoration projects (and associated database) in the Tampa Bay Watershed](https://www.tampabay.wateratlas.usf.edu/restoration/){target="_parent"}
 
