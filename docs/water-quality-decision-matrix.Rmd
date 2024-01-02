@@ -7,13 +7,15 @@ output:
 
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
-maxyr <- 2022
+maxyr <- 2023
 
 # local file path
-xlsx <- here('data-raw/Results_Updated.xls')
+# xlsx <- here('data-raw/Results_Updated.xls')
+xlsx <- here('data-raw/Results_Provisional.xlsx')
 
 # import and download if new
-epcdata <- read_importwq(xlsx, download_latest = T)
+# epcdata <- read_importwq(xlsx, download_latest = T)
+epcdata <- read_importwq(xlsx, download_latest = F)
 
 # summaries for inline
 sums <- wqsum_fun(epcdata, maxyr)
