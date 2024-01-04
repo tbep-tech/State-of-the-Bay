@@ -61,19 +61,19 @@ The following shows totals to date for each of the grant programs coordinated by
 ### TBERF
 
 ```{r, out.width = '100%'}
-grntsum_plo(tberfdat, family = fml, width = 1000, height = 400)
+grntsum_plo(tberfdat, family = fml, width = NULL, height = 400)
 ```
 
 ### Bay Mini Grants
 
 ```{r, out.width = '100%'}
-grntsum_plo(bmgdat, family = fml, width = 1000, height = 400)
+grntsum_plo(bmgdat, family = fml, width = NULL, height = 400)
 ```
 
 ### License Plate Sales
 
 ```{r, out.width = '100%'}
-grntsum_plo(comdat, family = fml, width = 1000, height = 400)
+grntsum_plo(comdat, family = fml, width = NULL, height = 400)
 ```
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
