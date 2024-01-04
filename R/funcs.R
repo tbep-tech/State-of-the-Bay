@@ -1036,7 +1036,7 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 
 # plotly graphic of running totals for grants
 # currently works for license plate sales (comdat), bay mini grants (bmgdat), and tberf (tberfdat)
-grntsum_plo <- function(datin, family, width, height){
+grntsum_plo <- function(datin, family, width, height, fntsz = 17){
   
   ylb <- 'Annual total awarded'
   tickprf <- '$'
@@ -1094,7 +1094,7 @@ grntsum_plo <- function(datin, family, width, height){
         title = ylb, 
         tickprefix = tickprf
       ), 
-      font = list(family = family, size = 18)
+      font = list(family = family, size = fntsz - 1)
     ) %>% 
     plotly::config(
       toImageButtonOptions = list(
