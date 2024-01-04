@@ -8,12 +8,12 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/comdat.RData'))
-maxyr <- 2022
+maxyr <- 2023
 ```
 
 Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners' actions.
 
-The TBEP tracks the impact of our social media output using various metrics. Number of followers, users, or views of our content is one way we can assess how the community engages in our online platforms. The number of engagements is another metric that we track, which includes "likes", "retweets", or other common interactions on social media.  The tables and plots below summarize this information for our various platforms. 
+The TBEP tracks the impact of our social media output using various metrics. Number of followers or engagement (reach) with our content is one way we can assess how the community interacts with our online platforms. The tables and plots below summarize this information for our various platforms. 
 
 ## {.tabset .tabset-pills}
 
@@ -22,7 +22,7 @@ The TBEP tracks the impact of our social media output using various metrics. Num
 #### `r maxyr` SUMMARY 
 
 ```{r}
-coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = F, family = fml, showtab = F)
+coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = T, family = fml, showtab = F)
 ```
 
 #### TOTALS TO DATE 
@@ -37,7 +37,7 @@ div(p, align = 'center')
 #### `r maxyr` SUMMARY
 
 ```{r}
-coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = F, family = fml)
+coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = T, family = fml)
 ```
 
 #### TOTALS TO DATE {.tabset .tabset-pills}
@@ -62,7 +62,7 @@ div(p, align = 'center')
 #### `r maxyr` SUMMARY
 
 ```{r}
-coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = F, family = fml, showtab = F)
+coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = T, family = fml, showtab = F)
 ```
 
 #### TOTALS TO DATE 

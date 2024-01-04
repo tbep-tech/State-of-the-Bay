@@ -441,7 +441,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
   
   cats <- list(
     `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
-    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP Twitter', 'TBEP YouTube'), 
+    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP YouTube'), 
     `Email Marketing` = c('Constant Contact'), 
     `Tarpon Tag` = c('Tarpon Tag')
   )
@@ -456,23 +456,19 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       icons = c('mouse-pointer')
     ),
     `TBEP IG` = list(
-      metric = c('Engagements', 'Total Followers'),
-      icons = c('heart', 'users') 
+      metric = c('Reach', 'Followers'),
+      icons = c('share', 'users') 
     ),
     `TBEP Facebook` = list(
-      metric = c('Engagements', 'Total Fans'),
-      icons = c( 'heart', 'users') 
+      metric = c('Reach', 'Followers'),
+      icons = c( 'share', 'users') 
     ), 
-    `TBEP Twitter` = list(
-      metric = c('Engagements', 'Followers'), 
-      icons = c('heart', 'users')
-      ),
     `TBEP YouTube` = list(
-      metric = c('Total Views', 'Total Subscribers'),
+      metric = c('Total Views', 'Followers'),
       icons = c('film', 'users')
       ), 
     `Constant Contact` = list(
-      metric = c('Net new contacts'), 
+      metric = c('Contacts'), 
       icons = c('users')
       ), 
     `Tarpon Tag` = list(
@@ -494,7 +490,6 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       tab_metric = gsub('^Total\\s', '', metric), 
       tab_metric = case_when(
         metric == 'Unique Page Views' ~ 'Page Views', 
-        metric == 'Net new contacts' ~ 'New Contacts', 
         T ~ tab_metric
       )
     )
@@ -504,7 +499,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
     filter(platform %in% !!platform)
 
   # filter tarpon tag to dec, since it's a running tally, not new registrations
-  if(category == 'Tarpon Tag')
+  if(category %in% c('Tarpon Tag', 'Email Marketing'))
     comdat <- comdat %>% 
       filter(month == 'dec')
   
@@ -512,7 +507,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
   if(category == 'Social Media')
     comdat <- comdat %>% 
       filter(!(month != 'dec' & metric %in% c('Total Followers', 'Total Fans', 'Followers', 'Total Subscribers')))
-
+    
   # table as change
   if(chg){
     
@@ -664,7 +659,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
   
   cats <- list(
     `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
-    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP Twitter', 'TBEP YouTube'), 
+    `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP YouTube'), 
     `Email Marketing` = c('Constant Contact'), 
     `Tarpon Tag` = c('Tarpon Tag')
   )
@@ -679,23 +674,19 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
       icons = c('mouse-pointer')
     ),
     `TBEP IG` = list(
-      metric = c('Engagements', 'Total Followers'),
+      metric = c('Reach', 'Followers'),
       icons = c('heart', 'users') 
     ),
     `TBEP Facebook` = list(
-      metric = c('Engagements', 'Total Fans'),
+      metric = c('Reach', 'Followers'),
       icons = c( 'heart', 'users') 
     ), 
-    `TBEP Twitter` = list(
-      metric = c('Engagements', 'Followers'), 
-      icons = c('heart', 'users')
-    ),
     `TBEP YouTube` = list(
-      metric = c('Total Views', 'Total Subscribers'),
+      metric = c('Total Views', 'Followers'),
       icons = c('film', 'users')
     ), 
     `Constant Contact` = list(
-      metric = c('Net new contacts'), 
+      metric = c('Contacts'), 
       icons = c('users')
     ), 
     `Tarpon Tag` = list(
@@ -717,7 +708,6 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     tab_metric = gsub('^Total\\s', '', metric), 
     tab_metric = case_when(
       metric == 'Unique Page Views' ~ 'Page Views', 
-      metric == 'Net new contacts' ~ 'Net New Contacts', 
       T ~ tab_metric
     )
   )
@@ -728,8 +718,8 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
   
   if(category %in% c('Social Media')){
 
-    cols <- c('#00806E', '#004F7E', '#5C4A42', '#958984')
-    names(cols) <- c('Facebook', 'Instagram', 'Twitter', 'YouTube')
+    cols <- c('#00806E', '#004F7E', '#958984')
+    names(cols) <- c('Facebook', 'Instagram', 'YouTube')
     
     if(metric != 'users')
       userplo <- toflt %>% 
@@ -788,7 +778,8 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
         })
       )
     
-    p <- subplot(userplo$data[[2]], userplo$data[[1]], userplo$data[[3]], userplo$data[[4]], nrows = 4, shareX = T, titleY = T)
+    p <- subplot(userplo$data[[2]], userplo$data[[1]], userplo$data[[3]], nrows = 3, shareX = T, titleY = T) %>% 
+      layout(legend = list(orientation = 'h', x = 0.3, y = 1.1, font = list(size = fntsz - 1)))
     
   }
   
@@ -848,88 +839,6 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
     )
     
   return(p)
-  
-}
-
-# reactable table for comms reach statistics, constant contact only
-# icons guidance https://kcuilla.github.io/reactablefmtr/articles/icon_sets.html
-ccreach_tab <- function(comdat, maxyr, fntsz = 16, family){
-  
-  fct <- c('Net new contacts', 'Number of Campaigns Sent', 'Open Rate', 'Click Rate')
-
-  sumdat <- comdat %>% 
-    filter(platform %in% 'Constant Contact') %>% 
-    filter(metric %in% fct) %>% 
-    filter(year %in% !!maxyr) %>% 
-    group_by(metric, uni) %>%
-    nest() %>% 
-    mutate(
-      val = purrr::pmap(list(data, uni), function(data, uni){
-        
-        if(uni == 'percent')
-          out <- round(mean(data$val, na.rm = T), 0)
-        if(uni == 'count')
-          out <- sum(data$val, na.rm = T)
-        
-        return(out)
-      
-      })
-    ) %>% 
-    select(metric, uni, val) %>% 
-    mutate(
-      metric = factor(metric, levels = fct)
-    ) %>% 
-    arrange(metric) %>% 
-    unnest('val') %>% 
-    ungroup %>% 
-    mutate(
-      val = case_when(
-        uni == 'percent'~ paste0(val, '%'), 
-        T ~ as.character(val)
-      ), 
-      metric = as.character(metric),
-      metric = case_when(
-        uni == 'percent' ~ paste0('Avg. Monthly ', metric), 
-        T ~ metric
-      ), 
-      metric = gsub('^Net\\snew\\contacts', 'New Contacts', metric)
-    ) %>% 
-    select(-uni)
-  
-  tobnd <- tibble(
-    metric = c('All-Industry Average Open Rate', 'All-Industry Average Click Rate'), 
-    val = c('16%', '7%')
-  )
-  
-  sumdat <- bind_rows(sumdat, tobnd)
-  
-  out <- reactable(
-    sumdat, 
-    columns = list(
-      metric = colDef(
-        minWidth = 300,
-        name = '',
-        align = 'right'
-      ), 
-      val = colDef(
-        name = as.character(maxyr), 
-        format = colFormat(separators = TRUE), 
-        align = 'center'
-      )
-    ), 
-    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
-    defaultColDef = colDef(
-      headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
-      footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
-    ),
-    borderless = T, 
-    resizable = T, 
-    theme = reactableTheme(
-      headerStyle = list(borderColor = 'white')
-    )
-  )
-  
-  return(out)  
   
 }
 
