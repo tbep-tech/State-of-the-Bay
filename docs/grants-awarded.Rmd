@@ -45,20 +45,20 @@ Established during the COVID-19 pandemic, the [Digital Challenge Grants](https:/
 ### `r maxyr` FUNDING SUMMARY 
 
 ```{r}
-grnt_tab(tberfdat, bmgdat, dcgdat, yrsel = maxyr, family = fml)
+grnt_tab(tberfdat, bmgdat, dcgdat, yrsel = maxyr, chg = T, family = fml)
 ```
 
 ### `r maxyr` LICENSE PLATE SALES
 
 ```{r}
-coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = F, family = fml, showtab = F)
+coms_tab(comdat, category = 'Tarpon Tag', maxyr = maxyr, chg = T, family = fml, showtab = F)
 ```
 
 ## TOTALS TO DATE {.tabset .tabset-pills}
 
 The following shows totals to date for each of the grant programs coordinated by TBEP and our partners.  Click on each tab to view the summary plot.
 
-### Tampa Bay Environmental Restoration Fund
+### TBERF
 
 ```{r, out.width = '100%'}
 grntsum_plo(tberfdat, family = fml, width = 1000, height = 400)

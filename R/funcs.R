@@ -555,7 +555,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
         chgicon = colDef(show = F), 
         chgcols = colDef(show = F),
         tab_metric = colDef(
-          # minWidth = 300,
+          minWidth = 200,
           name = '',
           cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
           align = 'right'
@@ -623,7 +623,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
           # minWidth = 100
         ),
         tab_metric = colDef(
-          # minWidth = 300,
+          minWidth = 200,
           name = '',
           cell = icon_sets(sumdat, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
           align = 'center'
@@ -1107,7 +1107,7 @@ grntsum_plo <- function(datin, family, width, height){
   
 }
 
-grnt_tab <- function(..., yrsel, fntsz = 20, family){
+grnt_tab <- function(..., yrsel, chg = TRUE, fntsz = 20, family){
   
   ics <- list(
     levs = c('newlead', 'n', 'total'),
@@ -1116,7 +1116,8 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
   )
   
   # datin
-  dat <- bind_rows(...)
+  dat <- bind_rows(...) %>% 
+    filter(year <= yrsel)
   
   # check input columns
   if(any(!names(dat) %in% c("year", "title", "lead", "total", "admin_total", "matching")))
@@ -1130,14 +1131,14 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
     ) %>% 
     select(-admin_total)
   
-  nototab <- dat %>% 
+  nototab1 <- dat %>% 
     filter(year != yrsel)
   
   # find new partners
-  totab <- dat %>% 
+  totab1 <- dat %>% 
     filter(year == yrsel) %>% 
     summarise(
-      newlead = sum(!lead %in% nototab$lead), 
+      newlead = sum(!lead %in% nototab1$lead), 
       total = sum(total, na.rm = T), 
       n = n()
     ) %>% 
@@ -1145,47 +1146,151 @@ grnt_tab <- function(..., yrsel, fntsz = 20, family){
     mutate(
       metric = factor(name, levels = ics$levs, labels = ics$labs), 
       icons = factor(name, levels = ics$levs, labels = ics$icons),
-      icons = as.character(icons), 
-      value = formatC(value, format = "d", big.mark = ","), 
-      value = case_when(
-        name == 'total' ~ paste0('$', value), 
-        T ~value
-      )
+      icons = as.character(icons)
     ) %>% 
     arrange(metric) %>% 
     select(name, icons, metric, value)
-  
-  out <- reactable(
-    totab, 
-    columns = list(
-      icons = colDef(show = F),
-      name = colDef(show = F),
-      metric = colDef(
-        # minWidth = 200,
-        name = '',
-        cell = icon_sets(totab, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
-        align = 'center'
+
+  if(chg){
+    
+    nototab2 <- dat %>% 
+      filter(!year %in% c(yrsel - 1, yrsel))
+    
+    # find new partners
+    totab2 <- dat %>% 
+      filter(year == (yrsel - 1)) %>% 
+      summarise(
+        newlead = sum(!lead %in% nototab2$lead), 
+        total = sum(total, na.rm = T), 
+        n = n()
+      ) %>% 
+      pivot_longer(cols = everything()) %>% 
+      mutate(
+        metric = factor(name, levels = ics$levs, labels = ics$labs), 
+        icons = factor(name, levels = ics$levs, labels = ics$icons),
+        icons = as.character(icons)
+      ) %>% 
+      arrange(metric) %>% 
+      select(name, icons, metric, value)
+    
+    totab <- full_join(totab2, totab1, by = c('name', 'icons', 'metric')) %>% 
+      rename(
+        cmpyr = value.x,
+        maxyr = value.y
+      ) %>%  
+      mutate(
+        `% change` = (maxyr - cmpyr) / cmpyr, 
+        # `% change` = round(`% change`, 0), 
+        `chgicon` = case_when(
+          `% change` > 0 ~ 'arrow-alt-circle-up', 
+          `% change` < 0 ~ 'arrow-alt-circle-down'
+        ),
+        `chgcols` = case_when(
+          `% change` > 0 ~ 'darkgreen', 
+          `% change` < 0 ~ 'red'
+        ), 
+        cmpyr = case_when(
+          grepl('funds', metric) ~ paste0('$', formatC(cmpyr, format = "d", big.mark = ",")),
+          T ~ as.character(cmpyr)
+        ),
+        maxyr = case_when(
+          grepl('funds', metric) ~ paste0('$', formatC(maxyr, format = "d", big.mark = ",")),
+          T ~ as.character(maxyr)
+        )
+      ) 
+    
+    out <- reactable(
+      totab, 
+      columns = list(
+        icons = colDef(show = F),
+        name = colDef(show = F),
+        chgicon = colDef(show = F), 
+        chgcols = colDef(show = F),
+        metric = colDef(
+          minWidth = 200,
+          name = '',
+          cell = icon_sets(totab, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
+          align = 'center'
+        ), 
+        value = colDef(
+          # minWidth = 200,
+          name = '', 
+          format = colFormat(separators = TRUE), 
+          align = 'center'
+        ),
+        cmpyr = colDef(
+          name = as.character(yrsel - 1), 
+          format = colFormat(separators = TRUE), 
+          align = 'center'
+        ), 
+        maxyr = colDef(
+          name = as.character(yrsel), 
+          format = colFormat(separators = TRUE), 
+          align = 'center'
+        ),
+        `% change` = colDef(
+          name = 'Change',
+          cell = icon_sets(totab, icon_ref = 'chgicon', icon_color_ref = "chgcols", icon_size = fntsz, number_fmt = scales::percent)
+        )
       ), 
-      value = colDef(
-        # minWidth = 200,
-        name = '', 
-        format = colFormat(separators = TRUE), 
-        align = 'center'
+      style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      borderless = T, 
+      resizable = T, 
+      sortable = F,
+      defaultColDef = colDef(
+        headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+        footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+      ),
+      theme = reactableTheme(
+        headerStyle = list(borderColor = 'white')
       )
-    ), 
-    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
-    borderless = T, 
-    resizable = T, 
-    sortable = F,
-    defaultColDef = colDef(
-      headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
-      footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
-    ),
-    theme = reactableTheme(
-      headerStyle = list(borderColor = 'white')
     )
-  )
+    
+  }
   
+  if(!chg){
+    
+    totab <- totab1 %>% 
+      mutate(
+        value = case_when(
+          grepl('funds', metric) ~ paste0('$', formatC(value, format = "d", big.mark = ",")),
+          T ~ as.character(value)
+        )
+      )
+    
+    out <- reactable(
+      totab, 
+      columns = list(
+        icons = colDef(show = F),
+        name = colDef(show = F),
+        metric = colDef(
+          minWidth = 200,
+          name = '',
+          cell = icon_sets(totab1, icon_ref = "icons", icon_position = "left", icon_size = fntsz, colors = "black"), 
+          align = 'center'
+        ), 
+        value = colDef(
+          # minWidth = 200,
+          name = '', 
+          format = colFormat(separators = TRUE), 
+          align = 'center'
+        )
+      ), 
+      style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      borderless = T, 
+      resizable = T, 
+      sortable = F,
+      defaultColDef = colDef(
+        headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+        footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+      ),
+      theme = reactableTheme(
+        headerStyle = list(borderColor = 'white')
+      )
+    )
+    
+  }
+    
   return(out)
   
 }
