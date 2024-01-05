@@ -30,7 +30,7 @@ coms_tab(comdat, category = 'Website', maxyr = maxyr, chg = T, family = fml, sho
 ```{r, out.width = '100%'}
 # p <- comssum_plo(comdat, category = 'Website', family = fml, width = 800, height = 400)
 # div(p, align = 'center')
-comssum_plo(comdat, category = 'Website', family = fml, height = 400, width = NULL)
+comssum_plo(comdat, category = 'Website', family = fml, height = 400, width = NULL, fntsz = 16)
 ```
 
 ### Social Media Reach
@@ -48,7 +48,7 @@ coms_tab(comdat, category = 'Social Media', maxyr = maxyr, chg = T, family = fml
 ```{r, out.width = '100%'}
 # p <- comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, width = 800, height = 600)
 # div(p, align = 'center')
-comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, height = 600, width = NULL)
+comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, height = 600, width = NULL, fntsz = 16)
 ```
 
 ##### Engagement
@@ -56,7 +56,7 @@ comssum_plo(comdat, category = 'Social Media', metric = 'users', family = fml, h
 ```{r, out.width = '100%'}
 # p <- comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, width = 800, height = 600)
 # div(p, align = 'center')
-comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, height = 600, width = NULL)
+comssum_plo(comdat, category = 'Social Media', metric = 'engagement', family = fml, height = 600, width = NULL, fntsz = 16)
 ```
 
 ### Email Marketing
@@ -72,7 +72,7 @@ coms_tab(comdat, category = 'Email Marketing', maxyr = maxyr, chg = T, family = 
 ```{r, out.width = '100%'}
 # p <- comssum_plo(comdat, category = 'Email Marketing', family = fml, width = 800, height = 200)
 # div(p, align = 'center')
-comssum_plo(comdat, category = 'Email Marketing', family = fml, height = 250, width = NULL)
+comssum_plo(comdat, category = 'Email Marketing', family = fml, height = 250, width = NULL, fntsz = 16)
 ```
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
