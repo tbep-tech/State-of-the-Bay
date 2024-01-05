@@ -80,10 +80,10 @@ datrawnew <- get_sheet_as_csv('Reach_Index_KPI_NEW') %>%
   textConnection %>% 
   read.table(sep = ',', header = T)
 
-parentskeep <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Constant Contact', 'TBEP YouTube', 'GSC: TBEP.ORG', 'GA: tbep.org')
+parentskeep <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Constant Contact', 'TBEP YouTube', 'GSC: tbep.org', 'GA: tbep.org')
 
 parents <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Be Floridian FB', 'TBEP LinkTree', 'TBEP Unsplash', 
-             'TBEP Twitter', 'Constant Contact', 'TBEP YouTube', 'GSC: TBEP.ORG', 'GSC: Be Floridian', 
+             'TBEP Twitter', 'Constant Contact', 'TBEP YouTube', 'GSC: tbep.org', 'GSC: Be Floridian', 
              'GA: tbep.org', '#LTB Hashtags on IG', 'TBEP: Google My Business', 
              'Reddit', 'Outreach Materials Request')
 

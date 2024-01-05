@@ -440,7 +440,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
   category <- match.arg(category)
   
   cats <- list(
-    `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
+    `Website` = c('GA: tbep.org', 'GSC: tbep.org'), 
     `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP YouTube'), 
     `Email Marketing` = c('Constant Contact'), 
     `Tarpon Tag` = c('Tarpon Tag')
@@ -451,7 +451,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       metric = c('Unique Page Views'), 
       icons = c('eye')
     ),
-    `GSC: TBEP.ORG` = list(
+    `GSC: tbep.org` = list(
       metric = c('Total Clicks'), 
       icons = c('mouse-pointer')
     ),
@@ -658,7 +658,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
                         metric = NULL, fntsz = 17, family, width, height){
   
   cats <- list(
-    `Website` = c('GA: tbep.org', 'GSC: TBEP.ORG'), 
+    `Website` = c('GA: tbep.org', 'GSC: tbep.org'), 
     `Social Media` = c('TBEP IG', 'TBEP Facebook', 'TBEP YouTube'), 
     `Email Marketing` = c('Constant Contact'), 
     `Tarpon Tag` = c('Tarpon Tag')
@@ -669,7 +669,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
       metric = c('Unique Page Views'), 
       icons = c('eye')
     ),
-    `GSC: TBEP.ORG` = list(
+    `GSC: tbep.org` = list(
       metric = c('Total Clicks'), 
       icons = c('mouse-pointer')
     ),
