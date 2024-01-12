@@ -70,13 +70,8 @@ save(popdat, file = here('data/popdat.RData'))
 
 # social media data -------------------------------------------------------
 
-# pre CJ
-datrawold <- get_sheet_as_csv('Reach_Index_KPI') %>% 
-  textConnection %>% 
-  read.table(sep = ',', header = T)
-
-# post JW
-datrawnew <- get_sheet_as_csv('Reach_Index_KPI_NEW') %>% 
+# raw smartsheet data
+datraw <- get_sheet_as_csv('Reach_Index_KPI') %>% 
   textConnection %>% 
   read.table(sep = ',', header = T)
 
@@ -87,104 +82,48 @@ parents <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Be Floridian FB', 'TBEP 
              'GA: tbep.org', '#LTB Hashtags on IG', 'TBEP: Google My Business', 
              'Reddit', 'Outreach Materials Request')
 
-comdat <- list(datrawold, datrawnew) %>% 
-  enframe() %>% 
+comdat <- datraw %>% 
   mutate(
-    value = map(value, function(x){
-
-      x %>% 
-      mutate(
-        parent = case_when(
-          PLATFORM %in% parents ~ PLATFORM, 
-          T ~ NA_character_
-        )
-      ) %>% 
-      fill(parent) %>% 
-      filter(!PLATFORM %in% parents) %>% 
-      select(-contains(c('Change', 'Column'))) %>% 
-      pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('PLATFORM|parent')) %>% 
-      separate(date, into = c('month', 'year'), sep = '\\.') %>% 
-      rename(
-        platform = parent, 
-        metric = PLATFORM
-      ) %>% 
-      mutate(
-        year = str_pad(year, width = 4, pad = '0'),
-        year = substr(year, 3, 4), 
-        year = paste0('20', year), 
-        year = as.numeric(year),
-        month = substr(month, 1, 3),
-        month = tolower(month),
-        month = factor(month, levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec')),
-        uni = case_when(
-          grepl('%', val) ~ 'percent', 
-          T ~ 'count'
-        ), 
-        val = gsub('\\,|\\%|N/A', '', val),
-        val = as.numeric(val), 
-        metric = case_when(
-          platform == 'Constant Contact' & metric == 'Net new contacts' ~ 'Contacts',
-          platform == 'TBEP Facebook' & metric == 'Impressions' ~ 'Reach',
-          platform == 'TBEP Facebook' & metric == 'Total Fans' ~ 'Followers',
-          platform == 'TBEP IG' & metric == 'Impressions' ~ 'Reach',
-          platform == 'TBEP IG' & metric == 'Total Followers' ~ 'Followers', 
-          platform == 'TBEP YouTube' & metric == 'Total Subscribers' ~ 'Followers',
-          T ~ metric
-        )
-      ) %>% 
-      select(platform, metric, everything()) %>% 
-      filter(!is.na(val)) %>% 
-      filter(
-        metric %in% c('Contacts', 'Click Rate', 'Open Rate', 'Reach', 'Followers', 'Unique Page Views', 'Total Clicks', 'Statewide Registrations', 'Total Views') &
-          platform %in% parentskeep
-      )
-      
-    })
+    parent = case_when(
+      PLATFORM %in% parents ~ PLATFORM, 
+      T ~ NA_character_
+    )
   ) %>% 
-  unnest('value') %>% 
+  fill(parent) %>% 
+  filter(!PLATFORM %in% parents) %>% 
+  pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('PLATFORM|parent')) %>% 
+  separate(date, into = c('month', 'year'), sep = '\\.') %>% 
+  rename(
+    platform = parent, 
+    metric = PLATFORM
+  ) %>% 
+  mutate(
+    year = str_pad(year, width = 4, pad = '0'),
+    year = substr(year, 3, 4), 
+    year = paste0('20', year), 
+    year = as.numeric(year),
+    month = substr(month, 1, 3),
+    month = tolower(month),
+    month = factor(month, levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec')),
+    uni = case_when(
+      grepl('%', val) ~ 'percent', 
+      T ~ 'count'
+    ), 
+    val = gsub('\\,|\\%|N/A', '', val),
+    val = as.numeric(val), 
+    metric = case_when(
+      metric %in% c('Total Fans/Followers', 'Total Followers', 'Total Subscribers') ~ 'Followers',
+      metric == 'Net New Contacts' ~ 'New Contacts',
+      T ~ metric
+    )
+  ) %>% 
+  select(platform, metric, everything()) %>% 
+  filter(!is.na(val)) %>% 
   filter(
-    !(name == 1 & year == 2023 & month == 'aug' & !(platform == 'Constant Contact' & metric == 'Contacts')
-    ) &
-    !(name == 2 & year == 2023 & month == 'aug' &  platform == 'Constant Contact' & metric == 'Contacts')
-    ) %>% # remove duplicate august 2023 from old data, except constant contact number of contacts
-  arrange(platform, metric, year, month) %>% 
-  select(-name)
-
-# fix constant contact contacts, pre sep 2023 is net change, not totals
-# sep 2023 net change is -28, from reporting tool in cc (not in smartsheet)
-
-# starting august 2023 count
-strtv <- comdat %>% 
-  filter(platform == 'Constant Contact' & metric == 'Contacts' & year == 2023 & month == 'sep') %>% 
-  pull(val) %>% 
-  `+`(28)
-
-# get change values pre sep 2023
-chg <- comdat %>% 
-  mutate(
-    dt = ymd(paste(year, as.numeric(month), '01', sep = '-'))
+    metric %in% c('New Contacts', 'Click Rate', 'Open Rate', 'Impressions/Reach', 'Followers', 'Unique Page Views', 'Total Clicks', 'Statewide Registrations', 'Total Views') &
+      platform %in% parentskeep
   ) %>% 
-  filter(platform == 'Constant Contact' & metric == 'Contacts' & dt < ymd('2023-09-01')) %>% 
-  pull(val)
-
-# back calculate contacts from monthly net change
-backcnt <- rev(cumsum(c(strtv, -1 * rev(chg))))[-1]
-
-# replace old values with back calculated values
-tmp <- comdat %>% 
-  mutate(
-    dt = ymd(paste(year, as.numeric(month), '01', sep = '-')),
-    dtind = dt < ymd('2023-09-01') & platform == 'Constant Contact' & metric == 'Contacts'
-  )
-tmp$val2 <- NA
-tmp[tmp$dtind, 'val2'] <- backcnt
-
-# update comdat constant contact contacts
-comdat <- tmp %>% 
-  mutate(
-    val = ifelse(dtind, val2, val)
-  ) %>% 
-  select(-val2, -dtind, -dt)
+  arrange(platform, metric, year, month) 
 
 save(comdat, file = here('data/comdat.RData'))
 

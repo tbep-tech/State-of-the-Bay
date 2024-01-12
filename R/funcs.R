@@ -456,11 +456,11 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       icons = c('mouse-pointer')
     ),
     `TBEP IG` = list(
-      metric = c('Reach', 'Followers'),
+      metric = c('Impressions/Reach', 'Followers'),
       icons = c('share', 'users') 
     ),
     `TBEP Facebook` = list(
-      metric = c('Reach', 'Followers'),
+      metric = c('Impressions/Reach', 'Followers'),
       icons = c( 'share', 'users') 
     ), 
     `TBEP YouTube` = list(
@@ -468,7 +468,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
       icons = c('film', 'users')
       ), 
     `Constant Contact` = list(
-      metric = c('Contacts'), 
+      metric = c('New Contacts'), 
       icons = c('users')
       ), 
     `Tarpon Tag` = list(
@@ -499,7 +499,7 @@ coms_tab <- function(comdat, category = c('Website', 'Social Media', 'Email Mark
     filter(platform %in% !!platform)
 
   # filter tarpon tag to dec, since it's a running tally, not new registrations
-  if(category %in% c('Tarpon Tag', 'Email Marketing'))
+  if(category %in% c('Tarpon Tag'))
     comdat <- comdat %>% 
       filter(month == 'dec')
   
@@ -674,11 +674,11 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
       icons = c('mouse-pointer')
     ),
     `TBEP IG` = list(
-      metric = c('Reach', 'Followers'),
+      metric = c('Impressions/Reach', 'Followers'),
       icons = c('heart', 'users') 
     ),
     `TBEP Facebook` = list(
-      metric = c('Reach', 'Followers'),
+      metric = c('Impressions/Reach', 'Followers'),
       icons = c( 'heart', 'users') 
     ), 
     `TBEP YouTube` = list(
@@ -686,7 +686,7 @@ comssum_plo <- function(comdat, category = c('Website', 'Social Media', 'Email M
       icons = c('film', 'users')
     ), 
     `Constant Contact` = list(
-      metric = c('Contacts'), 
+      metric = c('New Contacts'), 
       icons = c('users')
     ), 
     `Tarpon Tag` = list(
