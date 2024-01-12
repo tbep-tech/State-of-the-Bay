@@ -83,19 +83,19 @@ parents <- c('TBEP Facebook', 'TBEP IG', 'Tarpon Tag', 'Be Floridian FB', 'TBEP 
              'Reddit', 'Outreach Materials Request')
 
 comdat <- datraw %>% 
+  rename(metric = METRIC) %>% 
   mutate(
     parent = case_when(
-      PLATFORM %in% parents ~ PLATFORM, 
+      metric %in% parents ~ metric, 
       T ~ NA_character_
     )
   ) %>% 
   fill(parent) %>% 
-  filter(!PLATFORM %in% parents) %>% 
-  pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('PLATFORM|parent')) %>% 
+  filter(!metric %in% parents) %>% 
+  pivot_longer(names_to = 'date', values_to = 'val', cols = -matches('metric|parent')) %>% 
   separate(date, into = c('month', 'year'), sep = '\\.') %>% 
   rename(
-    platform = parent, 
-    metric = PLATFORM
+    platform = parent
   ) %>% 
   mutate(
     year = str_pad(year, width = 4, pad = '0'),
