@@ -54,11 +54,11 @@ div(p, align = 'center')
 
 In `r maxyr`, Old Tampa Bay received an action category of `r sums$OTB$action` (chlorophyll target `r sums$OTB$chla`, light attenuation target `r sums$OTB$la`), Hillsborough Bay received an action category of `r sums$HB$action` (chlorophyll target `r sums$HB$chla`, light attenuation target `r sums$HB$la`), Middle Tampa Bay received an action category of `r sums$MTB$action` (chlorophyll target `r sums$MTB$chla`, light attenuation target `r sums$MTB$la`), and Lower Tampa Bay received an action category of `r sums$LTB$action` (chlorophyll target `r sums$LTB$chla`, light attenuation target `r sums$LTB$la`). 
 
-<!-- This map shows the outcomes for each bay segment in `r maxyr`.  The color of the bay segment indicates the management action category, with the points showing chlorophyll (left) and light attenuation (right) for each monitoring used to estimate the categories. -->
+This map shows the outcomes for each bay segment in `r maxyr`.  The color of the bay segment indicates the management action category, with the points showing mean annual chlorophyll concentrations at each site used to estimate the categories.
 
-<!-- ```{r} -->
-
-<!-- ``` -->
+```{r, out.width = '80%', fig.height = 7, fig.width = 8}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', family = fml, base_size = 8)
+```
 
 The plots below show chlorophyll and light attenuation values for each bay segment, including the management target.
 
