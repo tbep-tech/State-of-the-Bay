@@ -8,7 +8,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2022
+maxyr <- 2023
 
 tbcrks <- tidalcreeks[tbshed, ]
 dat <- anlz_tdlcrk(tbcrks, iwrraw, yr = maxyr)
