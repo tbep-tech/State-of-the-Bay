@@ -56,12 +56,23 @@ dev.off()
 
 tbniscr <- anlz_tbniscr(fimdata)
 
+# w/ text
 p <- show_tbnimatrix(tbniscr, family = fml) +
   theme(
     text = element_text(family = fml),
     axis.text.y = element_text(family = fml)
   )
 jpeg('figures/tbnireport.jpg', family = fml, height = 6, width = 3, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# w/o text
+p <- show_tbnimatrix(tbniscr, family = fml, txtsz = NULL) +
+  theme(
+    text = element_text(family = fml),
+    axis.text.y = element_text(family = fml)
+  )
+jpeg('figures/tbnireportnotxt.jpg', family = fml, height = 6, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
