@@ -52,6 +52,10 @@ jpeg('figures/tbnits.jpg', family = fml, height = 7, width = 6, units = 'in', re
 print(p)
 dev.off()
 
+jpeg('figures/tbnitsbyseg.jpg', family = fml, height = 4, width = 6, units = 'in', res = 300)
+print(p2)
+dev.off()
+
 # tbni report card --------------------------------------------------------
 
 tbniscr <- anlz_tbniscr(fimdata)
