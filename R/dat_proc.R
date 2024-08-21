@@ -3,6 +3,11 @@ library(tidyverse)
 library(lubridate)
 library(here)
 library(rsmartsheet)
+library(readxl)
+library(httr)
+library(jsonlite)
+library(sf)
+library(tbeptools)
 
 cenkey <- Sys.getenv("census_key")
 smrkey <- Sys.getenv("smartsheets_key")
@@ -215,4 +220,44 @@ dcgdat <- dcgraw %>%
 
 save(dcgdat, file = here('data/dcgdat.RData'))
 
+# k brevis data -------------------------------------------------------------------------------
+
+
+# query api 
+path <- 'https://gis.ncdc.noaa.gov/arcgis/rest/services/ms/HABSOS_CellCounts/MapServer/0/query?'
+
+request <- GET(
+  url = path,
+  query= list(       
+    # where = "STATE_ID='FL'",
+    where = "LATITUDE < 28.2 AND LATITUDE > 27 AND LONGITUDE > -83.4 AND LONGITUDE < -82.08",
+    outFields = 'DESCRIPTION,SAMPLE_DATE,LATITUDE,LONGITUDE,SALINITY,SALINITY_UNIT,WATER_TEMP,WATER_TEMP_UNIT,GENUS,SPECIES,CATEGORY,CELLCOUNT,CELLCOUNT_UNIT',
+    f = 'pjson'
+  )
+)
+
+response <- content(request, as = "text", encoding = "UTF-8")
+results <- fromJSON(response, flatten = T)
+
+# format data
+kbrdat <- results$features %>% 
+  rename_all(function(x) gsub('^attributes\\.', '', x)) %>% 
+  rename_all(tolower) %>% 
+  mutate(
+    date = format(sample_date, scientific = F),
+    date = as.numeric(gsub('000$', '', date)), 
+    date = as.POSIXct(date, origin = c('1970-01-01'), tz = 'UTC'), 
+    date = as.Date(date)
+  ) %>% 
+  select(
+    date, station = description, sal_ppt = salinity, temp_c = water_temp, kb_100kcelll = cellcount, longitude, latitude
+  ) %>% 
+  gather('var', 'val', -date, -station, -longitude, -latitude) %>% 
+  separate(var, c('var', 'uni'), sep = '_') %>% 
+  filter(!is.na(val)) %>% 
+  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) %>% 
+  .[tbshed, ] %>%
+  .[tbseg, ]
+
+save(kbrdat, file = here::here('data/kbrdat.RData'))
 
