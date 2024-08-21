@@ -12,7 +12,6 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/acres.RData
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtacres.RData"))
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RData"))
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.RData"))
-fluccs <- read.csv('https://github.com/tbep-tech/hmpu-workflow/raw/master/data/FLUCCShabsclass.csv', stringsAsFactors = F)
 
 # subtidal max year
 submax <- '2022'
@@ -57,7 +56,13 @@ lngtrmtab_fun(subtacres, 'Category', typ = 'subtidal', yrsel = '1988', topyr = s
 ```
 
 ```{r}
-alluvout2(subtchgdat, fluccs, family = fml, maxyr = submax, width = 800, height = 900, mrg = 0)
+toplo <- subtchgdat %>% 
+  filter(grepl('1988', source)) %>%
+  filter(grepl(submax, target)) %>%
+  filter(grepl('Seagrasses|Tidal|Open', source)) %>% 
+  filter(grepl('Seagrasses|Tidal|Open', target))
+
+alluvout2(toplo, family = fml, maxyr = submax, width = 800, height = 500, mrg = 0)
 ```
 
 The intertidal habitat gains demonstrate the effectiveness of publicly-funded habitat restoration projects (see Habitat Restoration tab) and state and federal wetland regulatory programs. Increases in salt barrens may also reflect a landward expansion associated with sea level rise. However, a `r sprest['Developed']`% increase for developed lands and `r sprest['Restorable']`% loss for restorable lands in the watershed is a concern for continued habitat restoration and protection. A loss of upland habitats is the result of continued human population growth and urban development in the Tampa Bay watershed, and unless local protections for native upland habitats improve, this trend will likely continue.
@@ -67,7 +72,27 @@ lngtrmtab_fun(acres, 'Category', typ = 'supratidal', yrsel = '1990', topyr = spr
 ```
 
 ```{r}
-alluvout2(chgdat, fluccs, family = fml, maxyr = sprmax, width = 1000, height = 900, mrg = 95)
+toplo <- chgdat %>%
+  filter(grepl('1990', source)) %>% 
+  filter(grepl(sprmax, target)) %>% 
+  mutate(
+    source = case_when(
+      grepl('Mangrove|Salt|Wetlands|Uplands', source) ~ 'Forests/Wetlands, 1990',
+      T ~ source
+    ),
+    target = case_when(
+      grepl('Mangrove|Salt|Wetlands|Uplands', target) ~ paste('Forests/Wetlands,', sprmax),
+      T ~ target
+    )
+  ) %>% 
+  summarise(
+    value = sum(value), 
+    .by = c('source', 'target')
+  ) %>% 
+  filter(!grepl('Open|other', source)) %>% 
+  filter(!grepl('Open|other', target))
+
+alluvout2(toplo, family = fml, maxyr = sprmax, width = 1000, height = 500, mrg = 95, colrev = T)
 ```
 
 ## Seagrasses in Tampa Bay

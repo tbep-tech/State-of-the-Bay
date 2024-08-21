@@ -10,6 +10,8 @@ library(grid)
 library(here)
 library(maptiles)
 library(tidyterra)
+library(networkD3)
+library(htmltools)
 
 loadfonts(device = 'win', quiet = T)
 
@@ -214,7 +216,7 @@ p1 <- ggplot(toplo1, aes(x = yr, y = pyro, group = yr)) +
     y = 'Bloom intensity (cells / L)', 
     x = NULL,
     title = expression(paste(italic('Pyrodinium bahamense'), ' bloom intensity in Old Tampa Bay')), 
-    subtitle = 'Observed cell counts and annual medians', 
+    subtitle = 'Observed cell counts > 0 and annual medians', 
     caption = 'Source: Florida Fish and Wildlife Conservation Commission'
   )
 
@@ -257,13 +259,43 @@ p2 <- ggplot(toplo2, aes(x = yr, y = val)) +
     x = NULL,
     y = 'Bloom intensity (cells / L)', 
     title = expression(paste(italic('Karenia brevis'), ' bloom intensity in Tampa Bay')), 
-    subtitle = 'Observed cell counts and annual medians', 
+    subtitle = 'Observed cell counts > 0 and annual medians', 
     caption = 'Source: NOAA NCEI Harmful Algal BloomS Observing System (HABSOS)'
   )
 
-p <- p1 + p2 + plot_layout(ncol = 1)
+p <- p1 + p2 + plot_layout(ncol = 1, axis_titles = 'collect')
 
 jpeg('figures/habs.jpg', family = fml, height = 5, width = 9, units = 'in', res = 300)
 print(p)
 dev.off()
 
+# simplified land use change ------------------------------------------------------------------
+
+load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RData"))
+
+toplo <- chgdat %>%
+  filter(grepl('1990', source)) %>% 
+  filter(grepl('2020', target)) %>% 
+  mutate(
+    source = case_when(
+      grepl('Mangrove|Salt|Wetlands|Uplands', source) ~ 'Forests/Wetlands, 1990',
+      T ~ source
+    ),
+    target = case_when(
+      grepl('Mangrove|Salt|Wetlands|Uplands', target) ~ 'Forests/Wetlands, 2020',
+      T ~ target
+    )
+  ) %>% 
+  summarise(
+    value = sum(value), 
+    .by = c('source', 'target')
+  ) %>% 
+  filter(!grepl('Open|other', source)) %>% 
+  filter(!grepl('Open|other', target))
+
+p <- alluvout2(toplo, family = fml, maxyr = 2020, width = 1000, height = 700, mrg = 95, 
+          colrev = T, title = F)
+
+htmlwidgets::saveWidget(p, here::here('figures/landusechange.html'), selfcontained = T)
+
+webshot::webshot(url = here::here('figures/landusechange.html'), file = here::here('figures/landusechange.png'))

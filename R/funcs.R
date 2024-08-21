@@ -1328,19 +1328,12 @@ sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1988, topyr = 2016){
 
 # alluvial plot function, for HMPU targets
 # https://www.data-to-viz.com/graph/sankey.html
-alluvout2 <- function(datin, fluccs, family, maxyr, width, height, mrg){
+alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, title = TRUE){
   
   ttl <- paste('True change analysis, watershed land use from 1990 (left) to', maxyr, '(right)')
   
   if(any(grepl('^Seagrass', datin$source)))
     ttl <- paste('True change analysis, subtidal habitats (all categories) from 1988 (left) to', maxyr, '(right)')
-  
-    
-  clp <- fluccs %>%
-    pull(HMPU_TARGETS) %>% 
-    unique %>% 
-    c('Coastal Uplands', .) %>% 
-    sort
   
   sumdat <- datin %>% 
     rename(Acres = value) %>% 
@@ -1373,7 +1366,10 @@ alluvout2 <- function(datin, fluccs, family, maxyr, width, height, mrg){
     gsub('\\s$', '', .) %>% 
     unique %>% 
     length()
-  colin <- cols(ncol) %>% 
+  colin <- cols(ncol)
+  if(colrev)
+    colin <- rev(colin)
+  colin <- colin %>% 
     paste(collapse = '", "') %>% 
     paste('d3.scaleOrdinal(["', ., '"])')
   
@@ -1388,7 +1384,8 @@ alluvout2 <- function(datin, fluccs, family, maxyr, width, height, mrg){
                        margin = mrgs)
   
   # add caption
-  out <- htmlwidgets::prependContent(out, h5(class = "title", ttl))
+  if(title)
+    out <- htmlwidgets::prependContent(out, h5(class = "title", ttl))
 
   out <- htmlwidgets::onRender(
     out,
