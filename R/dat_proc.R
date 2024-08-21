@@ -220,8 +220,74 @@ dcgdat <- dcgraw %>%
 
 save(dcgdat, file = here('data/dcgdat.RData'))
 
-# k brevis data -------------------------------------------------------------------------------
+# pyro data -----------------------------------------------------------------------------------
 
+# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
+  select(
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = P..bahamense.Abundance..cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2021 only
+dat2021 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
+  select(
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = Pbahamense..cells.L.
+  ) %>%
+  mutate(
+    date = case_when(
+      grepl('[a-z]', date) ~ dmy(date),
+      T ~ mdy(date)
+    )
+  )
+
+# 2022 only
+dat2022 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
+  select(
+    date = Date,
+    Latitude,
+    Longitude,
+    pyro = Pyrodinium..Cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2023 only
+tmpfile <- tempfile(fileext = '.xlsx')
+download.file('https://github.com/tbep-tech/tbep-os-presentations/raw/master/data/2023%20OTB%20Pyrodinium%20bahamense%20abundance%20data.xlsx', 
+              tmpfile, 
+              mode = 'wb')
+dat2023raw <- read_excel(tmpfile)
+unlink(tmpfile)
+dat2023 <- dat2023raw %>% 
+  select(
+    date = `Sample Date`,
+    Latitude,
+    Longitude,
+    pyro = `Pyrodinium bahamense abundance (cells/L)`
+  ) %>%
+  mutate(date = ymd(date))
+
+brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
+labs <- c('No bloom', 'Low', 'Medium', 'High')
+
+pyrdat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs)
+  )
+
+save(pyrdat, file = here::here('data/pyrdat.Rdata'))
+
+# k brevis data -------------------------------------------------------------------------------
 
 # query api 
 path <- 'https://gis.ncdc.noaa.gov/arcgis/rest/services/ms/HABSOS_CellCounts/MapServer/0/query?'

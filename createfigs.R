@@ -178,3 +178,92 @@ dev.off()
 png('figures/seagrasscov.png', height = 3.25, width = 6, res = 300, unit = 'in')
 sgcov_plo(seagrass, family = fml)
 dev.off()
+
+# habs ----------------------------------------------------------------------------------------
+
+load(file = here::here('data/pyrdat.RData'))
+load(file = here::here('data/kbrdat.RData'))
+
+# pyro
+toplo1 <- pyrdat %>% 
+  filter(yr > 2011)
+
+toplomed1 <- toplo1 %>% 
+  reframe(
+    medv = median(pyro, na.rm = T), 
+    .by = yr
+  )
+
+p1 <- ggplot(toplo1, aes(x = yr, y = pyro, group = yr)) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.75, color = 'grey') +
+  scale_y_log10(breaks = c(1e3, 1e4, 1e5, 1e6), labels = parse(text = c('10^3', 'Low~(10^4)', 'Medium~(10^5)', 'High~(10^6)')),
+                limits = c(1e3, NA)) +
+  scale_x_continuous(breaks = seq(min(toplo1$yr), max(toplo1$yr), 1)) +
+  geom_segment(data = toplomed1,
+               aes(x = yr - 0.25, xend = yr + 0.25,
+                   y = medv, yend = medv),
+               linewidth = 1
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 45, size = 8, hjust = 1)
+  ) +
+  labs(
+    y = 'Bloom intensity (cells / L)', 
+    x = NULL,
+    title = expression(paste(italic('Pyrodinium bahamense'), ' bloom intensity in Old Tampa Bay')), 
+    subtitle = 'Observed cell counts and annual medians', 
+    caption = 'Source: Florida Fish and Wildlife Conservation Commission'
+  )
+
+# karenia
+toplo2 <- kbrdat %>%
+  st_set_geometry(NULL) %>%
+  filter(var == 'kb') %>% 
+  filter(date < as.Date('2024-01-01') & date > as.Date('1960-01-01')) %>% 
+  # filter(month(date) > 3 & month(date) < 10) %>% 
+  mutate(
+    yr = year(date), 
+    val = ifelse(val == 0, NA, val)
+  ) %>% 
+  filter(yr >= 1990)
+
+toplomed2 <- toplo2 %>% 
+  reframe(
+    medv = median(val, na.rm = T), 
+    .by = yr
+  )
+
+# plot
+p2 <- ggplot(toplo2, aes(x = yr, y = val)) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.75, color = 'grey') +
+  scale_y_log10(breaks = c(1e3, 1e4, 1e5, 1e6), labels = parse(text = c('10^3', 'Low~(10^4)', 'Medium~(10^5)', 'High~(10^6)')), 
+                limits= c(1e3, NA)) +
+  scale_x_continuous(breaks = seq(min(toplo2$yr), max(toplo2$yr), 1)) +
+  geom_segment(data = toplomed2,
+               aes(x = yr - 0.25, xend = yr + 0.25,
+                   y = medv, yend = medv),
+               linewidth = 1
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor = element_blank()
+  ) +
+  labs(
+    x = NULL,
+    y = 'Bloom intensity (cells / L)', 
+    title = expression(paste(italic('Karenia brevis'), ' bloom intensity in Tampa Bay')), 
+    subtitle = 'Observed cell counts and annual medians', 
+    caption = 'Source: NOAA NCEI Harmful Algal BloomS Observing System (HABSOS)'
+  )
+
+p <- p1 + p2 + plot_layout(ncol = 1)
+
+jpeg('figures/habs.jpg', family = fml, height = 5, width = 9, units = 'in', res = 300)
+print(p)
+dev.off()
+
