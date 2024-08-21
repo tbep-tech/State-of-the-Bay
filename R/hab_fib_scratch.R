@@ -19,7 +19,7 @@ datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTB
   mutate(date = mdy(date))
 
 # 2021 only
-dat2021 <- read.csv('../tbep-os-presentations/data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv') %>%
+dat2021 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
   select(
     date = Sample_Date,
     Latitude,
@@ -34,7 +34,7 @@ dat2021 <- read.csv('../tbep-os-presentations/data/Pyrodinium_Chl_2021_OTBMP_mbe
   )
 
 # 2022 only
-dat2022 <- read.csv('../tbep-os-presentations/data/Pyrodinium_Chla_OTBMP_2022.csv') %>%
+dat2022 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
   select(
     date = Date,
     Latitude,
@@ -44,7 +44,13 @@ dat2022 <- read.csv('../tbep-os-presentations/data/Pyrodinium_Chla_OTBMP_2022.cs
   mutate(date = mdy(date))
 
 # 2023 only
-dat2023 <- read_excel('../tbep-os-presentations/data/2023 OTB Pyrodinium bahamense abundance data.xlsx') %>% 
+tmpfile <- tempfile(fileext = '.xlsx')
+download.file('https://github.com/tbep-tech/tbep-os-presentations/raw/master/data/2023%20OTB%20Pyrodinium%20bahamense%20abundance%20data.xlsx', 
+              tmpfile, 
+              mode = 'wb')
+dat2023raw <- read_excel(tmpfile)
+unlink(tmpfile)
+dat2023 <- dat2023raw %>% 
   select(
     date = `Sample Date`,
     Latitude,
@@ -65,14 +71,14 @@ dat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
     pyro = pmin(3e6, pyro)
   )
 
-toplo <- dat |> 
+toplo <- dat %>% 
   filter(yr > 2011)
 
-toplomed <- toplo |> 
+toplomed <- toplo %>% 
   reframe(
     medv = median(pyro, na.rm = T), 
     .by = yr
-  ) |> 
+  ) %>% 
   mutate(
     pyrocat = cut(medv, breaks = brks, labels = labs), 
   )
@@ -142,7 +148,7 @@ kbrdat <- results$features %>%
 # habdat p1
 toplo <- kbrdat %>%
   st_set_geometry(NULL) %>%
-  filter(var == 'kb') |> 
+  filter(var == 'kb') %>% 
   filter(date < as.Date('2024-01-01') & date > as.Date('1960-01-01')) %>% 
   # filter(month(date) > 3 & month(date) < 10) %>% 
   mutate(
