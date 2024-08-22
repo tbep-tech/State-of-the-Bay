@@ -1404,3 +1404,31 @@ alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, 
   return(out)
   
 }
+
+# noaa tide level station data
+get_stations <- function(
+    station_id,
+    api_url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations"){
+  
+  httr2::request(api_url) |>
+    httr2::req_url_path_append(
+      paste0(station_id, ".json")) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json() |>
+    (\(x) x$stations[[1]])()
+  
+}
+
+# noaa tide level station details
+get_details <- function(
+    station_id,
+    api_url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations"){
+  
+  httr2::request(api_url) |>
+    httr2::req_url_path_append(
+      station_id, "details.json") |>
+    httr2::req_perform() |>
+    httr2::resp_body_json()
+  
+}
+

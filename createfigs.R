@@ -299,3 +299,137 @@ p <- alluvout2(toplo, family = fml, maxyr = 2020, width = 1000, height = 700, mr
 htmlwidgets::saveWidget(p, here::here('figures/landusechange.html'), selfcontained = T)
 
 webshot::webshot(url = here::here('figures/landusechange.html'), file = here::here('figures/landusechange.png'))
+
+
+# slr -----------------------------------------------------------------------------------------
+
+sealevelstations <- tibble::tribble(
+  ~station_id, ~station_name,
+  8726724    , "Clearwater Beach",
+  8726674    , "East Bay",
+  8726384    , "Port Manatee",
+  8726520    , "St. Petersburg",
+  8726667    , "McKay Bay",
+  8726607    , "Old Port Tampa"
+)
+
+sealevelstations <- sealevelstations |>
+  mutate(
+    lst_station = map(station_id, get_stations),
+    longitude   = map_dbl(lst_station, "lng"),
+    latitude    = map_dbl(lst_station, "lat"),
+    lst_details = map(station_id, get_details),
+    date_est    = map_chr(lst_details, "established") |>
+      as.Date() ) |>
+  select(-lst_station, -lst_details)
+
+tds <- sealevelstations %>% 
+  select(station_name, station_id) %>% 
+  mutate(
+    data = purrr::map(station_id, function(station_id){
+      
+      cat(station_id)
+      
+      url <- paste0('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=19400101&end_date=20231231&product=monthly_mean&datum=MLLW&application=DataAPI_Sample&station=', station_id, '&time_zone=LST&units=english&format=CSV')
+      
+      res <- try(read.table(url, sep = ',', header = T), silent = T)
+      
+      if(inherits(res, 'try-error')){
+        cat('\tno data\n')
+        return(NULL)
+      }
+      
+      cat('\n')
+      
+      return(res)
+      
+    })
+  ) %>% 
+  unnest(data) 
+
+toplo <- tds %>% 
+  select(station_name, yr = Year, mo = Month, msl = MSL) %>% 
+  mutate(
+    date = lubridate::make_date(yr, mo), 
+    dectime = lubridate::decimal_date(date)
+  ) %>% 
+  filter(yr >=2000) %>% 
+  # filter(!(yr < 1999 & station_name %in% c('McKay Bay', 'Old Port Tampa', 'Port Manatee'))) %>% 
+  mutate(
+    station_name = case_when(
+      grepl('East|McKay', station_name) ~ 'East/McKay Bay', 
+      T ~ station_name
+    )
+  )
+
+txtplo <- toplo %>% 
+  group_nest(station_name) %>%
+  mutate(
+    data = map(data, ~{
+      mod <- lm(msl ~ dectime, data = .x)
+      pyr <- round(12 * coef(mod)[2], 2) # feet/yr to inches/yr
+      pdc <- round(10 * pyr, 2) # inches/yr to inches/decade
+      out <- glue::glue('{pdc} in/decade')
+      return(out)
+    })
+  ) %>% 
+  unnest(data) %>% 
+  unite('data', station_name, data, sep = ': ', remove = F) %>% 
+  rename(txt = data)
+
+toplo <- toplo %>% 
+  full_join(txtplo, by = 'station_name')
+
+p <- ggplot(toplo, aes(date, msl)) +
+  geom_point(color = 'grey', size = 1) +
+  facet_wrap(~txt, ncol = 1) + 
+  stat_smooth(method = 'lm', formula = y ~ x, se = F, color = 'black') +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank()
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Mean sea level (ft)', 
+    title = 'Sea level by station in Tampa Bay'
+  )
+
+tomap <- sealevelstations %>% 
+  mutate(
+    station_name = case_when(
+      grepl('East|McKay', station_name) ~ 'East/McKay Bay', 
+      T ~ station_name
+    )
+  ) %>% 
+  summarise(
+    longitude = mean(longitude, na.rm = T),
+    latitude  = mean(latitude, na.rm = T), 
+    .by = station_name
+  ) %>% 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+dat_ext <- tomap %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(10, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(dat_ext, provider = "CartoDB.Positron", zoom = 11)
+
+m <- ggplot() +
+  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+  ggplot2::geom_sf(data = tomap, color = 'black', inherit.aes = F, size = 3) +
+  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326) + 
+  ggplot2::facet_wrap(~station_name, ncol = 1) + 
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(), 
+    strip.text = element_blank()
+  ) + 
+  labs(caption = 'Source: NOAA Tides & Currents')
+
+pout <- p + m + plot_layout(ncol = 2, widths = c(1.5, 1))
+
+png(here::here('figures/sealevel.png'), family = fml, height = 7, width = 4, units = 'in', res = 300)
+print(pout)
+dev.off()
