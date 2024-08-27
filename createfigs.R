@@ -433,3 +433,54 @@ pout <- p + m + plot_layout(ncol = 2, widths = c(1.5, 1))
 png(here::here('figures/sealevel.png'), family = fml, height = 7, width = 4, units = 'in', res = 300)
 print(pout)
 dev.off()
+
+# CCHA change ---------------------------------------------------------------------------------
+
+load(file = url('https://github.com/tbep-tech/ccha-workflow/raw/main/data/vegdat.RData'))
+
+toplo <- vegdat %>% 
+  select(site, sample, meter, zone_name_simp) %>% 
+  distinct() %>% 
+  summarise(
+    dist_m = max(meter) - min(meter),
+    .by = c(site, sample, zone_name_simp)
+  ) %>% 
+  pivot_wider(names_from = sample, values_from = dist_m) %>% 
+  na.omit() %>% # this removes any where a zone is missing in sample 1 or 3
+  mutate(
+    perchg = (`3` - `1`) / `1`
+  ) %>% 
+  summarise(
+    perchg = mean(perchg),
+    .by = c(zone_name_simp)
+  ) %>% 
+  mutate(
+    sgn = sign(perchg),
+    sgn = factor(ifelse(sgn == 0, -1, sgn))
+  ) %>% 
+  filter(!zone_name_simp %in% c('Water body'))
+
+p <- ggplot(toplo, aes(y = reorder(zone_name_simp, perchg), x = perchg)) +
+  geom_col(aes(fill = sgn), show.legend = F, color = 'black') +
+  geom_text(data = toplo[toplo$sgn == 1, ], aes(label = scales::percent(perchg, accuracy = 1)), hjust = -0.1, size = 4.5) +
+  geom_text(data = toplo[toplo$sgn == -1, ], aes(label = scales::percent(perchg, accuracy = 1)), hjust = 1.1, size = 4.5) +
+  scale_fill_manual(values = c('#004F7E', '#00806E')) + 
+  geom_vline(xintercept = 0, linetype = 'solid') +
+  scale_x_continuous(expand = c(0.1, 0)) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = 'Mean % change in transect distance of critical coastal habitats',
+    subtitle = '2015 to 2023', 
+    caption = 'Source: FWC FWRI Coastal Wetlands Research Program'
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(), 
+    axis.text.x = element_blank(), 
+    axis.text.y = element_text(size = 12)
+  )
+
+png(here::here('figures/cchachange.png'), family = fml, height = 4, width = 8, units = 'in', res = 300)
+print(p)
+dev.off()
