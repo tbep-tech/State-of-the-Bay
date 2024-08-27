@@ -225,6 +225,7 @@ save(dcgdat, file = here('data/dcgdat.RData'))
 # https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
 datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
   select(
+    station = Station_ID,
     yr = Year,
     date = Sample_Date,
     Latitude,
@@ -236,6 +237,7 @@ datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTB
 # 2021 only
 dat2021 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
   select(
+    station = Station_ID,
     date = Sample_Date,
     Latitude,
     Longitude,
@@ -251,6 +253,7 @@ dat2021 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-pre
 # 2022 only
 dat2022 <- read.csv(url('https://raw.githubusercontent.com/tbep-tech/tbep-os-presentations/master/data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
   select(
+    station = Station.ID,
     date = Date,
     Latitude,
     Longitude,
@@ -267,6 +270,7 @@ dat2023raw <- read_excel(tmpfile)
 unlink(tmpfile)
 dat2023 <- dat2023raw %>% 
   select(
+    station = `Station ID`,
     date = `Sample Date`,
     Latitude,
     Longitude,
