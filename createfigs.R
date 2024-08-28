@@ -439,11 +439,15 @@ dev.off()
 load(file = url('https://github.com/tbep-tech/ccha-workflow/raw/main/data/vegdat.RData'))
 
 toplo <- vegdat %>% 
-  select(site, sample, meter, zone_name_simp) %>% 
+  select(site, sample, meter, zone_name_simp) %>%
   distinct() %>% 
+  mutate(
+    grp = consecutive_id(zone_name_simp), 
+    .by = c(site, sample)
+  ) %>%
   summarise(
     dist_m = max(meter) - min(meter),
-    .by = c(site, sample, zone_name_simp)
+    .by = c(site, sample, zone_name_simp, grp)
   ) %>% 
   pivot_wider(names_from = sample, values_from = dist_m) %>% 
   na.omit() %>% # this removes any where a zone is missing in sample 1 or 3
