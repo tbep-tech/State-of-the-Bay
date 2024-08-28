@@ -447,14 +447,13 @@ toplo <- vegdat %>%
   ) %>% 
   pivot_wider(names_from = sample, values_from = dist_m) %>% 
   na.omit() %>% # this removes any where a zone is missing in sample 1 or 3
-  mutate(
-    perchg = (`3` - `1`) / `1`
-  ) %>% 
   summarise(
-    perchg = mean(perchg),
-    .by = c(zone_name_simp)
-  ) %>% 
+    `1` = sum(`1`, na.rm = T),
+    `3` = sum(`3`, na.rm = T),
+    .by = zone_name_simp
+  ) %>%
   mutate(
+    perchg = (`3` - `1`) / `1`,
     sgn = sign(perchg),
     sgn = factor(ifelse(sgn == 0, -1, sgn))
   ) %>% 
@@ -470,7 +469,7 @@ p <- ggplot(toplo, aes(y = reorder(zone_name_simp, perchg), x = perchg)) +
   labs(
     x = NULL,
     y = NULL,
-    title = 'Mean % change in transect distance of critical coastal habitats',
+    title = '% change in total transect distance of critical coastal habitats',
     subtitle = '2015 to 2023', 
     caption = 'Source: FWC FWRI Coastal Wetlands Research Program'
   ) +
