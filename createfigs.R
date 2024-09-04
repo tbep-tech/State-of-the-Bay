@@ -295,7 +295,7 @@ toplo <- chgdat %>%
 
 colvec <- c("#FF6347", "#2B775D", "#004F7E", "#82746E")
 p <- alluvout2(toplo, family = fml, maxyr = 2020, width = 1000, height = 700, mrg = 95, 
-          colvec = colvec, title = F)
+          colvec = colvec, title = F, fontsize = 25)
 
 htmlwidgets::saveWidget(p, here::here('figures/landusechange.html'), selfcontained = T)
 
@@ -306,12 +306,12 @@ webshot::webshot(url = here::here('figures/landusechange.html'), file = here::he
 
 sealevelstations <- tibble::tribble(
   ~station_id, ~station_name,
-  8726724    , "Clearwater Beach",
-  8726674    , "East Bay",
-  8726384    , "Port Manatee",
+  # 8726724    , "Clearwater Beach",
+  # 8726674    , "East Bay",
+  # 8726384    , "Port Manatee",
   8726520    , "St. Petersburg",
-  8726667    , "McKay Bay",
-  8726607    , "Old Port Tampa"
+  # 8726667    , "McKay Bay",
+  # 8726607    , "Old Port Tampa"
 )
 
 sealevelstations <- sealevelstations |>
@@ -354,17 +354,19 @@ toplo <- tds %>%
     date = lubridate::make_date(yr, mo), 
     dectime = lubridate::decimal_date(date)
   ) %>% 
-  filter(yr >=2000) %>% 
+  # filter(yr >=2000) %>% 
   # filter(!(yr < 1999 & station_name %in% c('McKay Bay', 'Old Port Tampa', 'Port Manatee'))) %>% 
   mutate(
     station_name = case_when(
       grepl('East|McKay', station_name) ~ 'East/McKay Bay', 
       T ~ station_name
-    )
+    ), 
+    time_period = ifelse(yr < 2000, 'pre-2000', '2000-present'), 
+    time_period = factor(time_period, c('pre-2000', '2000-present'))
   )
 
 txtplo <- toplo %>% 
-  group_nest(station_name) %>%
+  group_nest(station_name, time_period) %>%
   mutate(
     data = map(data, ~{
       mod <- lm(msl ~ dectime, data = .x)
@@ -375,64 +377,139 @@ txtplo <- toplo %>%
     })
   ) %>% 
   unnest(data) %>% 
-  unite('data', station_name, data, sep = ': ', remove = F) %>% 
+  unite('data', data, time_period, sep = ' ', remove = F) %>% 
   rename(txt = data)
 
 toplo <- toplo %>% 
-  full_join(txtplo, by = 'station_name')
+  full_join(txtplo, by = c('station_name', 'time_period'))
 
 p <- ggplot(toplo, aes(date, msl)) +
   geom_point(color = 'grey', size = 1) +
-  facet_wrap(~txt, ncol = 1) + 
-  stat_smooth(method = 'lm', formula = y ~ x, se = F, color = 'black') +
+  # stat_smooth(formula = y ~ x, se = T, method = 'glm', color = 'black', method.args = list(family = gaussian(link = 'log'))) +
+  stat_smooth(aes(group = time_period, color = txt, fill = txt), method = 'lm', formula = y ~ x, se = T) +
+  # geom_line(data = log.model.df, aes(x, y, color = "Log Model"), size = 1, linetype = 2) + 'black') +
+  scale_color_manual(values = c('red', 'red4')) +
+  scale_fill_manual(values = c('red', 'red4')) +
   theme_minimal() +
   theme(
-    panel.grid.minor = element_blank()
+    panel.grid.minor = element_blank(),
+    legend.position = 'top'
   ) + 
   labs(
     x = NULL, 
     y = 'Mean sea level (ft)', 
-    title = 'Sea level by station in Tampa Bay'
+    title = 'Daily sea level at St. Petersburg, 1947 to present', 
+    fill = NULL, 
+    color = NULL
   )
+# 
+# tomap <- sealevelstations %>% 
+#   mutate(
+#     station_name = case_when(
+#       grepl('East|McKay', station_name) ~ 'East/McKay Bay', 
+#       T ~ station_name
+#     )
+#   ) %>% 
+#   summarise(
+#     longitude = mean(longitude, na.rm = T),
+#     latitude  = mean(latitude, na.rm = T), 
+#     .by = station_name
+#   ) %>% 
+#   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+# 
+# dat_ext <- tomap %>% 
+#   sf::st_as_sfc() %>% 
+#   sf::st_buffer(dist = units::set_units(10, kilometer)) %>%
+#   sf::st_transform(crs = 4326) %>% 
+#   sf::st_bbox()
+# 
+# tls <- maptiles::get_tiles(dat_ext, provider = "CartoDB.Positron", zoom = 11)
+# 
+# m <- ggplot() +
+#   tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+#   ggplot2::geom_sf(data = tomap, color = 'black', inherit.aes = F, size = 3) +
+#   ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326) + 
+#   ggplot2::facet_wrap(~station_name, ncol = 1) + 
+#   theme_minimal() +
+#   theme(
+#     axis.text = element_blank(), 
+#     strip.text = element_blank()
+#   ) + 
+#   labs(caption = 'Source: NOAA Tides & Currents')
+# 
+# pout <- p + m + plot_layout(ncol = 2, widths = c(1.5, 1))
 
-tomap <- sealevelstations %>% 
+png(here::here('figures/sealevel.png'), family = fml, height = 3, width = 5, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# sea level rise one year ---------------------------------------------------------------------
+
+sealevelstations <- tibble::tribble(
+  ~station_id, ~station_name,
+  # 8726724    , "Clearwater Beach",
+  # 8726674    , "East Bay",
+  # 8726384    , "Port Manatee",
+  8726520    , "St. Petersburg",
+  # 8726667    , "McKay Bay",
+  # 8726607    , "Old Port Tampa"
+)
+
+sealevelstations <- sealevelstations |>
   mutate(
-    station_name = case_when(
-      grepl('East|McKay', station_name) ~ 'East/McKay Bay', 
-      T ~ station_name
-    )
+    lst_station = map(station_id, get_stations),
+    longitude   = map_dbl(lst_station, "lng"),
+    latitude    = map_dbl(lst_station, "lat"),
+    lst_details = map(station_id, get_details),
+    date_est    = map_chr(lst_details, "established") |>
+      as.Date() ) |>
+  select(-lst_station, -lst_details)
+
+
+tds <- sealevelstations %>% 
+  select(station_name, station_id) %>% 
+  mutate(
+    data = purrr::map(station_id, function(station_id){
+      
+      cat(station_id)
+      
+      url <- paste0('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20230101&end_date=20231231&product=hourly_height&datum=MLLW&application=DataAPI_Sample&station=', station_id, '&time_zone=LST&units=english&format=CSV')
+      
+      res <- try(read.table(url, sep = ',', header = T), silent = T)
+      
+      if(inherits(res, 'try-error')){
+        cat('\tno data\n')
+        return(NULL)
+      }
+      
+      cat('\n')
+      
+      return(res)
+      
+    })
   ) %>% 
-  summarise(
-    longitude = mean(longitude, na.rm = T),
-    latitude  = mean(latitude, na.rm = T), 
-    .by = station_name
-  ) %>% 
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+  unnest(data) 
 
-dat_ext <- tomap %>% 
-  sf::st_as_sfc() %>% 
-  sf::st_buffer(dist = units::set_units(10, kilometer)) %>%
-  sf::st_transform(crs = 4326) %>% 
-  sf::st_bbox()
+toplo <- tds %>% 
+  mutate(
+    Date.Time = ymd_hm(Date.Time, tz = 'America/Jamaica'),
+    Date = as.Date(Date.Time)
+  ) 
 
-tls <- maptiles::get_tiles(dat_ext, provider = "CartoDB.Positron", zoom = 11)
-
-m <- ggplot() +
-  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
-  ggplot2::geom_sf(data = tomap, color = 'black', inherit.aes = F, size = 3) +
-  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326) + 
-  ggplot2::facet_wrap(~station_name, ncol = 1) + 
+p <- ggplot(toplo, aes(x = Date.Time, y = Water.Level)) +
+  geom_line(linewidth = 0.25) +
   theme_minimal() +
   theme(
-    axis.text = element_blank(), 
-    strip.text = element_blank()
-  ) + 
-  labs(caption = 'Source: NOAA Tides & Currents')
+    panel.grid.minor = element_blank(),
+  ) +
+  labs(
+    y = 'Water Level (ft)', 
+    title = 'Hourly sea level at St. Petersburg, 2023', 
+    x = NULL
+  )
 
-pout <- p + m + plot_layout(ncol = 2, widths = c(1.5, 1))
-
-png(here::here('figures/sealevel.png'), family = fml, height = 7, width = 4, units = 'in', res = 300)
-print(pout)
+png(here::here('figures/sealevel2.png'), family = fml, height = 3, width = 5, units = 'in', res = 300)
+print(p)
 dev.off()
 
 # CCHA change ---------------------------------------------------------------------------------

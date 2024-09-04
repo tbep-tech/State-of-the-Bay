@@ -1328,7 +1328,8 @@ sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1988, topyr = 2016){
 
 # alluvial plot function, for HMPU targets
 # https://www.data-to-viz.com/graph/sankey.html
-alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, colvec = NULL, title = TRUE){
+alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, colvec = NULL, title = TRUE, 
+                      fontsize = 13){
   
   ttl <- paste('True change analysis, watershed land use from 1990 (left) to', maxyr, '(right)')
   
@@ -1397,7 +1398,7 @@ alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, 
   out <- sankeyNetwork(Links = sumdat, Nodes = nodes,
                        Source = "IDsource", Target = "IDtarget", colourScale = colin,
                        Value = "value", NodeID = "name", height = height, width = width, fontFamily = family,
-                       sinksRight = F, units = 'acres', nodeWidth=50, fontSize=13, nodePadding=10, 
+                       sinksRight = F, units = 'acres', nodeWidth=50, fontSize=fontsize, nodePadding=10, 
                        margin = mrgs)
   
   # add caption
