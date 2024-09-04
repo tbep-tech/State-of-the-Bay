@@ -290,11 +290,12 @@ toplo <- chgdat %>%
     value = sum(value), 
     .by = c('source', 'target')
   ) %>% 
-  filter(!grepl('Open|other', source)) %>% 
-  filter(!grepl('Open|other', target))
+  filter(!grepl('other', source)) %>% 
+  filter(!grepl('other', target))
 
+colvec <- c("#FF6347", "#2B775D", "#004F7E", "#82746E")
 p <- alluvout2(toplo, family = fml, maxyr = 2020, width = 1000, height = 700, mrg = 95, 
-          colrev = T, title = F)
+          colvec = colvec, title = F)
 
 htmlwidgets::saveWidget(p, here::here('figures/landusechange.html'), selfcontained = T)
 

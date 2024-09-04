@@ -1328,7 +1328,7 @@ sgsum_fun <- function(seagrass, sgmaxyr, refyr = 1988, topyr = 2016){
 
 # alluvial plot function, for HMPU targets
 # https://www.data-to-viz.com/graph/sankey.html
-alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, title = TRUE){
+alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, colvec = NULL, title = TRUE){
   
   ttl <- paste('True change analysis, watershed land use from 1990 (left) to', maxyr, '(right)')
   
@@ -1356,23 +1356,40 @@ alluvout2 <- function(datin, family, maxyr, width, height, mrg, colrev = FALSE, 
   # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
   sumdat$IDsource=match(sumdat$source, nodes$name)-1 
   sumdat$IDtarget=match(sumdat$target, nodes$name)-1
-  
-  # custom color scale
-  cols <- c('#004F7E', '#00806E', '#427355', '#958984', '#5C4A42', 'grey') %>% 
-    colorRampPalette
+
+  # number of colors needed
   ncol <- sumdat[, c('source', 'target')] %>% 
     unlist() %>% 
     unique %>% 
     gsub('\\s$', '', .) %>% 
     unique %>% 
     length()
-  colin <- cols(ncol)
-  if(colrev)
-    colin <- rev(colin)
+  
+  # custom color scale
+  if(is.null(colvec)){
+    
+    cols <- c('#004F7E', '#00806E', '#427355', '#958984', '#5C4A42', 'grey') %>% 
+      colorRampPalette
+    colin <- cols(ncol)
+    if(colrev)
+      colin <- rev(colin)
+    
+  }
+  
+  # manual color scale
+  if(!is.null(colvec)){
+    
+    if(length(colvec) != ncol)
+      stop(paste('Length of color vector must be', ncol))
+    
+    colin <- colvec
+    
+  }
+  
   colin <- colin %>% 
     paste(collapse = '", "') %>% 
     paste('d3.scaleOrdinal(["', ., '"])')
-  
+
   # margins for long text labels
   mrgs <- list(0, mrg, 0, 0)
   names(mrgs) <- c('top', 'right', 'bottom', 'left')
