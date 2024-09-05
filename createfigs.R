@@ -301,8 +301,7 @@ htmlwidgets::saveWidget(p, here::here('figures/landusechange.html'), selfcontain
 
 webshot::webshot(url = here::here('figures/landusechange.html'), file = here::here('figures/landusechange.png'))
 
-
-# slr -----------------------------------------------------------------------------------------
+# sea level rise ------------------------------------------------------------------------------
 
 sealevelstations <- tibble::tribble(
   ~station_id, ~station_name,
@@ -565,3 +564,51 @@ p <- ggplot(toplo, aes(y = reorder(zone_name_simp, perchg), x = perchg)) +
 png(here::here('figures/cchachange.png'), family = fml, height = 4, width = 8, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# TN load by source over time -----------------------------------------------------------------
+
+load(url("https://github.com/tbep-tech/load-estimates/raw/main/data/tnanndat.RData"))
+
+toplo <- tnanndat %>% 
+  filter(grepl('^All', bay_segment)) %>% 
+  mutate(
+    source = case_when(
+      source == 'AD' ~ 'Atmospheric',
+      source == 'GWS' ~ 'Groundwater',
+      source %in% c('IPS', 'DPS') ~ 'Point Source',
+      source == 'NPS' ~ 'Stormwater'
+    )
+  ) %>% 
+  summarise(
+    tn_load = sum(tn_load, na.rm = T), 
+    .by = c(year, source)
+  ) %>% 
+  mutate(
+    tn_load = tn_load / sum(tn_load),
+    .by = c(year)
+  )
+
+cols <- c( '#00806E', '#004F7E', '#5C4A42', '#427355') 
+
+p <- ggplot(toplo, aes(x = year, y = tn_load, group = source, color = source, fill = source)) + 
+  geom_point(show.legend = F) +
+  stat_smooth(method = 'lm', se = F, show.legend = F, formula = y ~ x) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_color_manual(values = cols) +
+  scale_fill_manual(values = cols) +
+  facet_wrap(~source, ncol = 4) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank()
+  ) +
+  labs(
+    x = NULL, 
+    y = '% total load', 
+    title = 'Tampa Bay Nitrogen Sources Over Time'
+  )
+
+png(here::here('figures/tnloadbysource.png'), family = fml, height = 2.5, width = 7, units = 'in', res = 300)
+print(p)
+dev.off()
+
+
