@@ -611,4 +611,61 @@ png(here::here('figures/tnloadbysource.png'), family = fml, height = 2.5, width 
 print(p)
 dev.off()
 
+# OTB aug 2024 pyro cyst counts ---------------------------------------------------------------
+
+cystdat <- read.csv(here('data-raw/CystCountsEPCHCFWC2024.csv'))
+
+# join data to tidalcreeks sf
+tomap <- cystdat %>%
+  rename(
+    cysts_pergwetsed = P..bah.Cysts..per.g.wet.sediment.
+  ) %>% 
+  mutate(
+    cyst_cat = cut(cysts_pergwetsed, breaks = c(-Inf, 101, 501, 1001, 5001, 10001, Inf),
+                   right = F, labels = c('0 - 100', '101 - 500', '501 - 1000', '1001 - 5000', '5001 - 10000', '> 10000')
+    )
+  ) %>% 
+  st_as_sf(coords = c('Longitude', 'Latitude'), crs = 4326)
+
+# base tiles
+bbx <- tomap %>% 
+  sf::st_bbox() %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(3, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(bbx, provider = "CartoDB.PositronNoLabels", zoom = 12)
+dat_ext <- sf::st_as_sfc(bbx) %>% 
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+cols <- c('grey', RColorBrewer::brewer.pal(length(levels(tomap$cyst_cat)) - 1, 'Reds'))
+
+p <- ggplot() + 
+  geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+  geom_sf(data = tomap, aes(fill = cyst_cat, size = cyst_cat), inherit.aes = F, linewidth = 1, pch = 21, color = 'darkgrey', show.legend = T) +
+  scale_fill_manual(values = cols, drop = F) +
+  scale_size_manual(values = seq(2, 7, length = length(levels(tomap$cyst_cat))), drop = F) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_text(size = 9),
+    legend.position = 'inside',
+    legend.position.inside = c(0.15, 0.25),
+    legend.background = element_blank(), 
+    legend.key = element_blank(), 
+    legend.title = element_text(size = 14)
+  ) +
+  labs(
+    fill = 'cysts per gram', 
+    size = 'cysts per gram'
+  ) +
+  annotate('text', x = bbx$xmin, y = bbx$ymax, label = 'Aug 2024', hjust = -0.2, vjust = 2, size = 6) +
+  ggspatial::annotation_north_arrow(location = 'tr') +
+  ggspatial::annotation_scale(location = 'bl', unit_category = 'metric') +
+  coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
+
+jpeg('figures/pyrocyst.jpg', family = fml, height = 6, width = 7, units = 'in', res = 300)
+print(p)
+dev.off()
 
