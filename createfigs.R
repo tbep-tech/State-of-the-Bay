@@ -12,6 +12,7 @@ library(maptiles)
 library(tidyterra)
 library(networkD3)
 library(htmltools)
+library(units)
 
 loadfonts(device = 'win', quiet = T)
 
@@ -669,3 +670,238 @@ jpeg('figures/pyrocyst.jpg', family = fml, height = 6, width = 7, units = 'in', 
 print(p)
 dev.off()
 
+
+# water quality report card -------------------------------------------------------------------
+
+maxyr <- 2024
+
+# local file path
+# xlsx <- here('data-raw/Results_Updated.xls')
+xlsx <- here('data-raw/Results_Provisional.xlsx')
+
+# import and download if new
+epcdata <- read_importwq(xlsx, download_latest = F)
+
+p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, historic = T, family = fml) 
+
+jpeg('figures/waterqualityreportcard.jpg', family = fml, height = 8, width = 2.5, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# habitat report card -------------------------------------------------------------------------
+
+p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 30)
+p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 30)
+
+p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
+
+jpeg('figures/habitatreportcard.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# SSOs ----------------------------------------------------------------------------------------
+
+load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
+
+toplo1 <- vols |>
+  group_by(yr, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(
+    volest = volest / 1e6, 
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+  )
+tots1 <- nrow(vols)
+toplo2 <- vols |>
+  filter(yr == maxyr) |>
+  group_by(mo, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(
+    volest = volest / 1e6,
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB')),
+    mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+  )
+tots2 <- sum(vols$yr == maxyr)
+
+cols <- c(
+  main_green = "#427355", 
+  main_brown = "#5C4A42", 
+  light_fill = "#958984", 
+  logo_blue = "#004F7E", 
+  logo_green = "#00806E"
+)
+pal <- colorRampPalette(cols)(length(levels(toplo1$bay_segment)))
+
+p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
+  geom_bar(stat = 'identity') +
+  scale_fill_manual(values = pal) +
+  scale_x_continuous(breaks = unique(toplo1$yr)) +
+  labs(
+    x = NULL, 
+    y = 'Million gallons', 
+    title = 'Estimated sewer overflow volume by bay segment', 
+    subtitle = '2017 - 2024',
+    caption = paste('Total SSOs:', scales::comma(tots1)), 
+    fill = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),  
+    panel.grid.major.x = element_blank()
+  )
+
+p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
+  geom_bar(stat = 'identity') +
+  scale_fill_manual(values = pal) +
+  labs(
+    x = NULL, 
+    y = 'Million gallons', 
+    subtitle = '2024 by month',
+    caption = paste('Total SSOs:', scales::comma(tots2)), 
+    fill = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),  
+    panel.grid.major.x = element_blank()
+  )
+
+p <- p1 + p2 + plot_layout(ncol = 1, guides = 'collect', axis_titles = 'collect')
+
+jpeg('figures/sso.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# Seagrass segment change ---------------------------------------------------------------------
+
+sgdat2020 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2020.RData')
+sgdat2022 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2022.RData')
+
+# bay segments detailed
+segclp <- rdataload('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/segclp.RData')
+
+data(file = 'sgseg', package = 'tbeptools')
+
+bnds <- sgseg %>% 
+  filter(segment %in% c('Boca Ciega Bay', 'Hillsborough Bay', 'Old Tampa Bay', 'Middle Tampa Bay',
+                        'Lower Tampa Bay', 'Manatee River', 'Terra Ceia Bay'))
+
+flcat <- list(
+  code = c('9113', '9116'),
+  name = c('patchy', 'cont.')
+)
+# process coverage ests by segment and year
+allsegests <- tibble(
+  yr = c(2020, 2022)
+  ) %>% 
+  group_by(yr) %>% 
+  nest() %>% 
+  mutate(
+    data = pmap(list(yr, data), function(yr, data){
+      
+      cat(yr, '\n')
+    
+      # make sure crs is the same, get relevant fluccs
+      sgrs <- get(paste0('sgdat', yr)) %>% 
+        st_transform(crs = st_crs(bnds)) %>% 
+        filter(FLUCCSCODE %in% flcat[['code']])
+      
+      # estimate coverage by flucss, segment
+      ests <- st_intersection(sgrs, bnds) %>% 
+        mutate(area = st_area(.)) %>% 
+        st_set_geometry(NULL) %>% 
+        group_by(segment, FLUCCSCODE) %>% 
+        summarise(area = sum(area), .groups = 'drop') %>% 
+        mutate(
+          Acres = as.numeric(set_units(area, 'acres')), 
+          Hectares = as.numeric(set_units(area, 'hectares'))
+        ) %>% 
+        select(Segment = segment, Habitat = FLUCCSCODE, Acres, Hectares) %>% 
+        mutate(
+          Habitat = factor(Habitat, levels = flcat$code, labels = flcat$name)
+        )
+      
+      return(ests)
+      
+    })
+  ) %>% 
+  unnest('data')
+
+# save(allsegests, file = here('data/allsegests.RData'))
+
+##
+# map
+
+colnm <- 'Segment'
+
+# get change summary
+tomap <- allsegests %>% 
+  filter(Habitat %in% c('patchy', 'cont.')) %>% 
+  group_by(yr, Segment) %>% 
+  summarise(
+    Acres = sum(Acres, na.rm = T), 
+    .groups = 'drop'
+  ) %>% 
+  spread(yr, Acres, fill = 0) %>% 
+  sgchgfun(c('2020', '2022'), colnm) %>% 
+  full_join(segclp, ., by = c('segment'= 'val'))
+
+maxv <- max(abs(tomap$chg))
+
+# colors
+colgrn <- c("#F7FCF5", "#E5F5E0", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", 
+            "#238B45", "#006D2C", "#00441B")
+colred <- c("#FFF5F0", "#FEE0D2", "#FCBBA1", "#FC9272", "#FB6A4A", "#EF3B2C", 
+            "#CB181D", "#A50F15", "#67000D")               
+colfun <- leaflet::colorNumeric(
+  palette = c(rev(colred), colgrn),
+  domain = c(-1 * maxv, maxv)
+)
+
+# bbox
+dat_ext <- tomap %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(2, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom = 10)
+
+m <- ggplot2::ggplot() + 
+  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+  ggplot2::geom_sf(data = tomap, ggplot2::aes(fill = chg), color = 'black', inherit.aes = F) +
+  scale_fill_gradientn(
+    colors = c(rev(colred), colgrn),
+    values = scales::rescale(c(seq(-maxv, 0, length.out = length(colred)),
+                               seq(0, maxv, length.out = length(colgrn)))),
+    limits = c(-maxv, maxv),
+    na.value = "grey50"
+  ) +
+  # ggplot2::scale_fill_distiller(name = 'Change (acres)', palette = palcol, direction = palcolrev) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(), 
+    axis.title = ggplot2::element_blank(), 
+    axis.text.y = ggplot2::element_text(size = ggplot2::rel(0.9)), 
+    axis.text.x = ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
+    axis.ticks = ggplot2::element_line(colour = 'grey'),
+    panel.background = ggplot2::element_rect(fill = NA, color = 'black')
+  ) +
+  ggspatial::annotation_scale(location = 'br', unit_category = 'metric') +
+  ggspatial::annotation_north_arrow(location = 'tl', which_north = "true") + 
+  ggplot2::labs(
+    fill = '2020 - 2022 Change\n(acres)'
+  )
+
+dat_ext <- dat_ext %>% 
+  sf::st_as_sfc(dat_ext) %>% 
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+# set coordinates because vector not clipped
+m <- m +
+  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
+
+jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+print(m)
+dev.off()

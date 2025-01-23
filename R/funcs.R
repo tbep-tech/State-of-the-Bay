@@ -1,3 +1,33 @@
+# try simple load, download if fail
+rdataload <- function(x){
+
+  fl <- basename(x)
+  obj <- gsub('\\.RData$', '', fl)
+  flurl <- x
+  
+  # try simple load
+  ld <- try(load(url(flurl)), silent = T)
+  
+  # return x if load worked
+  if(!inherits(ld, 'try-error')){
+    out <- get(obj)
+  }
+  
+  # download x if load failed
+  if(inherits(ld, 'try-error')){
+    
+    fl <- paste(tempdir(), fl, sep = '/')
+    download.file(flurl, destfile = fl, quiet = T)
+    load(file = fl)
+    out <- get(obj)
+    suppressMessages(file.remove(fl))
+    
+  }
+  
+  return(out)
+  
+}
+
 #' plot chlorophyll and la annual avg as plotly
 wqplotly_plo <- function(datin, bay_segment, yrrng, family, width, height){
   
@@ -1450,3 +1480,36 @@ get_details <- function(
   
 }
 
+#' seagrass change function
+sgchgfun <- function(datin, yrsel, colnm){
+
+  # yrs in input data
+  yrs <- names(datin)[!names(datin) %in% colnm] 
+
+  # calc diffs if both yrsel present
+  if(sum(unique(yrsel) %in% yrs) == 2){
+    out <- datin %>%
+      dplyr::rename(chgyr1 = !!yrsel[1]) %>% 
+      dplyr::rename(chgyr2 = !!yrsel[2]) %>% 
+      dplyr::mutate(
+        chg = chgyr2 - chgyr1,
+        chgper = 100 * (chgyr2 - chgyr1) / chgyr1
+      ) %>% 
+      dplyr::rename(val = !!colnm)
+    names(out)[names(out) == 'chgyr1'] <- yrsel[1]
+    names(out)[names(out) == 'chgyr2'] <- yrsel[2]
+  }
+  
+  # NA if yrsel is equal or missing a yrsel
+  if(yrsel[1] == yrsel[2] | any(!yrsel %in% yrs)){
+    out <- datin %>% 
+      dplyr::mutate(
+        chg = NA, 
+        chgper = NA
+      ) %>% 
+      dplyr::rename(val = !!colnm)
+  }
+  
+  return(out)
+  
+}
