@@ -791,7 +791,10 @@ flcat <- list(
   code = c('9113', '9116'),
   name = c('patchy', 'cont.')
 )
+
+##
 # process coverage ests by segment and year
+
 allsegests <- tibble(
   yr = c(2020, 2022)
   ) %>% 
@@ -885,12 +888,17 @@ m <- ggplot2::ggplot() +
     axis.text.y = ggplot2::element_text(size = ggplot2::rel(0.9)), 
     axis.text.x = ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
     axis.ticks = ggplot2::element_line(colour = 'grey'),
-    panel.background = ggplot2::element_rect(fill = NA, color = 'black')
+    panel.background = ggplot2::element_rect(fill = NA, color = 'black'), 
+    legend.position = 'top', 
+    legend.title.position = 'top',
+    legend.key.width = unit(1, "cm"),
+    legend.key.height = unit(0.25, "cm"),
+    legend.title = element_text(hjust = 0.5)
   ) +
   ggspatial::annotation_scale(location = 'br', unit_category = 'metric') +
   ggspatial::annotation_north_arrow(location = 'tl', which_north = "true") + 
   ggplot2::labs(
-    fill = '2020 - 2022 Change\n(acres)'
+    fill = '2020 - 2022 change (acres)'
   )
 
 dat_ext <- dat_ext %>% 
@@ -902,6 +910,6 @@ dat_ext <- dat_ext %>%
 m <- m +
   ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
 
-jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 4.25, units = 'in', res = 300)
 print(m)
 dev.off()
