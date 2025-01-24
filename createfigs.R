@@ -1,3 +1,5 @@
+# setup ---------------------------------------------------------------------------------------
+
 library(tbeptools)
 library(tidyverse)
 library(extrafont)
@@ -13,6 +15,7 @@ library(tidyterra)
 library(networkD3)
 library(htmltools)
 library(units)
+library(here)
 
 loadfonts(device = 'win', quiet = T)
 
@@ -912,4 +915,195 @@ m <- m +
 
 jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 4.25, units = 'in', res = 300)
 print(m)
+dev.off()
+
+
+# water temp and rainfall ---------------------------------------------------------------------
+
+##
+# water temp
+
+# local file path
+# xlsx <- here('data-raw/Results_Updated.xls')
+xlsx <- here('data-raw/Results_Provisional.xlsx')
+
+# import and download if new
+epcdata <- read_importwq(xlsx, download_latest = F)
+
+tempdat <- epcdata %>% 
+  select(epchc_station, yr, mo, Temp_Water_Top_degC, Temp_Water_Bottom_degC,Temp_Water_Mid_degC) %>% 
+  pivot_longer(cols = c(Temp_Water_Top_degC, Temp_Water_Bottom_degC, Temp_Water_Mid_degC), names_to = 'depth', values_to = 'temp') %>%
+  summarise(
+    temp = mean(temp, na.rm = T),
+    .by = c(yr, mo, epchc_station)
+  ) %>% 
+  summarise(
+    temp = mean(temp, na.rm = T),
+    .by = c(yr, mo)
+  ) %>% 
+  mutate(
+    date = as.Date(paste0(yr, '-', mo, '-01'))
+  )
+  
+toplo <- tempdat %>%
+  arrange(date) %>% 
+  mutate(
+    temp = (temp * 9/5) + 32,
+    flvl = case_when(
+      yr == 2024 ~ '2024', 
+      yr == 2023 ~ '2023',
+      yr == 2022 ~ '2022',
+      T ~ '2005 - 2021'
+    ), 
+    xvals = ymd(paste('2024', month(date), day(date), sep = '-'))
+  )
+
+toplo1 <- toplo %>% 
+  filter(yr == 2024)
+toplo2 <- toplo %>% 
+  filter(yr == 2023)
+toplo3 <- toplo %>% 
+  filter(yr == 2022)
+toplo4 <- toplo %>% 
+  filter(yr < 2022) %>% 
+  group_by(xvals) %>% 
+  summarise(
+    lov = quantile(temp, 0.05, na.rm = T),
+    hiv = quantile(temp, 0.95, na.rm = T),
+  ) %>% 
+  ungroup()
+p1 <- ggplot() + 
+  geom_ribbon(data = toplo4, aes(x = xvals, ymin = lov, ymax = hiv, fill = '1975 - 2022\n5th - 95th %tile'), alpha = 0.7) +
+  geom_line(data = toplo1, aes(x = xvals, y = temp, color = '2024'), size = 1.2) +
+  geom_line(data = toplo2, aes(x = xvals, y = temp, color = '2023'), size = 1.2) +
+  geom_line(data = toplo3, aes(x = xvals, y = temp, color = '2022'), size = 1.2) +
+  scale_color_manual(values = rev(c("#67000D", "#CB181D", "#FC9272"))) +
+  scale_fill_manual(values = 'grey') + 
+  scale_x_date(date_breaks = 'month', date_labels = '%b', expand = c(0, 0)) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    legend.title = element_blank(),
+    axis.title.x = element_blank()
+  ) +
+  labs(
+    y = expression(paste(degree, "F")),
+    title = '2022 - 2024 compared to historical',
+    subtitle = 'Water temperature',
+    color = 'Year group', 
+    size = 'Year group'
+  )
+
+##
+#rainfall
+
+# monthly rainfall data from swfwmd 
+# https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# file is from the link "USGS watershed"
+download.file(
+  'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
+  here('data-raw/swfwmdrainfall.xlsx'),
+  mode = 'wb'
+)
+
+# rain data for relevant TB areas
+raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>% 
+  grep('jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec', ., value = TRUE) %>% 
+  tibble(
+    mo = .
+  ) %>% 
+  nest(.by = mo) %>% 
+  mutate(
+    data = purrr::map(mo, function(mo){
+      
+      read_excel(here('data-raw/swfwmdrainfall.xlsx'), sheet = mo, skip = 1) %>% 
+        filter(Year %in% 1975:2024) %>% 
+        select(
+          yr = Year, 
+          tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
+          hillsborough_in = `Hillsborough River`,
+          alafia_in = `Alafia River`,
+          littlemanatee_in = `Little Manatee River`,
+          manatee_in = `Manatee River`
+        ) %>% 
+        mutate_all(as.numeric)
+      
+    })
+  ) %>% 
+  unnest('data') %>% 
+  # mutate(
+  #   precip_in = rowSums(select(., -mo, -yr), na.rm = TRUE)
+  # ) %>%
+  select(mo, yr, precip_in = tampacoastal_in) %>% 
+  mutate(
+    mo = gsub('\\-usgsbsn$', '', mo),
+    mo = as.numeric(factor(mo,
+                           levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                      'jul', 'aug', 'sep', 'oct', 'nov', 'dec'),
+                           labels = 1:12)
+    ),
+    date = as.Date(paste0(yr, '-', mo, '-01')), 
+    precip_mm = precip_in * 25.4
+  )
+
+toplo <- raindat %>%
+  arrange(date) %>% 
+  mutate(
+    precip_in = cumsum(precip_in), 
+    .by = yr
+  ) %>% 
+  mutate(
+    flvl = case_when(
+      yr == 2024 ~ '2024', 
+      yr == 2023 ~ '2023',
+      yr == 2022 ~ '2022',
+      T ~ '2005 - 2021'
+    ), 
+    xvals = ymd(paste('2024', month(date), day(date), sep = '-'))
+  )
+
+toplo1 <- toplo %>% 
+  filter(yr == 2024)
+toplo2 <- toplo %>% 
+  filter(yr == 2023)
+toplo3 <- toplo %>% 
+  filter(yr == 2022)
+toplo4 <- toplo %>% 
+  filter(yr < 2022) %>% 
+  group_by(xvals) %>% 
+  summarise(
+    lov = quantile(precip_in, 0.05, na.rm = T),
+    hiv = quantile(precip_in, 0.95, na.rm = T),
+  ) %>% 
+  ungroup()
+p2 <- ggplot() + 
+  geom_ribbon(data = toplo4, aes(x = xvals, ymin = lov, ymax = hiv, fill = '1975 - 2022\n5th - 95th %tile'), alpha = 0.7) +
+  geom_line(data = toplo1, aes(x = xvals, y = precip_in, color = '2024'), size = 1.2) +
+  geom_line(data = toplo2, aes(x = xvals, y = precip_in, color = '2023'), size = 1.2) +
+  geom_line(data = toplo3, aes(x = xvals, y = precip_in, color = '2022'), size = 1.2) +
+  scale_color_manual(values = rev(c("#004F7E", "#4F93B8", "#A1C9E1"))) +
+  scale_fill_manual(values = 'grey') + 
+  scale_x_date(date_breaks = 'month', date_labels = '%b', expand = c(0, 0)) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+    axis.title.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    legend.title = element_blank()
+  ) +
+  labs(
+    y = 'Inches',
+    subtitle = 'Cumulative precipitation',
+    caption = 'Data source: EPCHC, SWFWMD',
+    color = 'Year group', 
+    size = 'Year group'
+  )
+
+p <- p1 + p2 + plot_layout(ncol = 1)
+
+jpeg('figures/temprain.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
+print(p)
 dev.off()
