@@ -708,6 +708,8 @@ dev.off()
 
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 
+maxyr <- 2024
+
 toplo1 <- vols |>
   group_by(yr, bay_segment) |>
   summarise(volest = sum(volest), .groups = 'drop') |>
@@ -716,16 +718,16 @@ toplo1 <- vols |>
     bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
   )
 tots1 <- nrow(vols)
-toplo2 <- vols |>
-  filter(yr == maxyr) |>
-  group_by(mo, bay_segment) |>
-  summarise(volest = sum(volest), .groups = 'drop') |>
-  mutate(
-    volest = volest / 1e6,
-    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB')),
-    mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
-  )
-tots2 <- sum(vols$yr == maxyr)
+# toplo2 <- vols |>
+#   filter(yr == maxyr) |>
+#   group_by(mo, bay_segment) |>
+#   summarise(volest = sum(volest), .groups = 'drop') |>
+#   mutate(
+#     volest = volest / 1e6,
+#     bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB')),
+#     mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+#   )
+# tots2 <- sum(vols$yr == maxyr)
 
 cols <- c(
   main_green = "#427355", 
@@ -754,25 +756,25 @@ p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
     panel.grid.major.x = element_blank()
   )
 
-p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
-  geom_bar(stat = 'identity') +
-  scale_fill_manual(values = pal) +
-  labs(
-    x = NULL, 
-    y = 'Million gallons', 
-    subtitle = '2024 by month',
-    caption = paste('Total SSOs:', scales::comma(tots2)), 
-    fill = NULL
-  ) +
-  theme_minimal() +
-  theme(
-    panel.grid.minor = element_blank(),  
-    panel.grid.major.x = element_blank()
-  )
+# p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
+#   geom_bar(stat = 'identity') +
+#   scale_fill_manual(values = pal) +
+#   labs(
+#     x = NULL, 
+#     y = 'Million gallons', 
+#     subtitle = '2024 by month',
+#     caption = paste('Total SSOs:', scales::comma(tots2)), 
+#     fill = NULL
+#   ) +
+#   theme_minimal() +
+#   theme(
+#     panel.grid.minor = element_blank(),  
+#     panel.grid.major.x = element_blank()
+#   )
 
-p <- p1 + p2 + plot_layout(ncol = 1, guides = 'collect', axis_titles = 'collect')
+p <- p1 #+ p2 + plot_layout(ncol = 1, guides = 'collect', axis_titles = 'collect')
 
-jpeg('figures/sso.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+jpeg('figures/sso.jpg', family = fml, height = 3.5, width = 6, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -855,6 +857,15 @@ tomap <- allsegests %>%
 
 maxv <- max(abs(tomap$chg))
 
+# text labels
+totxt <- tomap %>% 
+  st_centroid() %>% 
+  mutate(
+    txt = ifelse(sign(chg) == -1, 'lost', 'gained'), 
+    txt = paste0(bay_segment, ': ', abs(round(chg, 0)), ' acres ', txt)
+  ) %>% 
+  filter(bay_segment %in% c('OTB', 'HB', 'MTB', 'LTB'))
+
 # colors
 colgrn <- c("#F7FCF5", "#E5F5E0", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", 
             "#238B45", "#006D2C", "#00441B")
@@ -877,6 +888,7 @@ tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom 
 m <- ggplot2::ggplot() + 
   tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
   ggplot2::geom_sf(data = tomap, ggplot2::aes(fill = chg), color = 'black', inherit.aes = F) +
+  ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
   scale_fill_gradientn(
     colors = c(rev(colred), colgrn),
     values = scales::rescale(c(seq(-maxv, 0, length.out = length(colred)),
@@ -916,7 +928,6 @@ m <- m +
 jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 4.25, units = 'in', res = 300)
 print(m)
 dev.off()
-
 
 # water temp and rainfall ---------------------------------------------------------------------
 
