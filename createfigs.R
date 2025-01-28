@@ -673,7 +673,6 @@ jpeg('figures/pyrocyst.jpg', family = fml, height = 6, width = 7, units = 'in', 
 print(p)
 dev.off()
 
-
 # water quality report card -------------------------------------------------------------------
 
 maxyr <- 2024
@@ -689,6 +688,19 @@ p <- show_matrix(epcdata, yrrng = c(1975, maxyr), txtsz = 3, abbrev = T, histori
 
 jpeg('figures/waterqualityreportcard.jpg', family = fml, height = 8, width = 2.5, units = 'in', res = 300)
 print(p)
+dev.off()
+
+# water quality report card map ---------------------------------------------------------------
+
+# local file path
+# xlsx <- here('data-raw/Results_Updated.xls')
+xlsx <- here('data-raw/Results_Provisional.xlsx')
+
+# import and download if new
+epcdata <- read_importwq(xlsx, download_latest = F)
+
+jpeg('figures/waterqualityreportcardmap.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
+show_sitesegmap(epcdata, yrsel = 2024)
 dev.off()
 
 # habitat report card -------------------------------------------------------------------------
