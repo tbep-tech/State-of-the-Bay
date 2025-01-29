@@ -1513,3 +1513,154 @@ sgchgfun <- function(datin, yrsel, colnm){
   return(out)
   
 }
+
+#' tidal creek trends
+show_tdlcrktrends <- function(tidalcreeks, iwrraw, maxyr = 2024, plotly = FALSE){
+
+  trnds <- tibble::tibble(
+      yrs = 1980:maxyr,
+    ) %>% 
+    dplyr::group_nest(yrs) %>% 
+    dplyr::mutate(
+      data = purrr::map(yrs, function(x){
+        # cat(x, '\t')
+        anlz_tdlcrk(tidalcreeks, iwrraw, yr = x)
+      }) 
+    )
+  
+  # counts
+  toplo1 <- trnds %>% 
+    tidyr::unnest('data') %>% 
+    dplyr::summarise(
+      cnt = dplyr::n(), 
+      .by = c(yrs, score)
+    ) %>% 
+    dplyr::mutate(
+      score = factor(score, c('Monitor', 'Caution', 'Investigate', 'Prioritize', 'No Data'))
+    )
+  
+  # percent with data
+  toplo2 <- toplo1 %>% 
+    dplyr::filter(score != 'No Data') %>% 
+    dplyr::mutate(
+      cnt = cnt / sum(cnt), 
+      .by = yrs
+    )
+  
+  cols <- c(
+    Monitor = '#2DC938', 
+    Caution = '#E9C318', 
+    Investigate = '#EE7600', 
+    Prioritize = '#FF4040',
+    `No Data` = '#ADD8E6'
+  )
+  
+  # ggplot
+  if(!plotly){
+
+    p1 <- ggplot2::ggplot(toplo1, ggplot2::aes(x = yrs, y = cnt, fill = forcats::fct_rev(score))) +
+      ggplot2::geom_col() +
+      ggplot2::scale_fill_manual(values = cols) +
+      ggplot2::scale_x_continuous(expand = c(0,0)) +
+      ggplot2::scale_y_continuous(expand = c(0,0)) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(
+        legend.position = 'top', 
+        axis.text.x = ggplot2::element_blank()
+      ) + 
+      ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
+      ggplot2::labs(
+        x = NULL,
+        fill = NULL,
+        y = 'Count'
+      )
+    
+    p2 <- ggplot2::ggplot(toplo2, ggplot2::aes(x = yrs, y = cnt, fill = forcats::fct_rev(score))) +
+      ggplot2::geom_bar(stat = 'identity', position = 'fill', show.legend = F) +
+      ggplot2::scale_fill_manual(values = cols) +
+      ggplot2::scale_x_continuous(expand = c(0,0)) +
+      ggplot2::scale_y_continuous(expand = c(0,0), labels = scales::percent) +
+      ggplot2::theme_minimal() +
+      ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
+      ggplot2::labs(
+        x = NULL,
+        fill = NULL,
+        y = 'Percent with data',
+        caption = 'Source: TBEP, Florida Department of Environmental Protection, Impaired Waters Rule'
+      )
+    
+    out <- p1 + p2 + patchwork::plot_layout(ncol = 1, guides = 'collect') & ggplot2::theme(legend.position = 'top')
+    
+  }
+  
+  # plotly
+  if(plotly){
+    
+    p1 <- plotly::plot_ly(data = toplo1, x = ~yrs, y = ~cnt, color = ~score,
+                  type = 'bar', legendgroup = ~score, name = ~score,
+                  colors = cols) %>%
+      plotly::layout(
+        barmode = 'stack',
+        showlegend = TRUE,
+        xaxis = list(
+          title = '',
+          showgrid = FALSE,
+          zeroline = FALSE
+        ),
+        yaxis = list(
+          title = 'Count',
+          showgrid = TRUE,
+          zeroline = FALSE
+        )
+      )
+  
+    p2 <- plotly::plot_ly() %>%
+      plotly::add_bars(data = toplo2, x = ~yrs, y = ~cnt, color = ~score,
+               legendgroup = ~score, name = ~score,
+               colors = cols, showlegend = FALSE) %>%
+      plotly::layout(
+        barmode = 'stack',
+        xaxis = list(
+          title = '',
+          showgrid = FALSE,
+          zeroline = FALSE
+        ),
+        yaxis = list(
+          title = 'Percent with data',
+          showgrid = TRUE,
+          zeroline = FALSE,
+          tickformat = ".0%"
+        )
+      )
+    
+    # Combine plots using subplot
+    out <- plotly::subplot(p1, p2, nrows = 2, shareX = TRUE, heights = c(0.5, 0.5), titleY = TRUE) %>%  
+      plotly::layout(
+        barmode = 'stack',
+        showlegend = TRUE,
+        legend = list(
+          orientation = 'h',
+          xanchor = 'center',
+          x = 0.5,
+          y = 1.01,
+          yanchor = 'bottom'
+        ),
+        margin = list(t = 50),
+        annotations = list(
+          list(
+            x = 1,
+            y = -0.1,
+            text = 'Source: TBEP, Florida Department of Environmental Protection, Impaired Waters Rule',
+            showarrow = FALSE,
+            xref = 'paper',
+            yref = 'paper',
+            font = list(size = 10)
+          )
+        )
+      )
+  
+  }
+  
+  return(out)
+  
+}

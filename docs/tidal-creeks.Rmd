@@ -8,7 +8,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 
-maxyr <- 2023
+maxyr <- 2024
 
 tbcrks <- tidalcreeks[tbshed, ]
 dat <- anlz_tdlcrk(tbcrks, iwrraw, yr = maxyr)
@@ -47,6 +47,12 @@ The current assessment period (`r maxyr`) indicates that `r sumdat['Prioritize']
 
 ```{r, out.width = '80%', fig.width = 11, fig.height = 11, fig.align = 'center'}
 show_tdlcrkmatrix(dat, class = c('3M', '2', '3F', '1'), family = fml)
+```
+
+Long term trends in tidal creek condition can also be evaluated.  This plot shows the count and percentage of creeks in each category each year for the entire period of record. Mouseover the plot to see individual year and category summaries. 
+
+```{r, out.width = '100%'}
+show_tdlcrktrends(tbcrks, iwrraw, maxyr = maxyr, plotly = T)
 ```
 
 See additional visualization tools at the tidal creeks data page: [https://tbep.org/tidal-creeks/](https://tbep.org/tidal-creeks/){target="_parent"}
