@@ -184,7 +184,7 @@ save(tberfdat, file = here('data/tberfdat.RData'))
 
 # bay mini grant funding data ---------------------------------------------
 
-bmgraw <- get_sheet_as_csv("BMG Project Rollup - Don't Use") %>% 
+bmgraw <- get_sheet_as_csv("BMG Project Rollup - All Years") %>% 
   textConnection %>% 
   read.table(sep = ',', header = T)
 
@@ -193,8 +193,8 @@ bmgdat <- bmgraw %>%
   mutate_all(function(x) ifelse(x == '', NA, x)) %>% 
   mutate(
     total = gsub('\\$|,', '', total),
-    total = as.numeric(total),
-    year = ifelse(year > 2022, year - 1, year) # post 2022, JL moved year up 1 to reflect year work will be done, not when funded (previous year)
+    total = as.numeric(total)#,
+    # year = ifelse(year > 2022, year - 1, year) # post 2022, JL moved year up 1 to reflect year work will be done, not when funded (previous year)
   ) %>% 
   filter(year >= 2000)
 

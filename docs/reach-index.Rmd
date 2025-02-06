@@ -8,7 +8,7 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/comdat.RData'))
-maxyr <- 2023
+maxyr <- 2024
 ```
 
 Being heard in an increasingly noisy digital landscape is harder now than ever before. TBEP uses social networking platforms to reach new audiences and maintain intentional communication with the online community. Through engagement-driven messaging, innovative mediums, and adaptive tinkering, the Program amplifies its messages, makes science accessible to the general public, and elevates awareness of its partners' actions.
