@@ -5,7 +5,6 @@ library(tidyverse)
 library(extrafont)
 library(patchwork)
 library(sf)
-library(extrafont)
 library(readxl)
 library(ggfx)
 library(grid)
@@ -17,8 +16,7 @@ library(htmltools)
 library(units)
 library(here)
 
-loadfonts(device = 'win', quiet = T)
-
+windowsFonts(Lato = windowsFont("Lato"))
 source(here('R/funcs.R'))
 
 fml <- "Lato"
@@ -1128,5 +1126,76 @@ p2 <- ggplot() +
 p <- p1 + p2 + plot_layout(ncol = 1)
 
 jpeg('figures/temprain.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# chlorophyll trend alternative graphic -------------------------------------------------------
+
+toplo <- epcdata %>%
+  filter(yr > 1974 & yr < 2023) %>% 
+  summarise(
+    avev = mean(chla, na.rm = T), 
+    hiv = t.test(chla, na.rm = T)$conf.int[2],
+    lov = t.test(chla, na.rm = T)$conf.int[1],
+    .by = yr
+  )
+
+p <- ggplot(toplo, aes(x = yr, y = avev)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = lov, ymax = hiv), width = 0) +
+  scale_y_continuous(breaks = seq(4, 20, by = 4)) +
+  scale_x_continuous(expand = c(0.07, 0.07)) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(), 
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) + 
+  labs(
+    x = NULL, 
+    y = expression(paste(mu, "g/L")),
+    title = 'Long-term Chlorophyll-a Trend'#, 
+    # caption = 'Source: Environmental Protection Commission of Hillsborough County'
+  )
+
+png(here('figures/chla.png'), family = fml, height = 2, width = 7, units = 'in', res = 300)
+print(p)
+dev.off()
+
+# seagrass trend alternative graphic ----------------------------------------------------------
+
+dumyr <- 1975
+toplo <- seagrass %>% 
+  select(yr = Year, acres = Acres) %>% 
+  filter(yr < 2024) %>% 
+  mutate(
+    acres = acres / 1000,
+    yr = case_when(
+      yr == 1950 ~ dumyr,
+      T ~ yr
+    )
+  )
+
+brks <- c(dumyr, seq(1982, 2022, by = 2))
+labs <- c(1950, seq(1982, 2022, by = 2))
+
+p <- ggplot(toplo, aes(x = yr, y = acres)) +
+  geom_col(fill = '#00806E', color = 'black') +
+  scale_x_continuous(breaks = brks, labels = labs) + 
+  geom_vline(xintercept = dumyr + ((1982 - dumyr) / 2), color = 'black', linetype = 'dashed') + 
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(), 
+    panel.grid.major.x = element_blank(), 
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Acres (x 1,000)',
+    title = 'Long-term seagrass coverage'#, 
+    # caption = 'Source: Southwest Florida Water Management District'
+  )
+
+png(here('figures/seagrasscovalt.png'), family = fml, height = 2, width = 7, units = 'in', res = 300)
 print(p)
 dev.off()
