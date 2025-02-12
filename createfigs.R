@@ -1199,3 +1199,70 @@ p <- ggplot(toplo, aes(x = yr, y = acres)) +
 png(here('figures/seagrasscovalt.png'), family = fml, height = 2, width = 7, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# seagrass coverage by segment ----------------------------------------------------------------
+
+
+load(url('https://github.com/tbep-tech/tbep-os-presentations/raw/refs/heads/master/data/sgsegest.RData'))
+
+# segment coverage targets in 1k acres
+segtrgs <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')), 
+  trgs = c(11.1, 1.751, 9.4, 7.4, 8.8, 1.1, 0.449, 40)
+)  
+
+# worst case coverage ests in 1k acres, 1982
+segworst <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')), 
+  trgs = c(5.94, 0, 4.04, 5.02, 5.77, 0.75, 0.13, 21.65)
+) 
+
+toplo <- sgsegest %>%
+  filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+# arrdf <- tibble(
+#   segment = factor('Old Tampa Bay', levels = levels(toplo$segment)),
+#   x = factor(2022),
+#   xend = factor(2022),
+#   y = 8,
+#   yend =  5
+# )
+
+p <- ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  # geom_segment(
+  #   data = arrdf,
+  #   aes(x = x, xend = xend, y = y, yend = yend),
+  #   arrow = arrow(length = grid::unit(0.5, "cm")),
+  #   size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  # ) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x =element_blank(),
+        # plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+
+png(here('figures/seagrassseg.png'), family = fml, height = 4.5, width = 10, units = 'in', res = 300)
+print(p)
+dev.off()
+
