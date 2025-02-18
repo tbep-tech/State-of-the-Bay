@@ -725,27 +725,27 @@ toplo1 <- vols |>
   summarise(volest = sum(volest), .groups = 'drop') |>
   mutate(
     volest = volest / 1e6, 
-    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+    bay_segment = factor(bay_segment, 
+                         levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'), 
+                         labels = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                                    'Lower Tampa Bay', 'Boca Ciega Bay', 'Manatee River', 
+                                    'Terra Ceia Bay'))
+  ) %>% 
+  filter(yr >= 2022 & yr <= maxyr)
+toplo2 <- vols |>
+  filter(yr == maxyr) |>
+  group_by(mo, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(
+    volest = volest / 1e6,
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'),
+                         labels = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                                    'Lower Tampa Bay', 'Boca Ciega Bay', 'Manatee River', 
+                                    'Terra Ceia Bay')),
+    mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
   )
-tots1 <- nrow(vols)
-# toplo2 <- vols |>
-#   filter(yr == maxyr) |>
-#   group_by(mo, bay_segment) |>
-#   summarise(volest = sum(volest), .groups = 'drop') |>
-#   mutate(
-#     volest = volest / 1e6,
-#     bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB')),
-#     mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
-#   )
-# tots2 <- sum(vols$yr == maxyr)
 
-cols <- c(
-  main_green = "#427355", 
-  main_brown = "#5C4A42", 
-  light_fill = "#958984", 
-  logo_blue = "#004F7E", 
-  logo_green = "#00806E"
-)
+cols <- c("#427355", "#5C4A42", "#958984", "#EA6F17", "#004F7E", "#00806E")
 pal <- colorRampPalette(cols)(length(levels(toplo1$bay_segment)))
 
 p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
@@ -755,9 +755,7 @@ p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
   labs(
     x = NULL, 
     y = 'Million gallons', 
-    title = 'Estimated sewer overflow volume by bay segment', 
-    subtitle = '2017 - 2024',
-    caption = paste('Total SSOs:', scales::comma(tots1)), 
+    title = 'Estimated sewer overflow volume', 
     fill = NULL
   ) +
   theme_minimal() +
@@ -766,104 +764,111 @@ p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
     panel.grid.major.x = element_blank()
   )
 
-# p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
-#   geom_bar(stat = 'identity') +
-#   scale_fill_manual(values = pal) +
-#   labs(
-#     x = NULL, 
-#     y = 'Million gallons', 
-#     subtitle = '2024 by month',
-#     caption = paste('Total SSOs:', scales::comma(tots2)), 
-#     fill = NULL
-#   ) +
-#   theme_minimal() +
-#   theme(
-#     panel.grid.minor = element_blank(),  
-#     panel.grid.major.x = element_blank()
-#   )
+p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
+  geom_bar(stat = 'identity') +
+  scale_fill_manual(values = pal) +
+  labs(
+    x = NULL,
+    y = 'Million gallons',
+    subtitle = '2024 by month',
+    fill = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
 
-p <- p1 #+ p2 + plot_layout(ncol = 1, guides = 'collect', axis_titles = 'collect')
+jpeg('figures/ssoyr.jpg', family = fml, height = 3.5, width = 4, units = 'in', res = 300)
+print(p1)
+dev.off()
 
-jpeg('figures/sso.jpg', family = fml, height = 3.5, width = 6, units = 'in', res = 300)
-print(p)
+jpeg('figures/ssomo.jpg', family = fml, height = 3.5, width = 6, units = 'in', res = 300)
+print(p2)
 dev.off()
 
 # Seagrass segment change ---------------------------------------------------------------------
 
-sgdat2020 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2020.RData')
-sgdat2022 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2022.RData')
+# sgdat2020 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2020.RData')
+# sgdat2022 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2022.RData')
 
 # bay segments detailed
 segclp <- rdataload('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/segclp.RData')
 
-data(file = 'sgseg', package = 'tbeptools')
-
-bnds <- sgseg %>% 
-  filter(segment %in% c('Boca Ciega Bay', 'Hillsborough Bay', 'Old Tampa Bay', 'Middle Tampa Bay',
-                        'Lower Tampa Bay', 'Manatee River', 'Terra Ceia Bay'))
-
-flcat <- list(
-  code = c('9113', '9116'),
-  name = c('patchy', 'cont.')
-)
-
-##
-# process coverage ests by segment and year
-
-allsegests <- tibble(
-  yr = c(2020, 2022)
-  ) %>% 
-  group_by(yr) %>% 
-  nest() %>% 
-  mutate(
-    data = pmap(list(yr, data), function(yr, data){
-      
-      cat(yr, '\n')
-    
-      # make sure crs is the same, get relevant fluccs
-      sgrs <- get(paste0('sgdat', yr)) %>% 
-        st_transform(crs = st_crs(bnds)) %>% 
-        filter(FLUCCSCODE %in% flcat[['code']])
-      
-      # estimate coverage by flucss, segment
-      ests <- st_intersection(sgrs, bnds) %>% 
-        mutate(area = st_area(.)) %>% 
-        st_set_geometry(NULL) %>% 
-        group_by(segment, FLUCCSCODE) %>% 
-        summarise(area = sum(area), .groups = 'drop') %>% 
-        mutate(
-          Acres = as.numeric(set_units(area, 'acres')), 
-          Hectares = as.numeric(set_units(area, 'hectares'))
-        ) %>% 
-        select(Segment = segment, Habitat = FLUCCSCODE, Acres, Hectares) %>% 
-        mutate(
-          Habitat = factor(Habitat, levels = flcat$code, labels = flcat$name)
-        )
-      
-      return(ests)
-      
-    })
-  ) %>% 
-  unnest('data')
+# data(file = 'sgseg', package = 'tbeptools')
+# 
+# bnds <- sgseg %>% 
+#   filter(segment %in% c('Boca Ciega Bay', 'Hillsborough Bay', 'Old Tampa Bay', 'Middle Tampa Bay',
+#                         'Lower Tampa Bay', 'Manatee River', 'Terra Ceia Bay'))
+# 
+# flcat <- list(
+#   code = c('9113', '9116'),
+#   name = c('patchy', 'cont.')
+# )
+# 
+# ##
+# # process coverage ests by segment and year
+# 
+# allsegests <- tibble(
+#   yr = c(2020, 2022)
+#   ) %>% 
+#   group_by(yr) %>% 
+#   nest() %>% 
+#   mutate(
+#     data = pmap(list(yr, data), function(yr, data){
+#       
+#       cat(yr, '\n')
+#     
+#       # make sure crs is the same, get relevant fluccs
+#       sgrs <- get(paste0('sgdat', yr)) %>% 
+#         st_transform(crs = st_crs(bnds)) %>% 
+#         filter(FLUCCSCODE %in% flcat[['code']])
+#       
+#       # estimate coverage by flucss, segment
+#       ests <- st_intersection(sgrs, bnds) %>% 
+#         mutate(area = st_area(.)) %>% 
+#         st_set_geometry(NULL) %>% 
+#         group_by(segment, FLUCCSCODE) %>% 
+#         summarise(area = sum(area), .groups = 'drop') %>% 
+#         mutate(
+#           Acres = as.numeric(set_units(area, 'acres')), 
+#           Hectares = as.numeric(set_units(area, 'hectares'))
+#         ) %>% 
+#         select(Segment = segment, Habitat = FLUCCSCODE, Acres, Hectares) %>% 
+#         mutate(
+#           Habitat = factor(Habitat, levels = flcat$code, labels = flcat$name)
+#         )
+#       
+#       return(ests)
+#       
+#     })
+#   ) %>% 
+#   unnest('data')
 
 # save(allsegests, file = here('data/allsegests.RData'))
 
 ##
 # map
 
-colnm <- 'Segment'
+# colnm <- 'Segment'
+# 
+# tomap <- allsegests %>% 
+#   filter(Habitat %in% c('patchy', 'cont.')) %>% 
+#   group_by(yr, Segment) %>% 
+#   summarise(
+#     Acres = sum(Acres, na.rm = T), 
+#     .groups = 'drop'
+#   ) %>% 
+#   spread(yr, Acres, fill = 0) %>% 
+#   sgchgfun(c('2020', '2022'), colnm) %>% 
+#   full_join(segclp, ., by = c('segment'= 'val'))
 
 # get change summary
-tomap <- allsegests %>% 
-  filter(Habitat %in% c('patchy', 'cont.')) %>% 
-  group_by(yr, Segment) %>% 
-  summarise(
-    Acres = sum(Acres, na.rm = T), 
-    .groups = 'drop'
+tomap <- tibble(
+    segment = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Boca Ciega Bay', 'Manatee River', 'Terra Ceia Bay'), 
+    chg = c(-327, 756, 230, 403, 344, 2, 1)
   ) %>% 
-  spread(yr, Acres, fill = 0) %>% 
-  sgchgfun(c('2020', '2022'), colnm) %>% 
-  full_join(segclp, ., by = c('segment'= 'val'))
+  full_join(segclp, ., by = 'segment')
 
 maxv <- max(abs(tomap$chg))
 
@@ -898,7 +903,7 @@ tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom 
 m <- ggplot2::ggplot() + 
   tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
   ggplot2::geom_sf(data = tomap, ggplot2::aes(fill = chg), color = 'black', inherit.aes = F) +
-  ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
+  # ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
   scale_fill_gradientn(
     colors = c(rev(colred), colgrn),
     values = scales::rescale(c(seq(-maxv, 0, length.out = length(colred)),
@@ -910,9 +915,9 @@ m <- ggplot2::ggplot() +
   ggplot2::theme(
     panel.grid = ggplot2::element_blank(), 
     axis.title = ggplot2::element_blank(), 
-    axis.text.y = ggplot2::element_text(size = ggplot2::rel(0.9)), 
-    axis.text.x = ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
-    axis.ticks = ggplot2::element_line(colour = 'grey'),
+    axis.text.y = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9)), 
+    axis.text.x = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
+    axis.ticks = element_blank(), #ggplot2::element_line(colour = 'grey'),
     panel.background = ggplot2::element_rect(fill = NA, color = 'black'), 
     legend.position = 'top', 
     legend.title.position = 'top',
@@ -920,10 +925,10 @@ m <- ggplot2::ggplot() +
     legend.key.height = unit(0.25, "cm"),
     legend.title = element_text(hjust = 0.5)
   ) +
-  ggspatial::annotation_scale(location = 'br', unit_category = 'metric') +
-  ggspatial::annotation_north_arrow(location = 'tl', which_north = "true") + 
+  # ggspatial::annotation_scale(location = 'br', unit_category = 'metric') +
+  # ggspatial::annotation_north_arrow(location = 'tl', which_north = "true") + 
   ggplot2::labs(
-    fill = '2020 - 2022 change (acres)'
+    fill = '2022 - 2024 change (acres)'
   )
 
 dat_ext <- dat_ext %>% 
