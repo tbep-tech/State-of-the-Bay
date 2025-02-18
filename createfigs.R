@@ -876,10 +876,10 @@ maxv <- max(abs(tomap$chg))
 totxt <- tomap %>% 
   st_centroid() %>% 
   mutate(
-    txt = ifelse(sign(chg) == -1, 'lost', 'gained'), 
-    txt = paste0(bay_segment, ': ', abs(round(chg, 0)), ' acres ', txt)
-  ) %>% 
-  filter(bay_segment %in% c('OTB', 'HB', 'MTB', 'LTB'))
+    txt = ifelse(sign(chg) == -1, '-', '+'),
+    txt = paste0(txt, abs(round(chg, 0))) #paste0(bay_segment, ': ', abs(round(chg, 0)), ' acres ', txt)
+  ) # %>% 
+  # filter(bay_segment %in% c('OTB', 'HB', 'MTB', 'LTB'))
 
 # colors
 colgrn <- c("#F7FCF5", "#E5F5E0", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", 
@@ -903,7 +903,7 @@ tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom 
 m <- ggplot2::ggplot() + 
   tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
   ggplot2::geom_sf(data = tomap, ggplot2::aes(fill = chg), color = 'black', inherit.aes = F) +
-  # ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
+  ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
   scale_fill_gradientn(
     colors = c(rev(colred), colgrn),
     values = scales::rescale(c(seq(-maxv, 0, length.out = length(colred)),
@@ -919,7 +919,7 @@ m <- ggplot2::ggplot() +
     axis.text.x = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
     axis.ticks = element_blank(), #ggplot2::element_line(colour = 'grey'),
     panel.background = ggplot2::element_rect(fill = NA, color = 'black'), 
-    legend.position = 'top', 
+    legend.position = 'none', 
     legend.title.position = 'top',
     legend.key.width = unit(1, "cm"),
     legend.key.height = unit(0.25, "cm"),
@@ -944,86 +944,7 @@ jpeg('figures/sgchange.jpg', family = fml, height = 5.5, width = 4.25, units = '
 print(m)
 dev.off()
 
-# water temp and rainfall ---------------------------------------------------------------------
-
-##
-# water temp
-
-# local file path
-# xlsx <- here('data-raw/Results_Updated.xls')
-xlsx <- here('data-raw/Results_Provisional.xlsx')
-
-# import and download if new
-epcdata <- read_importwq(xlsx, download_latest = F)
-
-tempdat <- epcdata %>% 
-  select(epchc_station, yr, mo, Temp_Water_Top_degC, Temp_Water_Bottom_degC,Temp_Water_Mid_degC) %>% 
-  pivot_longer(cols = c(Temp_Water_Top_degC, Temp_Water_Bottom_degC, Temp_Water_Mid_degC), names_to = 'depth', values_to = 'temp') %>%
-  summarise(
-    temp = mean(temp, na.rm = T),
-    .by = c(yr, mo, epchc_station)
-  ) %>% 
-  summarise(
-    temp = mean(temp, na.rm = T),
-    .by = c(yr, mo)
-  ) %>% 
-  mutate(
-    date = as.Date(paste0(yr, '-', mo, '-01'))
-  )
-  
-toplo <- tempdat %>%
-  arrange(date) %>% 
-  mutate(
-    temp = (temp * 9/5) + 32,
-    flvl = case_when(
-      yr == 2024 ~ '2024', 
-      yr == 2023 ~ '2023',
-      yr == 2022 ~ '2022',
-      T ~ '2005 - 2021'
-    ), 
-    xvals = ymd(paste('2024', month(date), day(date), sep = '-'))
-  )
-
-toplo1 <- toplo %>% 
-  filter(yr == 2024)
-toplo2 <- toplo %>% 
-  filter(yr == 2023)
-toplo3 <- toplo %>% 
-  filter(yr == 2022)
-toplo4 <- toplo %>% 
-  filter(yr < 2022) %>% 
-  group_by(xvals) %>% 
-  summarise(
-    lov = quantile(temp, 0.05, na.rm = T),
-    hiv = quantile(temp, 0.95, na.rm = T),
-  ) %>% 
-  ungroup()
-p1 <- ggplot() + 
-  geom_ribbon(data = toplo4, aes(x = xvals, ymin = lov, ymax = hiv, fill = '1975 - 2022\n5th - 95th %tile'), alpha = 0.7) +
-  geom_line(data = toplo1, aes(x = xvals, y = temp, color = '2024'), size = 1.2) +
-  geom_line(data = toplo2, aes(x = xvals, y = temp, color = '2023'), size = 1.2) +
-  geom_line(data = toplo3, aes(x = xvals, y = temp, color = '2022'), size = 1.2) +
-  scale_color_manual(values = rev(c("#67000D", "#CB181D", "#FC9272"))) +
-  scale_fill_manual(values = 'grey') + 
-  scale_x_date(date_breaks = 'month', date_labels = '%b', expand = c(0, 0)) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    legend.title = element_blank(),
-    axis.title.x = element_blank()
-  ) +
-  labs(
-    y = expression(paste(degree, "F")),
-    title = '2022 - 2024 compared to historical',
-    subtitle = 'Water temperature',
-    color = 'Year group', 
-    size = 'Year group'
-  )
-
-##
-#rainfall
+# rainfall ------------------------------------------------------------------------------------
 
 # monthly rainfall data from swfwmd 
 # https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
@@ -1074,63 +995,63 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
     precip_mm = precip_in * 25.4
   )
 
-toplo <- raindat %>%
-  arrange(date) %>% 
-  mutate(
-    precip_in = cumsum(precip_in), 
+toplo <- raindat %>% 
+  filter(yr > 2009) %>%
+  summarise(
+    precip_in = sum(precip_in, na.rm = TRUE), 
     .by = yr
-  ) %>% 
+  ) |> 
   mutate(
-    flvl = case_when(
-      yr == 2024 ~ '2024', 
-      yr == 2023 ~ '2023',
-      yr == 2022 ~ '2022',
-      T ~ '2005 - 2021'
-    ), 
-    xvals = ymd(paste('2024', month(date), day(date), sep = '-'))
+    ave = mean(precip_in), 
+    avediff = precip_in - ave
   )
 
-toplo1 <- toplo %>% 
-  filter(yr == 2024)
-toplo2 <- toplo %>% 
-  filter(yr == 2023)
-toplo3 <- toplo %>% 
-  filter(yr == 2022)
-toplo4 <- toplo %>% 
-  filter(yr < 2022) %>% 
-  group_by(xvals) %>% 
-  summarise(
-    lov = quantile(precip_in, 0.05, na.rm = T),
-    hiv = quantile(precip_in, 0.95, na.rm = T),
-  ) %>% 
-  ungroup()
-p2 <- ggplot() + 
-  geom_ribbon(data = toplo4, aes(x = xvals, ymin = lov, ymax = hiv, fill = '1975 - 2022\n5th - 95th %tile'), alpha = 0.7) +
-  geom_line(data = toplo1, aes(x = xvals, y = precip_in, color = '2024'), size = 1.2) +
-  geom_line(data = toplo2, aes(x = xvals, y = precip_in, color = '2023'), size = 1.2) +
-  geom_line(data = toplo3, aes(x = xvals, y = precip_in, color = '2022'), size = 1.2) +
-  scale_color_manual(values = rev(c("#004F7E", "#4F93B8", "#A1C9E1"))) +
-  scale_fill_manual(values = 'grey') + 
-  scale_x_date(date_breaks = 'month', date_labels = '%b', expand = c(0, 0)) +
-  theme_minimal() +
+ave <- mean(toplo$precip_in)
+
+p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
+  geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
+  geom_hline(aes(color = '15 year average', yintercept = ave), linewidth = 1) +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  scale_color_manual(values = '#5C4A42') + 
   theme(
-    axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-    axis.title.x = element_blank(),
+    axis.text.x =  element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.grid.major.x = element_blank(), 
-    legend.title = element_blank()
+    legend.position = 'top'
   ) +
   labs(
-    y = 'Inches',
-    subtitle = 'Cumulative precipitation',
-    caption = 'Data source: EPCHC, SWFWMD',
-    color = 'Year group', 
-    size = 'Year group'
+    x = NULL,
+    y = 'Annual rainfall (in)',
+    color = NULL
+    # caption = 'Data source: SWFWMD'
   )
 
-p <- p1 + p2 + plot_layout(ncol = 1)
+mxdiff <- max(toplo$avediff)
+p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
+  geom_col(color = 'black', alpha = 0.8) +
+  geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
+  scale_fill_gradient2(midpoint = 0, low = 'tomato1', mid = 'white', high = 'dodgerblue2') +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none'
+  ) +
+  labs(
+    x = NULL,
+    y = 'Deviation (in)'#,
+    # caption = 'Data source: SWFWMD'
+  )
 
-jpeg('figures/temprain.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
+p <- p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
+
+jpeg('figures/rain.jpg', family = fml, height = 5, width = 6, units = 'in', res = 300)
 print(p)
 dev.off()
 
