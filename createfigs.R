@@ -1006,49 +1006,33 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
 toplo <- raindat %>% 
   filter(yr > 2021)
 
-p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
-  geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
-  geom_hline(aes(color = '15 year average', yintercept = ave), linewidth = 1) +
+p <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
+  geom_col(aes(fill = 'Annual\nrainfall'), color = 'black', alpha = 0.8) +
+  geom_col(aes(y = avediff, fill = 'Deviation from\n15-yr mean'), width = 0.5, color = 'black', alpha = 0.8) + 
+  scale_fill_manual(values = c('#004F7E', '#5C4A42')) +
+  scale_color_manual(values = 'darkred') + 
+  geom_hline(aes(yintercept = unique(ave), color = '15-yr mean'), linewidth = 1, linetype = 'dashed') + 
   theme_minimal(base_size = 14) + 
   scale_x_continuous(breaks = unique(toplo$yr)) +
-  scale_y_continuous(expand= c(0, 0)) +
-  scale_color_manual(values = '#5C4A42') + 
+  scale_y_continuous(expand= c(0, 0), n.breaks = 10) +
   theme(
-    axis.text.x =  element_blank(),
-    panel.grid.minor.x = element_blank(),
+    # axis.text.x =  element_blank(),
+    # panel.grid.minor.x = element_blank(),
     panel.grid.major.x = element_blank(), 
-    legend.position = 'top'
+    panel.grid.minor = element_blank(),
+    legend.position = 'top',
+    legend.box = 'vertical',
+    legend.spacing.y = unit(0, 'cm')
   ) +
   labs(
     x = NULL,
-    y = 'Annual rainfall (in)',
-    color = NULL
+    y = 'Inches',
+    color = NULL,
+    fill = NULL
     # caption = 'Data source: SWFWMD'
   )
 
-p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
-  geom_col(color = 'black', alpha = 0.8) +
-  geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
-  scale_fill_gradient2(midpoint = 0, low = 'tomato1', mid = 'white', high = 'dodgerblue2') +
-  theme_minimal(base_size = 14) + 
-  scale_x_continuous(breaks = unique(toplo$yr)) +
-  scale_y_continuous(expand= c(0, 0)) +
-  theme(
-    axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    legend.position = 'none'
-  ) +
-  labs(
-    x = NULL,
-    y = 'Deviation (in)'#,
-    # caption = 'Data source: SWFWMD'
-  )
-
-p <- p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
-
-jpeg('figures/rain.jpg', family = fml, height = 5, width = 3, units = 'in', res = 300)
+jpeg('figures/rain.jpg', family = fml, height = 4.5, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
 
