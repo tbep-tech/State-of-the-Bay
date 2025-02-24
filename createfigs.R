@@ -903,7 +903,7 @@ tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom 
 m <- ggplot2::ggplot() + 
   tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
   ggplot2::geom_sf(data = tomap, ggplot2::aes(fill = chg), color = 'black', inherit.aes = F) +
-  ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
+  # ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = txt), size = 4, alpha = 0.8, inherit.aes = F) +
   scale_fill_gradientn(
     colors = c(rev(colred), colgrn),
     values = scales::rescale(c(seq(-maxv, 0, length.out = length(colred)),
@@ -919,7 +919,7 @@ m <- ggplot2::ggplot() +
     axis.text.x = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
     axis.ticks = element_blank(), #ggplot2::element_line(colour = 'grey'),
     panel.background = ggplot2::element_rect(fill = NA, color = 'black'), 
-    legend.position = 'none', 
+    legend.position = 'top', 
     legend.title.position = 'top',
     legend.key.width = unit(1, "cm"),
     legend.key.height = unit(0.25, "cm"),
@@ -966,7 +966,7 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
     data = purrr::map(mo, function(mo){
       
       read_excel(here('data-raw/swfwmdrainfall.xlsx'), sheet = mo, skip = 1) %>% 
-        filter(Year %in% 1975:2024) %>% 
+        filter(Year %in% 2009:2024) %>% 
         select(
           yr = Year, 
           tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
@@ -993,20 +993,18 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
     ),
     date = as.Date(paste0(yr, '-', mo, '-01')), 
     precip_mm = precip_in * 25.4
-  )
-
-toplo <- raindat %>% 
-  filter(yr > 2009) %>%
+  ) %>% 
   summarise(
-    precip_in = sum(precip_in, na.rm = TRUE), 
+    precip_in = sum(precip_in, na.rm = T), 
     .by = yr
-  ) |> 
+  ) %>% 
   mutate(
     ave = mean(precip_in), 
     avediff = precip_in - ave
   )
 
-ave <- mean(toplo$precip_in)
+toplo <- raindat %>% 
+  filter(yr > 2021)
 
 p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
   geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
@@ -1028,7 +1026,6 @@ p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) +
     # caption = 'Data source: SWFWMD'
   )
 
-mxdiff <- max(toplo$avediff)
 p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
   geom_col(color = 'black', alpha = 0.8) +
   geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
@@ -1051,7 +1048,7 @@ p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) +
 
 p <- p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
 
-jpeg('figures/rain.jpg', family = fml, height = 5, width = 6, units = 'in', res = 300)
+jpeg('figures/rain.jpg', family = fml, height = 5, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
