@@ -15,6 +15,7 @@ library(networkD3)
 library(htmltools)
 library(units)
 library(here)
+library(dataRetrieval)
 
 windowsFonts(Lato = windowsFont("Lato"))
 source(here('R/funcs.R'))
@@ -1173,3 +1174,55 @@ png(here('figures/seagrassseg.png'), family = fml, height = 4.5, width = 10, uni
 print(p)
 dev.off()
 
+# major river discharge -----------------------------------------------------------------------
+
+yr <- 2024
+start <- paste0(yr, "-01-01")
+end <- paste0(yr, "-12-31")
+
+# get discharge data (can also use 00065 for gage height, ft)
+dat <- list(
+  hr = '02303000', 
+  ar = '02301500',
+  mr = '02299950',
+  lmr = '02300500'
+) %>% 
+  enframe() %>% 
+  mutate(
+    var = purrr::map(value, ~dataRetrieval::readNWISdv(.x, "00060", start, end) %>%
+                       dataRetrieval::renameNWISColumns()
+    )
+  )
+
+toplo <- dat %>% 
+  unnest(value) %>% 
+  unnest(var) %>% 
+  mutate(
+    River = case_when(
+      name == 'hr' ~ 'Hillsborough River',
+      name == 'ar' ~ 'Alafia River',
+      name == 'mr' ~ 'Manatee River',
+      name == 'lmr' ~ 'Little Manatee River'
+    ),
+    River = factor(River, levels = c('Hillsborough River', 'Alafia River', 'Manatee River', 'Little Manatee River')),
+  )
+
+p <- ggplot(toplo, aes(x = Date, y = Flow)) + 
+  geom_line() + 
+  facet_wrap(~River, ncol = 1) + 
+  scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(hjust = 0, size = 12), 
+    panel.grid.minor = element_blank()
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Cubic Feet per Second', 
+    title = '2024 Discharge at Major Rivers in Tampa Bay Region',
+    caption = 'Source: USGS'
+  )
+
+png(here('figures/discharge.png'), height = 6, width = 8, units = 'in', res = 300)
+print(p)
+dev.off()
