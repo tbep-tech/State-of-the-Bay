@@ -1226,3 +1226,45 @@ p <- ggplot(toplo, aes(x = Date, y = Flow)) +
 png(here('figures/discharge.png'), height = 6, width = 8, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# average PEL over time by bay segment --------------------------------------------------------
+
+dat <- tibble(
+  yrs = 1993:2023
+) %>% 
+  group_nest(yrs) %>% 
+  mutate(
+    data = purrr::map(yrs, ~ anlz_sedimentpelave(sedimentdata, yrrng = .x, 
+                                                 bay_segment = c("HB", "OTB", "MTB", "LTB", "TCB", "MR", "BCB"),
+                                                 funding_proj = "TBEP"))
+  ) %>% 
+  unnest('data')
+
+brks <- c(0.00756, 0.02052, 0.08567, 0.28026)
+alph <- 1
+
+p <- ggplot(dat, aes(x = yrs, y = ave)) +
+  ggplot2::annotate("rect", xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = brks[1], alpha = alph, fill = '#2DC938') +
+  ggplot2::annotate("rect", xmin = -Inf, xmax = Inf, ymin = brks[1], ymax = brks[2], alpha = alph, fill = '#A2FD7A') +
+  ggplot2::annotate("rect", xmin = -Inf, xmax = Inf, ymin = brks[2], ymax = brks[3], alpha = alph, fill = '#E9C318') +
+  ggplot2::annotate("rect", xmin = -Inf, xmax = Inf, ymin = brks[3], ymax = brks[4], alpha = alph, fill = '#EE7600') +
+  ggplot2::annotate("rect", xmin = -Inf, xmax = Inf, ymin = brks[4], ymax = Inf, alpha = alph, fill = '#CC3231') +
+  geom_line() +
+  geom_point() +
+  # geom_errorbar(aes(ymin = lov, ymax = hiv), width = 0) + 
+  scale_x_continuous(breaks = seq(1995, 2020, by = 5)) + 
+  facet_wrap(~ AreaAbbr, scales = 'free', ncol = 2) +
+  coord_cartesian(ylim = c(0, NA), xlim = c(1993, 2023)) + 
+  theme_minimal() + 
+  theme(
+    strip.text = element_text(size = 12), 
+    axis.ticks = element_line(size = 0.5)
+  ) +
+  labs(
+    x = NULL, 
+    y = 'PEL summary'
+  )
+
+png(here('figures/pel.png'), height = 7, width = 6, units = 'in', res = 300)
+print(p)
+dev.off()
