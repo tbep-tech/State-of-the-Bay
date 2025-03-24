@@ -1281,6 +1281,6 @@ p <- tbeptools::show_fibmatrix(enterodata, stas = NULL, bay_segment = c('OTB', '
     axis.text.x = element_text(angle = 0, hjust = 0.5)
   )
 
-jpeg('figures/fibreport.jpg', family = fml, height = 7, width = 3.5, units = 'in', res = 300)
+jpeg('figures/fibreport.jpg', family = fml, height = 4, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
