@@ -23,6 +23,7 @@ library(leaflet)
 library(DT)
 library(lubridate)
 library(networkD3)
+library(fontawesome)
 
 # auth google drive
 drive_auth(email = 'mbeck@tbep.org')

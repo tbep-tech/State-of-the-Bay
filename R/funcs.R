@@ -1017,7 +1017,97 @@ gadmap_fun <- function(datin){
   return(out)
   
 }
+
+
+# debris derby totals
+ddsum_fun <- function(dddat){
   
+  out <- dddat %>% 
+    dplyr::summarise(
+      nlbs = format(round(sum(nlbs, na.rm = T), 0), nsmall = 0, big.mark = ','),
+      nvols = format(round(sum(nvolunteers, na.rm = T), 0), nsmall = 0, big.mark = ',')
+    )
+  
+  return(out)
+  
+}
+
+# debris derby table
+dddat_tab <- function(dddat, fntsz = 20, family){
+
+  # format for table
+  totab <- dddat %>% 
+    dplyr::mutate(dplyr::across(-c(year, comments), ~ format(round(.x, 0), nsmall = 0, big.mark = ','))) %>% 
+    dplyr::mutate(
+      nlbs = gsub('^\\s+0$', '-', nlbs)
+    ) %>% 
+    dplyr::select(
+      Year = year, 
+      Teams = nteams,
+      Volunteers = nvolunteers, 
+      `Pounds of trash removed` = nlbs, 
+      Sponsors = nsponsors
+    )
+  
+  # Create a function to generate header with icon
+  header_with_icon <- function(text, icon_name) {
+    as.character(tagList(
+      tags$span(HTML(icon_name), style = "margin-right: 5px;"),
+      tags$span(text)
+    ))
+  }
+  
+  # Create the table with icons in headers
+  out <- reactable(
+    totab,
+    columns = list(
+      Year = colDef(
+        # maxWidth = 75,
+        align = 'left'
+      ),
+      Teams = colDef(
+        html = T,
+        header = function() header_with_icon("Teams", 
+                                             fa("ship", fill = "currentColor", height = "1em")), 
+        align = 'center'
+      ),
+      Volunteers = colDef(
+        html = T,
+        header = function() header_with_icon("Volunteers", 
+                                             fa("user", fill = "currentColor", height = "1em")), 
+        align = 'center'
+      ),
+      `Pounds of trash removed` = colDef(
+        html = T,
+        minWidth = 200,
+        header = function() header_with_icon("Lbs of trash removed", 
+                                             fa("scale-balanced", fill = "currentColor", height = "1em")), 
+        align = 'center'
+      ),
+      Sponsors = colDef(
+        html = T,
+        header = function() header_with_icon("Sponsors", 
+                                             fa("handshake", fill = "currentColor", height = "1em")), 
+        align = 'center'
+      )
+    ),
+    style = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+    borderless = T, 
+    resizable = T, 
+    sortable = F,
+    defaultColDef = colDef(
+      headerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family),
+      footerStyle = list(fontSize = paste0(fntsz, 'px'), fontFamily = family)
+    ),
+    theme = reactableTheme(
+      headerStyle = list(borderColor = 'white')
+    )
+  )
+  
+  return(out)
+  
+}
+
 # get grant funding summary
 # datin is tberfdat, bmgdat, or dcgdat
 # yrsel not provided, get totals for all data
@@ -1228,7 +1318,7 @@ grnt_tab <- function(..., yrsel, chg = TRUE, fntsz = 20, family){
           T ~ as.character(maxyr)
         )
       ) 
-    
+
     out <- reactable(
       totab, 
       columns = list(

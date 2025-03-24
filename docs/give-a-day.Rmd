@@ -8,13 +8,15 @@ output:
 ```{r setup, warning = F, message = F, echo = F}
 source(here::here('R/setup.R'))
 load(file = here('data/gaddat.RData'))
+load(file = here('data/dddat.RData'))
 yrsel <- 2024
 tots <- gadsum_fun(gaddat, yrsel = c(2019:yrsel))
+ddtots <- ddsum_fun(dddat)
 ```
 
 Community involvement has been at the center of Tampa Bay's recovery story since the beginning. Keeping that tradition alive is the Give-a-Day for the Bay volunteer program where community members put in "sweat equity" to protect and restore bay-area parks and preserves. From planting native vegetation to removing debris from mangrove islands, these events encourage the community to get out, give back, and enjoy the bay!
 
-Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer workdays co-hosted with `r tots['npartner']` bay-area partners. During this time, significant attention has been given to addressing excessive litter and native habitat degradation in regions of the watershed that have historically not received support for restoration activities. During these events, `r tots['nvols']` volunteers removed `r tots['ntons']` tons of debris and litter and planted `r tots['nplants']` native plants. Volunteers have also participated in citizen science projects that highlighted the importance of blue carbon habitats by using tea bags to measure soil decomposition rates and carbon storage capacities of wetlands.
+Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer workdays co-hosted with `r tots['npartner']` bay-area partners. During this time, significant attention has been given to addressing excessive litter and native habitat degradation in regions of the watershed that have historically not received support for restoration activities. During these events, `r tots['nvols']` volunteers removed `r tots['nlbs']` pounds of debris and litter and planted `r tots['nplants']` native plants. Volunteers have also participated in citizen science projects that highlighted the importance of blue carbon habitats by using tea bags to measure soil decomposition rates and carbon storage capacities of wetlands.
 
 ## `r yrsel` Year in Review 
 
@@ -23,5 +25,15 @@ gaddat %>%
   gadsum_fun(yrsel = yrsel) %>% 
   gadsum_plo(family = fml)
 ```
+
+## Trash Free Waters
+
+The Tampa Bay Estuary Program is working with partners to reduce litter and debris in the watershed through the Trash Free Waters initiative. This program focuses on reducing the amount of trash entering the bay by addressing litter at its source, increasing community awareness, and improving waste management practices.  Since 2022, the Tampa Bay Debris Derby has engaged `r ddtots['nvols']` volunteers in a friendly competition to remove litter from the bay and its tributaries, totaling `r ddtots['nlbs']` pounds of debris to date. These totals complement the Give-a-Day for the Bay totals above, highlighting the importance of community involvement in keeping our waterways clean. Visit the [Trash Free Waters](https://tbep.org/trash-free-waters/) and [Debris Derby](https://tbep.org/debris-derby/) pages to learn more about this initiative.
+
+```{r}
+dddat_tab(dddat, family = fml)
+```
+
+\* Note: 2024 weigh-in cancelled due to incoming tropical activity.
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>

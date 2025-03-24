@@ -150,6 +150,7 @@ gaddat <- datraw %>%
     nfeet = `Area.Improved..linear.Ft.`#,
     # underserved = `Underserved.Community`
   ) %>% 
+  filter(!year == '') %>% 
   mutate(
     year = gsub('^Give-A-Day Activities_FY', '', year), 
     year = paste0('20', year)
