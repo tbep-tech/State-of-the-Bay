@@ -1268,3 +1268,19 @@ p <- ggplot(dat, aes(x = yrs, y = ave)) +
 png(here('figures/pel.png'), height = 7, width = 6, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# FIB report card -----------------------------------------------------------------------------
+
+maxyr <- 2024
+
+p <- tbeptools::show_fibmatrix(enterodata, stas = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'),
+                               yrrng = c(2003, maxyr), warn = F) +
+  theme(
+    text = element_text(family = fml),
+    axis.text.y = element_text(family = fml),
+    axis.text.x = element_text(angle = 0, hjust = 0.5)
+  )
+
+jpeg('figures/fibreport.jpg', family = fml, height = 7, width = 3.5, units = 'in', res = 300)
+print(p)
+dev.off()
