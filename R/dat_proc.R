@@ -331,3 +331,49 @@ kbrdat <- results$features %>%
 
 save(kbrdat, file = here::here('data/kbrdat.RData'))
 
+# debris derby data ---------------------------------------------------------------------------
+
+datraw <- get_sheet_as_csv('TBDD_Metrics_SOB_Rollup') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+dddat <- datraw %>% 
+  select(
+    year = Task.Name,
+    nteams = `X..Teams`, 
+    nvolunteers = `X..Volunteers`, 
+    nlbs = `Lbs.of.Debris.Removed`, 
+    nsponsors = `X..Sponsors`,
+    comments = Comments
+  ) %>% 
+  mutate(
+    year = as.numeric(gsub('(^\\d+).*', '\\1', year))
+  ) %>% 
+  filter(!is.na(year))
+
+save(dddat, file = here('data/dddat.RData'))
+
+# experiential education data -----------------------------------------------------------------
+
+datraw <- get_sheet_as_csv('Experiential_Education_Metrics_SOB_Rollup') %>% 
+  textConnection %>% 
+  read.table(sep = ',', header = T)
+
+expeddat <- datraw %>% 
+  select(
+    year = Task.Name,
+    nevents = `X..Events`, 
+    nadults = `X.Adults`, 
+    nyouth = `X..Youth`,
+    nejevents = `X..EJ.Specific.Event.`, 
+    ncorporatepartners = `X..Unique.Corporate.Partners`
+  ) %>% 
+  mutate(
+    year = gsub('^FY(\\d+).*', '\\1', year), 
+    year = as.numeric(paste0('20', year)), 
+    nparticipants = nadults + nyouth
+  ) 
+
+save(expeddat, file = here('data/expeddat.RData'))
+
+
