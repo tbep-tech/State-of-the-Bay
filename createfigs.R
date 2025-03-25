@@ -181,7 +181,7 @@ dev.off()
 # save plot
 
 png('figures/seagrasscov.png', height = 3.25, width = 6, res = 300, unit = 'in')
-sgcov_plo(seagrass, family = fml)
+show_seagrasscoverage(seagrass, family = fml)
 dev.off()
 
 # habs ----------------------------------------------------------------------------------------
@@ -1110,7 +1110,6 @@ dev.off()
 
 # seagrass coverage by segment ----------------------------------------------------------------
 
-
 load(url('https://github.com/tbep-tech/tbep-os-presentations/raw/refs/heads/master/data/sgsegest.RData'))
 
 # segment coverage targets in 1k acres
@@ -1126,9 +1125,9 @@ segworst <- tibble(
 ) 
 
 toplo <- sgsegest %>%
-  filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
-  mutate(acres = acres / 1000) %>%
-  mutate(segment = forcats::fct_drop(segment))
+  # filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
+  mutate(acres = acres / 1000) #%>%
+  # mutate(segment = forcats::fct_drop(segment))
 
 subsegtrgs <- segtrgs %>%
   filter(segment %in% levels(toplo$segment))
@@ -1170,7 +1169,7 @@ p <- ggplot(toplo, aes(x = factor(year), y = acres)) +
     color = NULL
   )
 
-png(here('figures/seagrassseg.png'), family = fml, height = 4.5, width = 10, units = 'in', res = 300)
+png(here('figures/seagrassseg.png'), family = fml, height = 8, width = 7, units = 'in', res = 300)
 print(p)
 dev.off()
 
