@@ -788,7 +788,7 @@ jpeg('figures/ssomo.jpg', family = fml, height = 3.5, width = 6, units = 'in', r
 print(p2)
 dev.off()
 
-# Seagrass segment change ---------------------------------------------------------------------
+# seagrass segment change map -----------------------------------------------------------------
 
 # sgdat2020 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2020.RData')
 # sgdat2022 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2022.RData')
@@ -864,10 +864,14 @@ segclp <- rdataload('https://github.com/tbep-tech/seagrass-analysis/raw/refs/hea
 #   sgchgfun(c('2020', '2022'), colnm) %>% 
 #   full_join(segclp, ., by = c('segment'= 'val'))
 
+load(url('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/sgsegest.RData'))
+
 # get change summary
-tomap <- tibble(
-    segment = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Boca Ciega Bay', 'Manatee River', 'Terra Ceia Bay'), 
-    chg = c(-327, 756, 230, 403, 344, 2, 1)
+tomap <- sgsegest %>% 
+  filter(year %in% c(2022, 2024)) %>% 
+  pivot_wider(names_from = 'year', values_from = 'acres') %>%
+  mutate(
+    chg = `2024` - `2022`
   ) %>% 
   full_join(segclp, ., by = 'segment')
 
@@ -1110,7 +1114,7 @@ dev.off()
 
 # seagrass coverage by segment ----------------------------------------------------------------
 
-load(url('https://github.com/tbep-tech/tbep-os-presentations/raw/refs/heads/master/data/sgsegest.RData'))
+load(url('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/sgsegest.RData'))
 
 # segment coverage targets in 1k acres
 segtrgs <- tibble(
