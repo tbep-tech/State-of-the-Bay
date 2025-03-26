@@ -1074,7 +1074,7 @@ dev.off()
 dumyr <- 1975
 toplo <- seagrass %>% 
   select(yr = Year, acres = Acres) %>% 
-  filter(yr < 2024) %>% 
+  # filter(yr < 2024) %>% 
   mutate(
     acres = acres / 1000,
     yr = case_when(
@@ -1083,8 +1083,8 @@ toplo <- seagrass %>%
     )
   )
 
-brks <- c(dumyr, seq(1982, 2022, by = 2))
-labs <- c(1950, seq(1982, 2022, by = 2))
+brks <- c(dumyr, seq(1982, 2024, by = 2))
+labs <- c(1950, seq(1982, 2024, by = 2))
 
 p <- ggplot(toplo, aes(x = yr, y = acres)) +
   geom_col(fill = '#00806E', color = 'black') +

@@ -99,10 +99,10 @@ alluvout2(toplo, family = fml, maxyr = sprmax, width = 1000, height = 500, mrg =
 
 Seagrasses are used by the Tampa Bay Estuary Program to assess progress in achieving water quality goals. Seagrasses need sunlight to grow.  With improving water clarity, seagrasses can thrive in Tampa Bay.
 
-Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r formals(sgsum_fun)$topyr`, seagrasses `r sgsums$topdir` by `r sgsums$topcmp` acres.  However, from `r formals(sgsum_fun)$topyr` to `r submax`, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres.  Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.
+Areal coverage of seagrasses are tracked semi-annually to determine if they are increasing or decreasing over time.  From `r formals(sgsum_fun)$refyr` to `r formals(sgsum_fun)$topyr`, seagrasses `r sgsums$topdir` by `r sgsums$topcmp` acres.  However, from `r formals(sgsum_fun)$topyr` to `r submax`, seagrasses `r sgsums$recdir` by `r sgsums$reccmp` acres.  Most significant seagrass losses were in Old Tampa Bay, a segment that has not been meeting water quality targets in recent years.  Notably, seagrasses increased from 2022 to 2024 baywide, although losses were still observed in Old Tampa Bay.
 
 ```{r, fig.height = 4.5, fig.width = 10}
-show_seagrasscoverage(seagrass, maxyr = submax, family = fml)
+show_seagrasscoverage(seagrass, maxyr = 2024, family = fml)
 ```
 
 ## Resources
