@@ -1754,3 +1754,67 @@ show_tdlcrktrends <- function(tidalcreeks, iwrraw, maxyr = 2024, plotly = FALSE)
   return(out)
   
 }
+
+# thermometer plot for exp ed comms plan goals
+# this is super janky and annotation locations will need to be changed with plot dims
+# this is currently optimized for 2.5 inch width
+expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#005293') {  
+  
+  ncur <- expeddat %>% 
+    filter(year >= 2024) %>% 
+    pull(nparticipants) %>% 
+    sum()
+  curyr <- max(expeddat$year)
+  toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
+  toplo$npar1 <- lag(toplo$npar)
+  
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 15) +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 10, lineend =  c("round"), color = "black") +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 9, lineend =  c("round"), color = "white") +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 14, color = collo) +
+    geom_segment(data = toplo[-1, ], ggplot2::aes(x = 0, y = npar, yend = npar1, color = npar), lineend =  c("butt"), linewidth = 9, show.legend = F) +
+    ggplot2::scale_y_continuous(breaks = seq(0, ngoal, by = 100)) +
+    ggplot2::scale_color_gradient(low = collo, high = colhi, limits = c(0, ngoal)) +
+    ggplot2::coord_cartesian(
+      xlim = c(-1, 1),
+      ylim = c(-10, NA)
+    ) +
+    ggplot2::annotate("text", x = -0.4, y = seq(0, ngoal, by = 100), 
+                      label = seq(0, ngoal, by = 100), 
+                      hjust = 1, 
+                      vjust = 0.5) +
+    ggplot2::annotate("segment", 
+                      x = -0.125, y = seq(100, ngoal, by = 100), 
+                      xend = 0.125, yend = seq(100, ngoal, by = 100), 
+                      color = 'grey') +
+    ggplot2::annotate("segment", 
+                      x = -0.125, y = seq(30, ngoal, by = 10), 
+                      xend = -0.09, yend = seq(30, ngoal, by = 10), 
+                      color = 'grey') +
+    ggplot2::annotate("text", x = 0.5, y = ncur, 
+                      label = paste(ncur, "\nto date"), 
+                      hjust = 0, 
+                      vjust = 0.5, 
+                      fontface = "bold") +
+    ggplot2::annotate("segment", 
+                      x = 0.45, y = ncur, 
+                      xend = 0.2, yend = ncur, 
+                      arrow = arrow(type = "closed", length = unit(0.2, "cm"))) +
+    ggplot2::theme(
+      panel.background = ggplot2::element_blank(),
+      panel.grid = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      axis.text = ggplot2::element_blank(), 
+      axis.ticks = ggplot2::element_blank(), 
+      plot.title = ggplot2::element_text(hjust = 0.5), 
+      plot.subtitle = ggplot2::element_text(hjust = 0.5)
+    ) + 
+    ggplot2::labs(
+      title = 'Experiential education', 
+      subtitle = '2028 goal: 600 participants',
+    )
+  
+  return(p)
+  
+}
