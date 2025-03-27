@@ -886,9 +886,9 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
 
   out <- out %>% 
     mutate(
-      nvols = nadults + nyouth
+      nvol = nadult + nyouth
     ) %>% 
-    # select(-nadults, -nyouth) %>% 
+    # select(-nadult, -nyouth) %>% 
     pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
     group_by(var) %>% 
     summarise(
@@ -900,8 +900,8 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
   out <- out %>% 
     pivot_wider(names_from = 'var', values_from = 'val') %>% 
     mutate(
-      ntons = nlbs / 2e3, 
-      ntons = round(ntons, 1)
+      nton = nlb / 2e3, 
+      nton = round(nton, 1)
     ) %>% 
     mutate_all(function(x) format(x, big.mark = ',', scientific = FALSE))
   
@@ -918,9 +918,9 @@ gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5, family){
   )
 
   txt <- tibble(
-    name = c('nevent', 'nvols', 'nlbs', 'nplants', 'npartner'),
+    name = c('nevent', 'nvol', 'nlb', 'nplant', 'npartner'),
     info = c('Event areas are prioritized by the presence of excessive litter & native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
-             paste(datin$nadults, 'adults &', datin$nyouth, 'youths helped to protect and restore the bay this season.'),
+             paste(datin$nadult, 'adults &', datin$nyouth, 'youths helped to protect and restore the bay this season.'),
              'Including trash, invasive plants & marine debris.', 
              "Native plants increase the bay's resiliency a& restore crucial wildlife habitat.",
              'Our partners play an invaluable role in recruiting volunteers to help us put in work!'
@@ -978,7 +978,7 @@ gadmap_fun <- function(datin){
   tomap <- datin %>% 
     filter(!is.na(lng)) %>% 
     mutate(
-      Volunteers = nadults + nyouth
+      Volunteers = nadult + nyouth
     ) %>% 
     select(
       Event = event, 
@@ -1024,8 +1024,8 @@ ddsum_fun <- function(dddat){
   
   out <- dddat %>% 
     dplyr::summarise(
-      nlbs = format(round(sum(nlbs, na.rm = T), 0), nsmall = 0, big.mark = ','),
-      nvols = format(round(sum(nvolunteers, na.rm = T), 0), nsmall = 0, big.mark = ',')
+      nlb = format(round(sum(nlb, na.rm = T), 0), nsmall = 0, big.mark = ','),
+      nvol = format(round(sum(nvolunteer, na.rm = T), 0), nsmall = 0, big.mark = ',')
     )
   
   return(out)
@@ -1039,14 +1039,14 @@ dddat_tab <- function(dddat, fntsz = 20, family){
   totab <- dddat %>% 
     dplyr::mutate(dplyr::across(-c(year, comments), ~ format(round(.x, 0), nsmall = 0, big.mark = ','))) %>% 
     dplyr::mutate(
-      nlbs = gsub('^\\s+0$', '-', nlbs)
+      nlb = gsub('^\\s+0$', '-', nlb)
     ) %>% 
     dplyr::select(
       Year = year, 
-      Teams = nteams,
-      Volunteers = nvolunteers, 
-      `Pounds of trash removed` = nlbs, 
-      Sponsors = nsponsors
+      Teams = nteam,
+      Volunteers = nvolunteer, 
+      `Pounds of trash removed` = nlb, 
+      Sponsors = nsponsor
     )
   
   # Create a function to generate header with icon
@@ -1757,12 +1757,12 @@ show_tdlcrktrends <- function(tidalcreeks, iwrraw, maxyr = 2024, plotly = FALSE)
 
 # thermometer plot for exp ed comms plan goals
 # this is super janky and annotation locations will need to be changed with plot dims
-# this is currently optimized for 2.5 inch width
+# this is currently optimized for 2.5 inch width, 5 inch height
 expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#005293') {  
   
   ncur <- expeddat %>% 
     filter(year >= 2024) %>% 
-    pull(nparticipants) %>% 
+    pull(nparticipant) %>% 
     sum()
   curyr <- max(expeddat$year)
   toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
@@ -1783,7 +1783,9 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
     ggplot2::annotate("text", x = -0.4, y = seq(0, ngoal, by = 100), 
                       label = seq(0, ngoal, by = 100), 
                       hjust = 1, 
-                      vjust = 0.5) +
+                      vjust = 0.5, 
+                      size = 3
+                      ) +
     ggplot2::annotate("segment", 
                       x = -0.125, y = seq(100, ngoal, by = 100), 
                       xend = 0.125, yend = seq(100, ngoal, by = 100), 
@@ -1796,7 +1798,9 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
                       label = paste(ncur, "\nto date"), 
                       hjust = 0, 
                       vjust = 0.5, 
-                      fontface = "bold") +
+                      fontface = "bold", 
+                      size = 3
+                      ) +
     ggplot2::annotate("segment", 
                       x = 0.45, y = ncur, 
                       xend = 0.2, yend = ncur, 
@@ -1807,12 +1811,109 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
       axis.title = ggplot2::element_blank(),
       axis.text = ggplot2::element_blank(), 
       axis.ticks = ggplot2::element_blank(), 
-      plot.title = ggplot2::element_text(hjust = 0.5), 
-      plot.subtitle = ggplot2::element_text(hjust = 0.5)
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 9), 
+      plot.subtitle = ggplot2::element_text(hjust = 0.5, size = 8)
     ) + 
     ggplot2::labs(
       title = 'Experiential education', 
       subtitle = '2028 goal: 600 participants',
+    )
+  
+  return(p)
+  
+}
+
+# tally experiential ed efforts
+# yrsel not provided, get totals for all data in expeddat
+# yrsel provided will get totals for yrsel
+expedsum_fun <- function(expeddat, yrsel = NULL){
+  
+  out <- expeddat
+  
+  # filter by year if provided
+  if(!is.null(yrsel)){
+    
+    valyr <- sort(unique(out$year))
+    if(any(!yrsel %in% out$year))
+      stop('yrsel must be one to many of ', paste(valyr, collapse = ', '))
+    
+    out <- out %>% 
+      filter(year %in% yrsel)
+    
+  }
+  
+  out <- out %>% 
+    pivot_longer(-year, names_to = 'var', values_to = 'val') %>% 
+    group_by(var) %>% 
+    summarise(
+      val = sum(val, na.rm = T), 
+      .groups = 'drop'
+    )
+  
+  # final formatting  
+  out <- out %>% 
+    pivot_wider(names_from = 'var', values_from = 'val') %>% 
+    mutate_all(function(x) format(x, big.mark = ',', scientific = FALSE))
+  
+  return(out)
+  
+}
+
+# plot exped efforts
+# datin is summmary output from expedsum_fun w/ yrsel not null 
+expedsum_plo <- function(datin, h = 3, w = 18, padding = 0, rows = 4, family){ 
+  
+  box::use(
+    emojifont[...]
+  )
+  
+  txt <- tibble(
+    name = c('nevent', 'nejevent', 'nparticipant', 'ncorporatepartner'),
+    info = c('Event areas are where learning through experience, engagement, and reflection encourage participants to take initiative, make decisions, consider real problems, and take responsibility for bay health.',
+             'Environmental justice events involve locations or community groups that have historically not received the support to facilitate restorative activities.',
+             paste(datin$nadult, 'adults &', datin$nyouth, 'youths participated in events to increase knowledge of key objectives.'),
+             'Our partners play an invaluable role in supporting experiential education for Tampa Bay!'
+    ), 
+    txtadd = c('EVENTS', 'EJ EVENTS', 'PARTICIPANTS', 'PARTNERS'),
+    icon = paste0('fa-', c('calendar', 'balance-scale', 'users', 'handshake-o')), 
+    txtcols = c("#00806E", "#00806E", "#F7FBFF", "#F7FBFF")
+  )
+  
+  cols <- nrow(txt) / rows
+
+  toplo <- datin %>% 
+    pivot_longer(everything()) %>% 
+    inner_join(txt, by = 'name') %>% 
+    unite('value', value, txtadd, sep = ' ') %>% 
+    mutate(
+      h = h,
+      w = w,
+      icon = emojifont::fontawesome(icon),
+      font_family = 'fontawesome-webfont',
+      name = factor(name, levels = rev(txt$name))
+    ) %>%  
+    arrange(name) %>% 
+    mutate(
+      x = rep(seq(0, (!!w + padding) * cols - 1, !!w + padding), times = rows),
+      y = rep(seq(0, (!!h + padding) * rows - 1, !!h + padding), each = cols),
+      info = str_wrap(info, 75)
+    )
+
+  p <- ggplot(toplo, aes(x, y, height = h, width = w, label = info)) +
+    geom_tile(aes(fill = name)) +
+    geom_text(fontface = "bold", size = 10, family = family,
+              aes(label = value, x = x - w/2.2, y = y + h/4, color = name), hjust = 0) +
+    geom_text(size = 5, lineheight = 1.7, family = family,
+              aes(color = name, label = info, x = x - w/2.2, y = y - h/6), hjust = 0) +
+    coord_fixed() +
+    scale_fill_brewer(type = "cont", palette = "Greens", direction = -1) +
+    scale_color_manual(values = toplo$txtcols) +
+    geom_text(size = 20, aes(label = icon, family = font_family,
+                             x = x + w/2.5, y = y + h/8), alpha = 0.25) +
+    theme_void() +
+    guides(
+      fill = 'none', 
+      color = 'none'
     )
   
   return(p)

@@ -142,11 +142,12 @@ gaddat <- datraw %>%
   select(
     year = Task.Name,
     nevent = `X..Events`, 
-    nadults = `X..Adult`, 
+    nadult = `X..Adult`, 
     nyouth = `X..Youth`,
     npartner = Number.of.Partners,
-    nplants = `X..Plants.Installed`, 
-    nlbs = `Lbs.of.Debris.Removed`,
+    nplant = `X..Plants.Installed`, 
+    nlbinv  = `Lbs.of.Invasives.Removed`,
+    nlb = `Lbs.of.Debris.Removed`,
     nfeet = `Area.Improved..linear.Ft.`#,
     # underserved = `Underserved.Community`
   ) %>% 
@@ -156,6 +157,13 @@ gaddat <- datraw %>%
     year = paste0('20', year)
   ) %>% 
   mutate_if(is.numeric, round, 0)
+
+# manually correct nevent and npartner for 2024 to match https://tbep.org/get-involved/volunteer/
+gaddat <- gaddat %>% 
+  mutate(
+    nevent = ifelse(year == 2024, 7, nevent), 
+    npartner = ifelse(year == 2024, 13, npartner)
+  )
 
 save(gaddat, file = here('data/gaddat.RData'))
 
@@ -341,10 +349,10 @@ datraw <- get_sheet_as_csv('TBDD_Metrics_SOB_Rollup') %>%
 dddat <- datraw %>% 
   select(
     year = Task.Name,
-    nteams = `X..Teams`, 
-    nvolunteers = `X..Volunteers`, 
-    nlbs = `Lbs.of.Debris.Removed`, 
-    nsponsors = `X..Sponsors`,
+    nteam = `X..Teams`, 
+    nvolunteer = `X..Volunteers`, 
+    nlb = `Lbs.of.Debris.Removed`, 
+    nsponsor = `X..Sponsors`,
     comments = Comments
   ) %>% 
   mutate(
@@ -363,16 +371,16 @@ datraw <- get_sheet_as_csv('Experiential_Education_Metrics_SOB_Rollup') %>%
 expeddat <- datraw %>% 
   select(
     year = Task.Name,
-    nevents = `X..Events`, 
-    nadults = `X.Adults`, 
+    nevent = `X..Events`, 
+    nadult = `X.Adults`, 
     nyouth = `X..Youth`,
-    nejevents = `X..EJ.Specific.Event.`, 
-    ncorporatepartners = `X..Unique.Corporate.Partners`
+    nejevent = `X..EJ.Specific.Event.`, 
+    ncorporatepartner = `X..Unique.Corporate.Partners`
   ) %>% 
   mutate(
     year = gsub('^FY(\\d+).*', '\\1', year), 
     year = as.numeric(paste0('20', year)), 
-    nparticipants = nadults + nyouth
+    nparticipant = nadult + nyouth
   ) 
 
 save(expeddat, file = here('data/expeddat.RData'))
