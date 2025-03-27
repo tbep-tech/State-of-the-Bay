@@ -911,23 +911,24 @@ gadsum_fun <- function(gaddat, yrsel = NULL){
 
 # plot gad efforts
 # datin is summmary output from gadsum_fun w/ yrsel not null 
-gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 5, family){ 
+gadsum_plo <- function(datin, h = 3, w = 15, padding = 0, rows = 6, family){ 
   
   box::use(
     emojifont[...]
   )
 
   txt <- tibble(
-    name = c('nevent', 'nvol', 'nlb', 'nplant', 'npartner'),
+    name = c('nevent', 'nvol', 'nlb', 'nlbinv', 'nplant', 'npartner'),
     info = c('Event areas are prioritized by the presence of excessive litter & native habitat degradation, often overlapping with neighborhoods that have historically not received the support to facilitate restorative activities.',
              paste(datin$nadult, 'adults &', datin$nyouth, 'youths helped to protect and restore the bay this season.'),
-             'Including trash, invasive plants & marine debris.', 
-             "Native plants increase the bay's resiliency a& restore crucial wildlife habitat.",
+             'Includes trash & marine debris.', 
+             'Invasive species have a negative impact on the surrounding environment.',
+             "Native plants increase the bay's resiliency & restore crucial wildlife habitat.",
              'Our partners play an invaluable role in recruiting volunteers to help us put in work!'
     ), 
-    txtadd = c('EVENTS', 'VOLUNTEERS', 'LBS REMOVED', 'PLANTS INSTALLED', 'PARTNERS'),
-    icon = paste0('fa-', c('calendar', 'users', 'trash', 'tree', 'handshake-o')), 
-    txtcols = c("#08306B", "#08306B", "#F7FBFF", "#F7FBFF", "#F7FBFF")
+    txtadd = c('EVENTS', 'VOLUNTEERS', 'LBS REMOVED', 'LBS INVASIVES REMOVED', 'PLANTS INSTALLED', 'PARTNERS'),
+    icon = paste0('fa-', c('calendar', 'users', 'trash', 'pagelines', 'tree', 'handshake-o')), 
+    txtcols = c("#08306B", "#08306B", "#08306B", "#F7FBFF", "#F7FBFF", "#F7FBFF")
   )
   
   cols <- nrow(txt) / rows

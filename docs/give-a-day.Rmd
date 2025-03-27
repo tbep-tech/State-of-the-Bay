@@ -20,7 +20,7 @@ Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer 
 
 ## `r yrsel` Year in Review 
 
-```{r, out.width = '80%', fig.height = 14, fig.width = 14}
+```{r, out.width = '80%', fig.height = 17, fig.width = 14}
 gaddat %>% 
   gadsum_fun(yrsel = yrsel) %>% 
   gadsum_plo(family = fml)
