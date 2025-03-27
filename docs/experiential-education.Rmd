@@ -21,7 +21,7 @@ expedtherm_plo(expeddat)
 
 ## `r yrsel` Year in Review 
 
-```{r, out.width = '80%', fig.height = 11, fig.width = 14}
+```{r, out.width = '80%', fig.height = 12, fig.width = 14}
 expeddat %>% 
   expedsum_fun(yrsel = yrsel) %>% 
   expedsum_plo(family = fml)
