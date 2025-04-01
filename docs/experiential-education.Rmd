@@ -17,7 +17,7 @@ Experiential education events are planned and facilitated by the Tampa Bay Estua
 
 Since 2023, there have been `r tots['nevent']` experiential education events co-hosted with `r tots['ncorporatepartner']` bay-area partners.  Our goal for the 2024 to 2028 period is to engage over 600 participants. The goal to date is expressed below.
 
-```{r, fig.height = 5, fig.width = 2.5}
+```{r, fig.height = 3, fig.width = 2.5, dpi=300, out.width = '50%'}
 expedtherm_plo(expeddat)
 ```
 

@@ -1779,28 +1779,28 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
     ggplot2::scale_color_gradient(low = collo, high = colhi, limits = c(0, ngoal)) +
     ggplot2::coord_cartesian(
       xlim = c(-1, 1),
-      ylim = c(-10, NA)
+      ylim = c(-40, ngoal + 20)
     ) +
-    ggplot2::annotate("text", x = -0.4, y = seq(0, ngoal, by = 100), 
+    ggplot2::annotate("text", x = -0.3, y = seq(0, ngoal, by = 100), 
                       label = seq(0, ngoal, by = 100), 
                       hjust = 1, 
                       vjust = 0.5, 
-                      size = 3
+                      size = 6
                       ) +
     ggplot2::annotate("segment", 
                       x = -0.125, y = seq(100, ngoal, by = 100), 
                       xend = 0.125, yend = seq(100, ngoal, by = 100), 
                       color = 'grey') +
     ggplot2::annotate("segment", 
-                      x = -0.125, y = seq(30, ngoal, by = 10), 
-                      xend = -0.09, yend = seq(30, ngoal, by = 10), 
+                      x = -0.125, y = seq(50, ngoal, by = 10), 
+                      xend = -0.09, yend = seq(50, ngoal, by = 10), 
                       color = 'grey') +
     ggplot2::annotate("text", x = 0.5, y = ncur, 
-                      label = paste(ncur, "\nto date"), 
+                      label = paste(ncur, "to date"), 
                       hjust = 0, 
                       vjust = 0.5, 
                       fontface = "bold", 
-                      size = 3
+                      size = 6
                       ) +
     ggplot2::annotate("segment", 
                       x = 0.45, y = ncur, 
@@ -1812,8 +1812,8 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
       axis.title = ggplot2::element_blank(),
       axis.text = ggplot2::element_blank(), 
       axis.ticks = ggplot2::element_blank(), 
-      plot.title = ggplot2::element_text(hjust = 0.5, size = 9), 
-      plot.subtitle = ggplot2::element_text(hjust = 0.5, size = 8)
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 18), 
+      plot.subtitle = ggplot2::element_text(hjust = 0.5, size = 15)
     ) + 
     ggplot2::labs(
       title = 'Experiential education', 
