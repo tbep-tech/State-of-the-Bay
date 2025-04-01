@@ -1862,7 +1862,7 @@ expedsum_fun <- function(expeddat, yrsel = NULL){
 
 # plot exped efforts
 # datin is summmary output from expedsum_fun w/ yrsel not null 
-expedsum_plo <- function(datin, h = 4, w = 18, padding = 0, rows = 4, family){ 
+expedsum_plo <- function(datin, h = 4, w = 20, padding = 0, rows = 4, family){ 
   
   box::use(
     emojifont[...]
