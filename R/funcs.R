@@ -1773,27 +1773,29 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
     ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 15) +
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 10, lineend =  c("round"), color = "black") +
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 9, lineend =  c("round"), color = "white") +
-    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 14, color = collo) +
-    geom_segment(data = toplo[-1, ], ggplot2::aes(x = 0, y = npar, yend = npar1, color = npar), lineend =  c("butt"), linewidth = 9, show.legend = F) +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 6, lineend =  c("round"), color = "grey") +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 14, color = 'white') +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 11, color = collo) +
+    ggplot2::geom_segment(data = toplo[-1, ], ggplot2::aes(x = 0, y = npar, yend = npar1, color = npar), lineend =  c("butt"), linewidth = 6, show.legend = F) +
     ggplot2::scale_y_continuous(breaks = seq(0, ngoal, by = 100)) +
     ggplot2::scale_color_gradient(low = collo, high = colhi, limits = c(0, ngoal)) +
     ggplot2::coord_cartesian(
       xlim = c(-1, 1),
       ylim = c(-40, ngoal + 20)
     ) +
-    ggplot2::annotate("text", x = -0.3, y = seq(0, ngoal, by = 100), 
-                      label = seq(0, ngoal, by = 100), 
+    ggplot2::annotate("text", x = -0.3, y = seq(100, ngoal, by = 100), 
+                      label = seq(100, ngoal, by = 100), 
                       hjust = 1, 
                       vjust = 0.5, 
                       size = 6
                       ) +
+    # ggplot2::annotate("segment", 
+    #                   x = -0.125, y = seq(100, ngoal, by = 100), 
+    #                   xend = 0.125, yend = seq(100, ngoal, by = 100), 
+    #                   color = 'grey') +
     ggplot2::annotate("segment", 
-                      x = -0.125, y = seq(100, ngoal, by = 100), 
-                      xend = 0.125, yend = seq(100, ngoal, by = 100), 
-                      color = 'grey') +
-    ggplot2::annotate("segment", 
-                      x = -0.125, y = seq(50, ngoal, by = 10), 
-                      xend = -0.09, yend = seq(50, ngoal, by = 10), 
+                      x = -0.25, y = seq(50, ngoal, by = 50), 
+                      xend = -0.2, yend = seq(50, ngoal, by = 50), 
                       color = 'grey') +
     ggplot2::annotate("text", x = 0.5, y = ncur, 
                       label = paste(ncur, "to date"), 
