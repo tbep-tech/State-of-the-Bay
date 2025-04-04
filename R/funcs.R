@@ -1765,7 +1765,6 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
     filter(year >= 2024) %>% 
     pull(nparticipant) %>% 
     sum()
-  curyr <- max(expeddat$year)
   toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
   toplo$npar1 <- lag(toplo$npar)
   
@@ -1917,6 +1916,75 @@ expedsum_plo <- function(datin, h = 4, w = 20, padding = 0, rows = 4, family){
     guides(
       fill = 'none', 
       color = 'none'
+    )
+  
+  return(p)
+  
+}
+
+# thermometer plot for seagrass goals
+# this is super janky and annotation locations will need to be changed with plot dims
+# this is currently optimized for 2.5 inch width, 5 inch height
+seagrasstherm_plo <- function(seagrass, yr = 2024, ngoal = 40, colhi = '#00806E', collo = '#005293') {  
+  
+  ncur <- seagrass %>% 
+    filter(Year == !!yr) %>% 
+    mutate(Acres = Acres / 1000) %>% 
+    pull(Acres)
+  toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
+  toplo$npar1 <- lag(toplo$npar)
+  
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 15) +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 10, lineend =  c("round"), color = "black") +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 9, lineend =  c("round"), color = "white") +
+    ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 6, lineend =  c("round"), color = "grey") +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 14, color = 'white') +
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 11, color = collo) +
+    ggplot2::geom_segment(data = toplo[-1, ], ggplot2::aes(x = 0, y = npar, yend = npar1, color = npar), lineend =  c("butt"), linewidth = 6, show.legend = F) +
+    ggplot2::scale_y_continuous(breaks = seq(0, ngoal, by = 5)) +
+    ggplot2::scale_color_gradient(low = collo, high = colhi, limits = c(0, ngoal)) +
+    ggplot2::coord_cartesian(
+      xlim = c(-1, 1),
+      ylim = c(-3, ngoal + 1)
+    ) +
+    ggplot2::annotate("text", x = -0.3, y = seq(10, ngoal, by = 10), 
+                      label = paste0(seq(10, ngoal, by = 10), 'k'),
+                      hjust = 1, 
+                      vjust = 0.5, 
+                      size = 3
+    ) +
+    # ggplot2::annotate("segment", 
+    #                   x = -0.125, y = seq(100, ngoal, by = 100), 
+    #                   xend = 0.125, yend = seq(100, ngoal, by = 100), 
+    #                   color = 'grey') +
+    ggplot2::annotate("segment", 
+                      x = -0.25, y = seq(5, ngoal, by = 5), 
+                      xend = -0.2, yend = seq(5, ngoal, by = 5), 
+                      color = 'grey') +
+    ggplot2::annotate("text", x = 0.4, y = ncur, 
+                      label = paste(format(ncur * 1000, big.mark = ',', nsmall = 0), "acres\ncurrent extent"), 
+                      hjust = 0, 
+                      vjust = 0.5, 
+                      fontface = "bold", 
+                      size = 2.5
+    ) +
+    ggplot2::annotate("segment", 
+                      x = 0.35, y = ncur, 
+                      xend = 0.2, yend = ncur, 
+                      arrow = arrow(type = "closed", length = unit(0.2, "cm"))) +
+    ggplot2::theme(
+      panel.background = ggplot2::element_blank(),
+      panel.grid = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      axis.text = ggplot2::element_blank(), 
+      axis.ticks = ggplot2::element_blank(), 
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 10), 
+      plot.subtitle = ggplot2::element_text(hjust = 0.5, size = 8)
+    ) + 
+    ggplot2::labs(
+      title = 'Seagrass Coverage', 
+      subtitle = 'Goal: 40k Acres',
     )
   
   return(p)

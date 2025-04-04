@@ -1287,3 +1287,11 @@ p <- tbeptools::show_fibmatrix(enterodata, stas = NULL, bay_segment = c('OTB', '
 jpeg('figures/fibreport.jpg', family = fml, height = 4, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# seagrass thermomemter -----------------------------------------------------------------------
+
+p <- seagrasstherm_plo(seagrass, yr = 2024)
+
+png(here('figures/seagrasstherm.png'), family = fml, height = 3, width = 2.5, units = 'in', res = 300)
+print(p)
+dev.off()
