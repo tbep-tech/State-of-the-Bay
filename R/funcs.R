@@ -1768,6 +1768,8 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
   toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
   toplo$npar1 <- lag(toplo$npar)
   
+  prog_txt <- paste0(round(100 * ncur / ngoal, 0), "% to date")
+  
   p <- ggplot2::ggplot() +
     ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 15) +
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 10, lineend =  c("round"), color = "black") +
@@ -1797,11 +1799,11 @@ expedtherm_plo <- function(expeddat, ngoal = 600, colhi = '#00806E', collo = '#0
                       xend = -0.2, yend = seq(50, ngoal, by = 50), 
                       color = 'grey') +
     ggplot2::annotate("text", x = 0.5, y = ncur, 
-                      label = paste(ncur, "to date"), 
+                      label = prog_txt, 
                       hjust = 0, 
                       vjust = 0.5, 
                       fontface = "bold", 
-                      size = 6
+                      size = 5.5
                       ) +
     ggplot2::annotate("segment", 
                       x = 0.45, y = ncur, 
@@ -1934,6 +1936,8 @@ seagrasstherm_plo <- function(seagrass, yr = 2024, ngoal = 40, colhi = '#00806E'
   toplo <- data.frame(npar = seq(from = 0, to = ncur, by = 0.1))
   toplo$npar1 <- lag(toplo$npar)
   
+  prog_txt <- paste0(round(100 * ncur / ngoal, 0), "% to date")
+  
   p <- ggplot2::ggplot() +
     ggplot2::geom_point(ggplot2::aes(x = 0, y = 0), size = 15) +
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, yend = ngoal), linewidth = 10, lineend =  c("round"), color = "black") +
@@ -1963,7 +1967,7 @@ seagrasstherm_plo <- function(seagrass, yr = 2024, ngoal = 40, colhi = '#00806E'
                       xend = -0.2, yend = seq(5, ngoal, by = 5), 
                       color = 'grey') +
     ggplot2::annotate("text", x = 0.4, y = ncur, 
-                      label = paste(format(ncur * 1000, big.mark = ',', nsmall = 0), "acres\ncurrent extent"), 
+                      label = prog_txt, 
                       hjust = 0, 
                       vjust = 0.5, 
                       fontface = "bold", 
