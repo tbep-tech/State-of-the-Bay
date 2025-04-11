@@ -746,8 +746,10 @@ toplo2 <- vols |>
     mo = factor(mo, levels = c(1:12), labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
   )
 
-cols <- c("#427355", "#5C4A42", "#958984", "#EA6F17", "#004F7E", "#00806E")
+# cols <- c("#C0C0C0", "#0047AB", "#00CCAA", "#1D8A3B", "#A63C06", "#FF5500")
+cols <- c("#0020A0", "#00E5C0", "#00B032", "#8B2500", "#FF3000")
 pal <- colorRampPalette(cols)(length(levels(toplo1$bay_segment)))
+names(pal) <- levels(toplo1$bay_segment)
 
 p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
   geom_bar(stat = 'identity') +
