@@ -1297,3 +1297,75 @@ p <- seagrasstherm_plo(seagrass, yr = 2024)
 png(here('figures/seagrasstherm.png'), family = fml, height = 3, width = 2.5, units = 'in', res = 600)
 print(p)
 dev.off()
+
+# seven segment matrix ------------------------------------------------------------------------
+
+
+load(file = url('https://github.com/tbep-tech/tbnmc-compliance-assessment-2024/raw/refs/heads/main/data/chldat.RData'))
+
+secdat <- tibble(
+  fl = list.files(pattern = '1924', here('data-raw/'), full.names = T)
+) %>% 
+  group_nest(fl) %>% 
+  mutate(
+    data = purrr::map(fl, read.table, sep = '\t', header = T),
+    data = purrr::map(data, function(x) x %>% mutate(StationName = as.character(StationName)))
+  ) %>% 
+  unnest(data) %>% 
+  filter(Characteristic == 'Secchi disk depth') %>% 
+  mutate(
+    SampleDate = mdy_hms(SampleDate),
+    mo = month(SampleDate), 
+    yr = year(SampleDate), 
+    sd_m = Result_Value * 0.3048, # verified all secchi in ft
+    bay_segment = case_when(
+      WaterBodyName == 'Boca Ciega Bay' ~ 'BCBS',
+      WaterBodyName == 'Terra Ceia Bay' ~ 'TCB',
+      WaterBodyName == 'Manatee River Estuary' ~ 'MR'
+    ), 
+    Actual_StationID = gsub('^\\=', '', Actual_StationID),
+    Actual_StationID = gsub('\\-\\d{2}\\-\\d{2}$', '', Actual_StationID)
+  ) %>% 
+  filter(!grepl('^W6', Actual_StationID)) %>% # not BCBS
+  select(bay_segment, station = Actual_StationID, yr, mo, sd_m = Result_Value) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', sd_m)
+
+chldat <- chldat %>% 
+  filter(bay_segment %in% c('MR', 'TCB', 'BCBS')) %>% 
+  filter(yr >= 2019) %>% 
+  select(-SampleTime, -Latitude, -Longitude, -chla_q) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', chla)
+
+epcdat <- epcdata %>% 
+  select(bay_segment, station = epchc_station, yr,  mo, chla, sd_m) %>% 
+  filter(yr >= 2019) %>% 
+  mutate(station = as.character(station)) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', chla:sd_m)
+
+sobdat <- bind_rows(secdat, chldat, epcdat)
+
+tmp <- anlz_sobavedat(sobdat)
+
+# needs to be verified
+trgs <- targets %>% 
+  mutate(
+    la_target = case_when(
+      bay_segment %in% c('BCBN', 'BCBS', 'TCB', 'MR') ~ 0.63, 
+      T ~ la_target
+    ), 
+    la_smallex = case_when(
+      bay_segment %in% c('BCBN', 'BCBS', 'TCB', 'MR') ~ 0.66, 
+      T ~ la_smallex
+    ),
+    la_thresh = case_when(
+      bay_segment %in% c('BCBN', 'BCBS', 'TCB', 'MR') ~ 0.68, 
+      T ~ la_thresh
+    ), 
+    chla_smallex  = case_when(
+      is.na(chla_smallex) ~ ((chla_thresh - chla_target) / 2) + chla_target,
+      T ~ chla_smallex
+    )
+  )
+
+show_sobmatrix(sobdat, trgs = trgs)
+

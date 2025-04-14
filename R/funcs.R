@@ -1994,3 +1994,177 @@ seagrasstherm_plo <- function(seagrass, yr = 2024, ngoal = 40, colhi = '#00806E'
   return(p)
   
 }
+
+# anlz chl and secchi data as averages by seven bay segments, equivalent to tbeptools::anlz_avedat
+anlz_sobavedat <- function(datin, partialyr = FALSE){
+  
+  # year month averages
+  # long format, separate bay_segment for MTB into sub segs
+  # mtb year month averages are weighted
+  moout <- datin %>%
+    tidyr::drop_na() %>%
+    dplyr::mutate(
+      bay_segment = dplyr::case_when(
+        station %in% c(9, 11, 81, 84) ~ "MT1",
+        station %in% c(13, 14, 32, 33) ~ "MT2",
+        station %in% c(16, 19, 28, 82) ~ "MT3",
+        TRUE ~ bay_segment
+      )
+    ) %>%
+    dplyr::group_by(bay_segment, yr, mo, var) %>%
+    dplyr::summarise(val = mean(val), .groups = 'drop') %>%
+    drop_na() %>%
+    dplyr::mutate(
+      val = dplyr::case_when(
+        bay_segment %in% "MT1" ~ val * 2108.7,
+        bay_segment %in% "MT2" ~ val * 1041.9,
+        bay_segment %in% "MT3" ~ val * 974.6,
+        TRUE ~ val
+      ),
+      bay_segment = dplyr::case_when(
+        bay_segment %in% c('MT1', 'MT2', 'MT3') ~ 'MTB',
+        TRUE ~ bay_segment
+      )
+    ) %>%
+    dplyr::group_by(bay_segment, yr, mo, var) %>%
+    dplyr::summarise(
+      val = sum(val), 
+      .groups = 'drop'
+    ) %>%
+    dplyr::mutate(
+      val = dplyr::case_when(
+        bay_segment %in% 'MTB' ~ val / 4125.2,
+        TRUE ~ val
+      )
+    ) %>%
+    dplyr::filter(!is.na(val)) %>%
+    dplyr::filter(!is.infinite(val)) %>%
+    dplyr::arrange(var, yr, mo, bay_segment)
+  
+  # annual data
+  anout <- moout %>%
+    dplyr::group_by(yr, bay_segment, var) %>%
+    dplyr::summarise(val = mean(val)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      var = dplyr::case_when(
+        var == 'chla' ~ 'mean_chla',
+        TRUE ~ var
+      )
+    ) %>%
+    tidyr::spread('var', 'val') %>%
+    dplyr::rename(
+      mean_sdm = sd_m
+    ) %>%
+    dplyr::mutate(
+      mean_la = dplyr::case_when(
+        bay_segment %in% "OTB" ~ 1.49 / mean_sdm,
+        bay_segment %in% "HB" ~ 1.61 / mean_sdm,
+        bay_segment %in% "MTB" ~ 1.49 / mean_sdm,
+        bay_segment %in% c("LTB", "BCBS", "MR", "TCB") ~ 1.84 / mean_sdm, # needs verification
+        TRUE ~ mean_sdm
+      )
+    ) %>%
+    tidyr::gather('var', 'val', mean_chla, mean_la, mean_sdm) %>%
+    dplyr::filter(!is.na(val)) %>%
+    dplyr::filter(!is.infinite(val)) %>%
+    dplyr::arrange(var, yr, bay_segment)
+  
+  # mo dat to light attenuation
+  moout <- moout %>%
+    dplyr::mutate(
+      var = dplyr::case_when(
+        var == 'chla' ~ 'mean_chla',
+        var == 'sd_m' ~ 'mean_la'
+      ),
+      val = dplyr::case_when(
+        bay_segment %in% "OTB" & var == 'mean_la' ~ 1.49 / val,
+        bay_segment %in% "HB" & var == 'mean_la' ~ 1.61 / val,
+        bay_segment %in% "MTB" & var == 'mean_la' ~ 1.49 / val,
+        bay_segment %in% c("LTB", "BCBS", "MR", "TCB") & var == 'mean_la' ~ 1.84 / val, # needs verification
+        TRUE ~ val
+      )
+    )
+  
+  # combine all
+  out <- list(
+    ann = anout,
+    mos = moout
+  )
+  
+  return(out)
+  
+}
+
+# create water quality matrix for all seven bay segments
+show_sobmatrix <- function(dat, txtsz = 3, trgs = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCBS', 'MR', 'TCB'), abbrev = FALSE, family = NA){
+  
+  # default targets from data file
+  if(is.null(trgs))
+    trgs <- targets
+  
+  # get year range from data if not provided
+  yrrng <- c(2022, 2024)
+
+  # process data to plot
+  avedat <- anlz_sobavedat(dat)
+  toplo <- anlz_attain(avedat, trgs = trgs) %>%
+    dplyr::filter(yr >= yrrng[1] & yr <= yrrng[2]) %>%
+    dplyr::filter(bay_segment %in% !!bay_segment) %>%
+    dplyr::mutate(
+      bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCBS', 'MR', 'TCB'))
+    )
+  
+  # add abbreviations if true
+  if(abbrev)
+    toplo <- toplo %>%
+    dplyr::mutate(
+      outcometxt = dplyr::case_when(
+        outcome == 'red' ~ 'R',
+        outcome == 'yellow' ~ 'Y',
+        outcome == 'green' ~ 'G'
+      )
+    )
+  if(!abbrev)
+    toplo <- toplo %>%
+    dplyr::mutate(
+      outcometxt = outcome
+    )
+  
+  # add descriptive labels, Action
+  lbs <- dplyr::tibble(
+    outcome = c('red', 'yellow', 'green'),
+    Action = c('On Alert', 'Caution', 'Stay the Course')
+  )
+  toplo <- toplo %>%
+    dplyr::left_join(lbs, by = 'outcome') %>%
+    tidyr::separate(chl_la, c('chl', 'la'), sep = '_', remove = F) %>%
+    dplyr::mutate(
+      chl = paste0('chla: ', chl),
+      la = paste0('la: ', la)
+    ) %>%
+    tidyr::unite(chl_la, c('chl', 'la'), sep = ', ') %>%
+    dplyr::mutate(
+      chl_la = paste0('(', chl_la, ')')
+    ) %>%
+    unite(Action, c('Action', 'chl_la'), sep = ' ')
+  
+  # ggplot
+  p <- ggplot(toplo, aes(x = bay_segment, y = yr, fill = outcome)) +
+    geom_tile(aes(group = Action), colour = 'black') +
+    scale_y_reverse(expand = c(0, 0), breaks = toplo$yr) +
+    scale_x_discrete(expand = c(0, 0), position = 'top') +
+    scale_fill_manual(values = c(red = '#CC3231', yellow = '#E9C318', green = '#2DC938')) +
+    theme_bw() +
+    theme(
+      axis.title = element_blank(),
+      legend.position = 'none'
+    )
+  
+  if(!is.null(txtsz))
+    p <- p +
+    geom_text(aes(label = outcometxt), size = txtsz, family = family)
+
+  return(p)
+  
+}
