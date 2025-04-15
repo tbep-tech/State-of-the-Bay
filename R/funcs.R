@@ -2097,14 +2097,15 @@ anlz_sobavedat <- function(datin, partialyr = FALSE){
 }
 
 # create water quality matrix for all seven bay segments
-show_sobmatrix <- function(dat, txtsz = 3, trgs = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCBS', 'MR', 'TCB'), abbrev = FALSE, family = NA){
+show_sobmatrix <- function(dat, txtsz = 3, yrrng = NULL, trgs = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCBS', 'MR', 'TCB'), abbrev = FALSE, family = NA, tab = FALSE){
   
   # default targets from data file
   if(is.null(trgs))
     trgs <- targets
   
   # get year range from data if not provided
-  yrrng <- c(2022, 2024)
+  if(is.null(yrrng))
+    yrrng <- range(dat$yr)
 
   # process data to plot
   avedat <- anlz_sobavedat(dat)
@@ -2148,6 +2149,9 @@ show_sobmatrix <- function(dat, txtsz = 3, trgs = NULL, bay_segment = c('OTB', '
       chl_la = paste0('(', chl_la, ')')
     ) %>%
     unite(Action, c('Action', 'chl_la'), sep = ' ')
+  
+  if(tab)
+    return(toplo)
   
   # ggplot
   p <- ggplot(toplo, aes(x = bay_segment, y = yr, fill = outcome)) +

@@ -796,7 +796,7 @@ dev.off()
 # sgdat2022 <- rdataload('https://github.com/tbep-tech/hmpu-workflow/raw/refs/heads/master/data/sgdat2022.RData')
 
 # bay segments detailed
-segclp <- rdataload('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/segclp.RData')
+data(tbsegdetail)
 
 # data(file = 'sgseg', package = 'tbeptools')
 # 
@@ -1290,7 +1290,7 @@ jpeg('figures/fibreport.jpg', family = fml, height = 4, width = 4, units = 'in',
 print(p)
 dev.off()
 
-# seagrass thermomemter -----------------------------------------------------------------------
+# seagrass thermometer ------------------------------------------------------------------------
 
 p <- seagrasstherm_plo(seagrass, yr = 2024)
 
@@ -1298,8 +1298,10 @@ png(here('figures/seagrasstherm.png'), family = fml, height = 3, width = 2.5, un
 print(p)
 dev.off()
 
-# seven segment matrix ------------------------------------------------------------------------
+# seven segment matrix and map ----------------------------------------------------------------
 
+##
+# matrix
 
 load(file = url('https://github.com/tbep-tech/tbnmc-compliance-assessment-2024/raw/refs/heads/main/data/chldat.RData'))
 
@@ -1344,8 +1346,6 @@ epcdat <- epcdata %>%
 
 sobdat <- bind_rows(secdat, chldat, epcdat)
 
-tmp <- anlz_sobavedat(sobdat)
-
 # needs to be verified
 trgs <- targets %>% 
   mutate(
@@ -1367,5 +1367,95 @@ trgs <- targets %>%
     )
   )
 
-show_sobmatrix(sobdat, trgs = trgs)
+sobmat <- show_sobmatrix(sobdat, trgs = trgs, yrrng = c(2022, 2024), abbrev = T) +
+  scale_x_discrete(
+    labels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'), 
+    expand = c(0, 0), 
+    position = 'top'
+  ) +
+  labs(
+    subtitle = c('Annual outcomes')
+  )
 
+## 
+# map
+
+# get three year rolling avg
+threeyr <- anlz_sobavedat(sobdat)$ann %>% 
+  arrange(bay_segment, var, yr) %>% 
+  mutate(
+    vallag1 = lag(val, 1L),
+    vallag2 = lag(val, 2L), 
+    .by = c(bay_segment, var)
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    threeavg = mean(c(val, vallag1, vallag2))
+  ) %>% 
+  select(yr, bay_segment, var, val = threeavg) %>% 
+  arrange(var, yr, bay_segment)
+threeyr <- list(ann = threeyr)
+
+tomap <- anlz_attain(threeyr, trgs = trgs) %>% 
+  filter(yr == 2024) %>% 
+  mutate(
+    col = case_when(
+      outcome == 'red' ~ '#CC3231',
+      outcome == 'yellow' ~ '#E9C318',
+      outcome == 'green' ~ '#2DC938'
+    ), 
+    bay_segment = case_when(
+      bay_segment == 'BCBS' ~ 'BCB', 
+      T ~ bay_segment
+    )
+  ) %>% 
+  left_join(tbeptools::tbsegdetail, ., by = 'bay_segment')
+
+# text labels
+totxt <- st_centroid(tomap) 
+
+# bbox
+dat_ext <- tomap %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(2, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom = 10)
+
+m <- ggplot2::ggplot() + 
+  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+  ggplot2::geom_sf(data = tomap, fill = tomap$col, color = 'black', inherit.aes = F) +
+  ggplot2::geom_sf_label(data = totxt, ggplot2::aes(label = bay_segment), size = 3, alpha = 0.8, inherit.aes = F) +
+  ggplot2::theme(
+    panel.grid = ggplot2::element_blank(), 
+    axis.title = ggplot2::element_blank(), 
+    axis.text.y = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9)), 
+    axis.text.x = element_blank(), #ggplot2::element_text(size = ggplot2::rel(0.9), angle = 30, hjust = 1),
+    axis.ticks = element_blank(), #ggplot2::element_line(colour = 'grey'),
+    panel.background = ggplot2::element_rect(fill = NA, color = 'black'), 
+    legend.position = 'top', 
+    legend.title.position = 'top',
+    legend.key.width = unit(1, "cm"),
+    legend.key.height = unit(0.25, "cm"),
+    legend.title = element_text(hjust = 0.5)
+  ) + 
+  labs(
+    subtitle = c('2022-2024 average')
+  )
+  
+dat_ext <- dat_ext %>% 
+  sf::st_as_sfc(dat_ext) %>% 
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+# set coordinates because vector not clipped
+m <- m +
+  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
+
+# combine map and matrix
+p <- m + sobmat + plot_layout(ncol = 1, heights = c(1, 0.2))
+
+png(here('figures/sobmatmap.png'), family = fml, height = 6, width = 4, units = 'in', res = 300)
+print(p)
+dev.off()
