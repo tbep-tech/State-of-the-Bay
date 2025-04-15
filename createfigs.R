@@ -1458,9 +1458,9 @@ dev.off()
 
 load(file = url('https://github.com/tbep-tech/tbnmc-compliance-assessment-2024/raw/refs/heads/main/data/chldat.RData'))
 
-mat <- show_rawqmatrix(chldat, yrrng = c(2022, 2024)) +
+mat <- show_rawqmatrix(chldat, yrrng = c(2022, 2024), abbrev = T) +
   labs(
-    subtitle = c('Annual outcomes')
+    subtitle = c('Annual chlorophyll outcomes')
   )
 
 ##
@@ -1537,6 +1537,6 @@ m <- m +
 # combine map and matrix
 p <- m + mat + plot_layout(ncol = 1, heights = c(1, 0.2))
 
-png(here('figures/sobwqmatmap.png'), family = fml, height = 6, width = 4, units = 'in', res = 300)
+png(here('figures/sobchlmatmap.png'), family = fml, height = 6, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
