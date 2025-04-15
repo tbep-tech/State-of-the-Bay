@@ -973,7 +973,7 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
     data = purrr::map(mo, function(mo){
       
       read_excel(here('data-raw/swfwmdrainfall.xlsx'), sheet = mo, skip = 1) %>% 
-        filter(Year %in% 2009:2024) %>% 
+        filter(Year %in% 2005:2024) %>% 
         select(
           yr = Year, 
           tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
@@ -1015,10 +1015,10 @@ toplo <- raindat %>%
 
 p <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
   geom_col(aes(fill = 'Annual\nrainfall'), color = 'black', alpha = 0.8) +
-  geom_col(aes(y = avediff, fill = 'Deviation from\n15-yr mean'), width = 0.5, color = 'black', alpha = 0.8) + 
+  geom_col(aes(y = avediff, fill = 'Deviation from\n20-yr mean'), width = 0.5, color = 'black', alpha = 0.8) + 
   scale_fill_manual(values = c('#004F7E', '#5C4A42')) +
   scale_color_manual(values = 'darkred') + 
-  geom_hline(aes(yintercept = unique(ave), color = '15-yr mean'), linewidth = 1, linetype = 'dashed') + 
+  geom_hline(aes(yintercept = unique(ave), color = '20-yr mean'), linewidth = 1, linetype = 'dashed') + 
   theme_minimal(base_size = 14) + 
   scale_x_continuous(breaks = unique(toplo$yr)) +
   scale_y_continuous(expand= c(0, 0), n.breaks = 10) +
