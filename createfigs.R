@@ -1368,11 +1368,6 @@ trgs <- targets %>%
   )
 
 sobmat <- show_sobmatrix(sobdat, trgs = trgs, yrrng = c(2022, 2024), abbrev = T) +
-  scale_x_discrete(
-    labels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'), 
-    expand = c(0, 0), 
-    position = 'top'
-  ) +
   labs(
     subtitle = c('Annual outcomes')
   )
@@ -1403,13 +1398,9 @@ tomap <- anlz_attain(threeyr, trgs = trgs) %>%
       outcome == 'red' ~ '#CC3231',
       outcome == 'yellow' ~ '#E9C318',
       outcome == 'green' ~ '#2DC938'
-    ), 
-    bay_segment = case_when(
-      bay_segment == 'BCBS' ~ 'BCB', 
-      T ~ bay_segment
     )
   ) %>% 
-  left_join(tbeptools::tbsegdetail, ., by = 'bay_segment')
+  left_join(tbeptools::tbsegdetailbcbs, ., by = 'bay_segment')
 
 # text labels
 totxt <- st_centroid(tomap) 
@@ -1475,7 +1466,7 @@ mat <- show_rawqmatrix(chldat, yrrng = c(2022, 2024)) +
 ##
 # map
 
-tojn <- tbeptools::tbsegdetail %>% 
+tojn <- tbeptools::tbsegdetailbcbs %>% 
   mutate(
     bay_segment = case_when(
       bay_segment == 'BCB' ~ 'BCBS', 
