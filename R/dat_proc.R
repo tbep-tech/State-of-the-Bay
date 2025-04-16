@@ -385,4 +385,85 @@ expeddat <- datraw %>%
 
 save(expeddat, file = here('data/expeddat.RData'))
 
+# all seven segments chlorophyll and secchi data for sob period -------------------------------
+
+# ra shapefile for bcbs spatial subset for pinellas data, includes areas W7 and parts of W6
+bcbsseg <- st_read(here('data-raw/tampabay_ra_seg_watersheds.shp')) %>%
+  st_transform(crs = 4326) %>%
+  filter(BAY_SEGMEN == 5)
+
+# chlorophyll data from 2024 TBNMC compliance assessment report
+load(file = url('https://github.com/tbep-tech/tbnmc-compliance-assessment-2024/raw/refs/heads/main/data/chldat.RData'))
+
+# secchi data 2019-2024 for BCB (labelled as BCBS, subset later), MR, TCB
+# BCB 2224 removed for combo with complete data below (incomplete here)
+secdat <- tibble(
+  fl = list.files(pattern = '1924', here('data-raw/'), full.names = T)
+) %>% 
+  group_nest(fl) %>% 
+  mutate(
+    data = purrr::map(fl, read.table, sep = '\t', header = T),
+    data = purrr::map(data, function(x) x %>% mutate(StationName = as.character(StationName)))
+  ) %>% 
+  unnest(data) %>% 
+  filter(Characteristic == 'Secchi disk depth') %>% 
+  mutate(
+    SampleDate = mdy_hms(SampleDate),
+    mo = month(SampleDate), 
+    yr = year(SampleDate), 
+    sd_m = Result_Value * 0.3048, # verified all secchi in ft
+    bay_segment = case_when(
+      WaterBodyName == 'Boca Ciega Bay' ~ 'BCBS',
+      WaterBodyName == 'Terra Ceia Bay' ~ 'TCB',
+      WaterBodyName == 'Manatee River Estuary' ~ 'MR'
+    ), 
+    Actual_StationID = gsub('^\\=', '', Actual_StationID),
+    Actual_StationID = gsub('\\-\\d{2}\\-\\d{2}$', '', Actual_StationID)
+  ) %>% 
+  filter(!(bay_segment %in% 'BCBS' & yr >= 2022)) %>% # remove BCB data 2022 and later to add data from AM
+  select(bay_segment, station = Actual_StationID, yr, mo, lat = Actual_Latitude, lon = Actual_Longitude, sd_m = Result_Value) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', sd_m)
+
+# BCB data 2224, in meters, via email 4/15/2025 from AM
+bcbssecdat2224 <- readxl::read_excel(here('data-raw/BCB_Secchi_2022_2024.xlsx')) %>% 
+  mutate(
+    bay_segment = 'BCBS', 
+    yr = year(Date), 
+    mo = month(Date)
+  ) %>% 
+  select(bay_segment, station = Site, yr, mo, lat = Latitude, lon = Longitude, sd_m = Secchi) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', sd_m)
+
+# cobmine bcbssecdat with secdat
+secdat <- bind_rows(secdat, bcbssecdat2224) %>% 
+  arrange(bay_segment, station, yr, mo)
+
+# subset BCB data to BCBS
+secdatbcbs <- secdat %>% 
+  filter(bay_segment == 'BCBS') %>% 
+  st_as_sf(coords = c('lon', 'lat'), crs = 4326) %>% 
+  .[bcbsseg, ] %>% 
+  st_set_geometry(NULL)
+
+# recombine BCBS data with secdat
+secdat <- secdat %>% 
+  filter(bay_segment != 'BCBS') %>% 
+  bind_rows(secdatbcbs) %>% 
+  arrange(bay_segment, station, yr, mo)
+
+chldat <- chldat %>% 
+  filter(bay_segment %in% c('MR', 'TCB', 'BCBS')) %>% 
+  filter(yr >= 2019) %>% 
+  select(-SampleTime, -Latitude, -Longitude, -chla_q) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', chla)
+
+epcdat <- epcdata %>% 
+  select(bay_segment, station = epchc_station, yr,  mo, chla, sd_m) %>% 
+  filter(yr >= 2019) %>% 
+  mutate(station = as.character(station)) %>% 
+  pivot_longer(names_to = 'var', values_to = 'val', chla:sd_m)
+
+sobdat <- bind_rows(secdat, chldat, epcdat)
+
+save(sobdat, file = here('data/sobdat.RData'))
 
