@@ -1015,13 +1015,13 @@ toplo <- raindat %>%
 
 p <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
   geom_col(aes(fill = 'Annual\nrainfall'), color = 'black', alpha = 0.8) +
-  geom_col(aes(y = avediff, fill = 'Deviation from\n20-yr mean'), width = 0.5, color = 'black', alpha = 0.8) + 
+  geom_col(aes(y = avediff, fill = 'Deviation from\n20-yr mean'), width = 0.5, color = 'black', alpha = 0.8, linewidth = 1) + 
   scale_fill_manual(values = c('#004F7E', '#5C4A42')) +
   scale_color_manual(values = 'darkred') + 
   geom_hline(aes(yintercept = unique(ave), color = '20-yr mean'), linewidth = 1, linetype = 'dashed') + 
   theme_minimal(base_size = 14) + 
   scale_x_continuous(breaks = unique(toplo$yr)) +
-  scale_y_continuous(expand= c(0, 0), n.breaks = 10) +
+  scale_y_continuous(expand= c(0.01, 0.01), n.breaks = 10) +
   theme(
     # axis.text.x =  element_blank(),
     # panel.grid.minor.x = element_blank(),
@@ -1039,7 +1039,7 @@ p <- ggplot(toplo, aes(x = yr, y = precip_in)) +
     # caption = 'Data source: SWFWMD'
   )
 
-jpeg('figures/rain.jpg', family = fml, height = 4.5, width = 4, units = 'in', res = 300)
+jpeg('figures/rain.jpg', family = fml, height = 5.25, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -1447,7 +1447,7 @@ m <- m +
 # combine map and matrix
 p <- m + sobmat + plot_layout(ncol = 1, heights = c(1, 0.2))
 
-png(here('figures/sobmatmap.png'), family = fml, height = 6, width = 4, units = 'in', res = 300)
+png(here('figures/sobmatmap.png'), family = fml, height = 6.75, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
 
@@ -1480,7 +1480,7 @@ tomap <- anlz_raavedat(chldat)$ann %>%
     val = mean(val), 
     .by = bay_segment
   ) %>% 
-  dplyr::left_join(trgs, by = 'bay_segment') %>%
+  dplyr::left_join(tbeptools::targets, by = 'bay_segment') %>%
   dplyr::select(bay_segment, val, thresh = chla_thresh) %>%
   dplyr::mutate(
     bay_segment = factor(bay_segment, 
@@ -1537,6 +1537,6 @@ m <- m +
 # combine map and matrix
 p <- m + mat + plot_layout(ncol = 1, heights = c(1, 0.2))
 
-png(here('figures/sobchlmatmap.png'), family = fml, height = 6, width = 4, units = 'in', res = 300)
+png(here('figures/sobchlmatmap.png'), family = fml, height = 6.75, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
