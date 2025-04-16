@@ -1,3 +1,5 @@
+# setup ---------------------------------------------------------------------------------------
+
 library(tidycensus)
 library(tidyverse)
 library(lubridate)
@@ -398,8 +400,8 @@ load(file = url('https://github.com/tbep-tech/tbnmc-compliance-assessment-2024/r
 # secchi data 2019-2024 for BCB (labelled as BCBS, subset later), MR, TCB
 # BCB 2224 removed for combo with complete data below (incomplete here)
 secdat <- tibble(
-  fl = list.files(pattern = '1924', here('data-raw/'), full.names = T)
-) %>% 
+    fl = list.files(pattern = '1924', here('data-raw/'), full.names = T)
+  ) %>% 
   group_nest(fl) %>% 
   mutate(
     data = purrr::map(fl, read.table, sep = '\t', header = T),
@@ -449,14 +451,17 @@ secdatbcbs <- secdat %>%
 secdat <- secdat %>% 
   filter(bay_segment != 'BCBS') %>% 
   bind_rows(secdatbcbs) %>% 
+  select(-lat, -lon) %>% 
   arrange(bay_segment, station, yr, mo)
 
+# get chlorophyll data for mr, tcb, bcbs
 chldat <- chldat %>% 
   filter(bay_segment %in% c('MR', 'TCB', 'BCBS')) %>% 
   filter(yr >= 2019) %>% 
   select(-SampleTime, -Latitude, -Longitude, -chla_q) %>% 
   pivot_longer(names_to = 'var', values_to = 'val', chla)
 
+# chlorophyll, secchi for otb, hb, mtb, ltb
 epcdat <- epcdata %>% 
   select(bay_segment, station = epchc_station, yr,  mo, chla, sd_m) %>% 
   filter(yr >= 2019) %>% 

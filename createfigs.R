@@ -1302,7 +1302,7 @@ dev.off()
 
 load(file = here("data/sobdat.RData"))
 
-# needs to be verified
+# needs to be verified, this is not right
 trgs <- targets %>% 
   mutate(
     la_target = case_when(
