@@ -747,8 +747,9 @@ toplo2 <- vols |>
   )
 
 # cols <- c("#C0C0C0", "#0047AB", "#00CCAA", "#1D8A3B", "#A63C06", "#FF5500")
-cols <- c("#0020A0", "#00E5C0", "#00B032", "#8B2500", "#FF3000")
-pal <- colorRampPalette(cols)(length(levels(toplo1$bay_segment)))
+cols <- c("#00577C", "#ABB8CE", "#077686", "#DA8C53", "#4E795E", "#F1BCB5", "#FDF486")
+# pal <- colorRampPalette(cols)(length(levels(toplo1$bay_segment)))
+pal <- cols
 names(pal) <- levels(toplo1$bay_segment)
 
 p1 <- ggplot(toplo1, aes(x = yr, y = volest, fill = bay_segment)) +
