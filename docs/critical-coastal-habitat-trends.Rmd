@@ -17,7 +17,7 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.
 submax <- '2022'
 
 # suptratidal max year
-sprmax <- '2020'
+sprmax <- '2023'
 
 # seagrass maximum
 sgrmax <- '2016'
