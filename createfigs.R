@@ -278,14 +278,14 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RDat
 
 toplo <- chgdat %>%
   filter(grepl('1990', source)) %>% 
-  filter(grepl('2020', target)) %>% 
+  filter(grepl('2023', target)) %>% 
   mutate(
     source = case_when(
       grepl('Mangrove|Salt|Wetlands|Uplands', source) ~ 'Forests/Wetlands, 1990',
       T ~ source
     ),
     target = case_when(
-      grepl('Mangrove|Salt|Wetlands|Uplands', target) ~ 'Forests/Wetlands, 2020',
+      grepl('Mangrove|Salt|Wetlands|Uplands', target) ~ 'Forests/Wetlands, 2023',
       T ~ target
     )
   ) %>% 
