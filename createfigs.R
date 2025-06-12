@@ -1015,9 +1015,9 @@ toplo <- raindat %>%
   filter(yr > 2021)
 
 p <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
-  geom_col(aes(fill = 'Annual\nrainfall'), color = 'black', alpha = 0.8) +
-  geom_col(aes(y = avediff, fill = 'Deviation from\n20-yr mean'), width = 0.5, color = 'black', alpha = 0.8, linewidth = 1) + 
-  scale_fill_manual(values = c('#004F7E', '#5C4A42')) +
+  geom_col(aes(fill = 'Annual\nrainfall'), color = 'black', alpha = 0.8, show.legend = F) +
+  # geom_col(aes(y = avediff, fill = 'Deviation from\n20-yr mean'), width = 0.5, color = 'black', alpha = 0.8, linewidth = 1) + 
+  scale_fill_manual(values = c('#004F7E')) + #, '#5C4A42')) +
   scale_color_manual(values = 'darkred') + 
   geom_hline(aes(yintercept = unique(ave), color = '20-yr mean'), linewidth = 1, linetype = 'dashed') + 
   theme_minimal(base_size = 14) + 
@@ -1034,13 +1034,13 @@ p <- ggplot(toplo, aes(x = yr, y = precip_in)) +
   ) +
   labs(
     x = NULL,
-    y = 'Inches',
+    y = 'Annual rainfall (inches)',
     color = NULL,
     fill = NULL
     # caption = 'Data source: SWFWMD'
   )
 
-jpeg('figures/rain.jpg', family = fml, height = 5.25, width = 3, units = 'in', res = 300)
+jpeg('figures/rain.jpg', family = fml, height = 4.25, width = 3, units = 'in', res = 300)
 print(p)
 dev.off()
 
