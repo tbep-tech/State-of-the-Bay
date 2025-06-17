@@ -9,7 +9,7 @@ output:
 source(here::here('R/setup.R'))
 
 maxyr <- 2023
-seg <- c('OTB', 'HB', 'MTB', 'LTB', 'All (wt)')
+seg <- c('OTB', 'HB', 'MTB', 'LTB', 'All')
 
 tbbiscr <- anlz_tbbiscr(benthicdata)
 
@@ -25,7 +25,7 @@ The Tampa Bay Benthic Index (TBBI) provides an estimate of the health of benthic
 
 ## Results for `r maxyr`
 
-In `r maxyr`, Old Tampa Bay received an overall assessment of `r sums$OTB$cat` (based on the amount of site scores as degraded, intermediate, or healthy), Hillsborough Bay was `r sums$HB$cat`, Middle Tampa Bay was `r sums$MTB$cat`, and Lower Tampa Bay was `r sums$LTB$cat`.  The bay-wide area-weighted assessment of benthic condition was `r sums[["All (wt)"]]$cat`.
+In `r maxyr`, Old Tampa Bay received an overall assessment of `r sums$OTB$cat` (based on the amount of site scores as degraded, intermediate, or healthy), Hillsborough Bay was `r sums$HB$cat`, Middle Tampa Bay was `r sums$MTB$cat`, and Lower Tampa Bay was `r sums$LTB$cat`.  The bay-wide area-weighted assessment of benthic condition was `r sums[["All"]]$cat`.
 
 ```{r}
 p <- show_tbbimatrix(tbbiscr, width = 350, height = 600, plotly = T, family = fml, bay_segment = seg)
