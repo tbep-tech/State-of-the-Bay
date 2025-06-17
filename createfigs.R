@@ -704,14 +704,23 @@ dev.off()
 
 # habitat report card -------------------------------------------------------------------------
 
+
 p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
-                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 30)
+                     strata = 'Subtidal', ycollapse = T, xang = 45, twocol = T)
 p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
-                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 30)
+                     strata = c('Intertidal', 'Supratidal'), ycollapse = T, xang = 45, twocol = T, totintertid = F) + 
+  theme(
+    plot.margin = unit(c(5.5, 20.5, 5.5, 5.5), 'pt')
+  )
 
-p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
+p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & 
+  labs(title = NULL) &
+  theme(
+    plot.background = element_rect(fill = 'transparent', colour = NA), 
+    legend.position = 'bottom'
+  )
 
-jpeg('figures/habitatreportcard.jpg', family = fml, height = 5.5, width = 6, units = 'in', res = 300)
+jpeg('figures/habitatreportcard.jpg', family = fml, height = 6.5, width = 7, units = 'in', res = 300)
 print(p)
 dev.off()
 
