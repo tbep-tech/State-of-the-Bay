@@ -121,11 +121,11 @@ dev.off()
 # tidal creek report ------------------------------------------------------
 
 tidcrk <- tidalcreeks[tbshed, ]
-tidres <- anlz_tdlcrk(tidcrk, iwrraw, yr = 2023)
+tidres <- anlz_tdlcrk(tidcrk, iwrraw, yr = 2024)
 
-out <- show_tdlcrkmatrix(tidres)
+out <- show_tdlcrkmatrix(tidres, class = c('3M', '2', '3F', '1'))
 
-jpeg('figures/tidalcreekreport.jpg', family = fml, height = 7, width = 6, units = 'in', res = 300)
+jpeg('figures/tidalcreekreport.jpg', family = fml, height = 9, width = 6, units = 'in', res = 300)
 print(out)
 dev.off()
 
