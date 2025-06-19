@@ -14,7 +14,7 @@ load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/chgdat.RDat
 load(url("https://github.com/tbep-tech/hmpu-workflow/raw/master/data/subtchgdat.RData"))
 
 # subtidal max year
-submax <- '2022'
+submax <- '2024'
 
 # suptratidal max year
 sprmax <- '2023'

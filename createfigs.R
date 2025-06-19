@@ -24,7 +24,7 @@ fml <- "Lato"
 
 # wq matrix map -----------------------------------------------------------
 
-maxyr <- 2023
+maxyr <- 2024
 txtcol <- 'black'
 p <- show_sitemap(epcdata, yrsel = maxyr) +
   theme(
@@ -877,6 +877,7 @@ data(tbsegdetail)
 #   full_join(segclp, ., by = c('segment'= 'val'))
 
 load(url('https://github.com/tbep-tech/seagrass-analysis/raw/refs/heads/main/data/sgsegest.RData'))
+data(tbsegdetail, package = 'tbeptools')
 
 # get change summary
 tomap <- sgsegest %>% 
@@ -885,7 +886,7 @@ tomap <- sgsegest %>%
   mutate(
     chg = `2024` - `2022`
   ) %>% 
-  full_join(segclp, ., by = 'segment')
+  full_join(tbsegdetail, ., by = c('long_name' = 'segment'))
 
 maxv <- max(abs(tomap$chg))
 
