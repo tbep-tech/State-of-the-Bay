@@ -105,7 +105,7 @@ dev.off()
 
 # tbbi report card --------------------------------------------------------
 
-maxyr <- 2023
+maxyr <- 2024
 tbbiscr <- anlz_tbbiscr(benthicdata)
 p <- show_tbbimatrix(tbbiscr, family = fml, yrrng = c(1993, maxyr)) +
   theme(
@@ -1246,7 +1246,7 @@ dev.off()
 # average PEL over time by bay segment --------------------------------------------------------
 
 dat <- tibble(
-  yrs = 1993:2023
+  yrs = 1993:2024
 ) %>% 
   group_nest(yrs) %>% 
   mutate(
