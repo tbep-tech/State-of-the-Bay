@@ -1289,7 +1289,7 @@ dev.off()
 
 # FIB report card -----------------------------------------------------------------------------
 
-maxyr <- 2024
+maxyr <- 2025
 
 p <- tbeptools::show_fibmatrix(enterodata, stas = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'),
                                yrrng = c(2003, maxyr), warn = F) +
