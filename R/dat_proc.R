@@ -25,11 +25,15 @@ set_smartsheet_api_key(smrkey)
 # variables for acs (acs1, 3, or 5 are one, three, and five year results) from load_variables('2005', 'acs1')
 # pop variable is B01003_001
 
-yrs <- seq(2005, 2019)
+yrs <- seq(2005, 2024)
 out <- NULL
 for(yr in yrs){
   
-  tmp <- get_acs('metropolitan statistical area/micropolitan statistical area', variables = 'B01003_001', survey = 'acs1', year = yr)
+  tmp <- try(get_acs('metropolitan statistical area/micropolitan statistical area', variables = 'B01003_001', survey = 'acs1', year = yr))
+
+  if(inherits(tmp, 'try-error')){
+    next
+  }
 
   tmp <- tmp %>% 
     mutate(yr = !!yr)
@@ -63,15 +67,16 @@ popdat <- bind_rows(legdat, acsdat) %>%
   arrange(yr)
 
 ##
-# manually add 2020, 2021 (not in tidycensus yet)
+# manually add 2020 (not in tidycensus yet)
 # https://www.statista.com/statistics/815278/tampa-metro-area-population/
 
 popdat <- popdat %>% 
   bind_rows(
     tibble(
-      yr = c(2020, 2021), 
-      pop = c(3183385, 3219514))
-  )
+      yr = c(2020), 
+      pop = c(3187828))
+  ) |> 
+  arrange(yr)
 
 save(popdat, file = here('data/popdat.RData'))
 
