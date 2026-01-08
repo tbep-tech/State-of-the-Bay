@@ -1164,7 +1164,7 @@ grntsum_plo <- function(datin, maxyr, family, width, height, fntsz = 17){
   
   datin <- datin |> 
     filter(year <= maxyr)
-  
+
   # comdat input
   if('platform' %in% names(datin)){
     
@@ -1891,6 +1891,12 @@ expedsum_plo <- function(datin, h = 4, w = 20, padding = 0, rows = 4, family){
   toplo <- datin %>% 
     pivot_longer(everything()) %>% 
     inner_join(txt, by = 'name') %>% 
+    mutate(
+      txtadd = case_when(
+        value == 1 ~ gsub('S$', '', txtadd),
+        T ~ txtadd
+      )
+    ) |> 
     unite('value', value, txtadd, sep = ' ') %>% 
     mutate(
       h = h,

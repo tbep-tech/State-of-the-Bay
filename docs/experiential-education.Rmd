@@ -10,7 +10,6 @@ source(here::here('R/setup.R'))
 load(file = here('data/expeddat.RData'))
 yrsel <- 2025
 tots <- expedsum_fun(expeddat, yrsel = c(2023:yrsel))
-tots2024 <- expedsum_fun(expeddat, yrsel = 2024:yrsel)
 ```
 
 Experiential education events are planned and facilitated by the Tampa Bay Estuary Program to increase environmental stewardship, well-being, and scientific literacy about key topics related to Tampa Bay ([Communication & Outreach Plan 2024](https://drive.google.com/file/d/1cPMlSIDgfinErzVVg6Vdy3Ycb_Xeodel/view){target="_parent"}). These events acknowledge that merging hands-on experience with guided education leads to a deeper understanding of key environmental topics. The target audience is the general public and anyone that has an interest in increasing knowledge about and stewardship of Tampa Bay.  
