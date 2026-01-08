@@ -24,9 +24,11 @@ fml <- "Lato"
 
 # wq matrix map -----------------------------------------------------------
 
-maxyr <- 2024
+maxyr <- 2025
 txtcol <- 'black'
-p <- show_sitemap(epcdata, yrsel = maxyr) +
+# wqdat <- epcdata
+wqdat <- read_importwq(here('data-raw/Results_Provisional.xlsx'), download_latest = F)
+p <- show_sitemap(wqdat, yrsel = maxyr) +
   theme(
     plot.background = element_rect(fill = NA, color = NA),
     axis.text = element_blank(),
@@ -674,7 +676,7 @@ dev.off()
 
 # water quality report card -------------------------------------------------------------------
 
-maxyr <- 2024
+maxyr <- 2025
 
 # local file path
 # xlsx <- here('data-raw/Results_Updated.xls')
@@ -699,7 +701,7 @@ xlsx <- here('data-raw/Results_Provisional.xlsx')
 epcdata <- read_importwq(xlsx, download_latest = F)
 
 jpeg('figures/waterqualityreportcardmap.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
-show_sitesegmap(epcdata, yrsel = 2024)
+show_sitesegmap(epcdata, yrsel = 2025)
 dev.off()
 
 # habitat report card -------------------------------------------------------------------------
@@ -728,7 +730,7 @@ dev.off()
 
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 
-maxyr <- 2024
+maxyr <- 2025
 
 toplo1 <- vols |>
   group_by(yr, bay_segment) |>
@@ -783,7 +785,7 @@ p2 <- ggplot(toplo2, aes(x = mo, y = volest, fill = bay_segment)) +
   labs(
     x = NULL,
     y = 'Million gallons',
-    subtitle = '2024 by month',
+    subtitle = '2025 by month',
     fill = NULL
   ) +
   theme_minimal() +
@@ -984,7 +986,7 @@ raindat <- readxl::excel_sheets(here('data-raw/swfwmdrainfall.xlsx')) %>%
     data = purrr::map(mo, function(mo){
       
       read_excel(here('data-raw/swfwmdrainfall.xlsx'), sheet = mo, skip = 1) %>% 
-        filter(Year %in% 2005:2024) %>% 
+        filter(Year %in% 2005:2025) %>% 
         select(
           yr = Year, 
           tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
