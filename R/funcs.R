@@ -1157,10 +1157,13 @@ grntsum_fun <- function(datin, yrsel = NULL, rnd = c('M', 'k')){
 
 # plotly graphic of running totals for grants
 # currently works for license plate sales (comdat), bay mini grants (bmgdat), and tberf (tberfdat)
-grntsum_plo <- function(datin, family, width, height, fntsz = 17){
+grntsum_plo <- function(datin, maxyr, family, width, height, fntsz = 17){
   
   ylb <- 'Annual total awarded'
   tickprf <- '$'
+  
+  datin <- datin |> 
+    filter(year <= maxyr)
   
   # comdat input
   if('platform' %in% names(datin)){

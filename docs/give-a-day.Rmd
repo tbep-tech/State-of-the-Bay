@@ -9,7 +9,7 @@ output:
 source(here::here('R/setup.R'))
 load(file = here('data/gaddat.RData'))
 load(file = here('data/dddat.RData'))
-yrsel <- 2024
+yrsel <- 2025
 tots <- gadsum_fun(gaddat, yrsel = c(2019:yrsel))
 ddtots <- ddsum_fun(dddat)
 ```
@@ -20,11 +20,13 @@ Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer 
 
 ## `r yrsel` Year in Review 
 
-```{r, out.width = '80%', fig.height = 17, fig.width = 14}
+![](https://tbep.org/wp-content/uploads/Give-A-Day-Recap-1.jpg
+)
+<!-- ```{r, out.width = '80%', fig.height = 17, fig.width = 14}
 gaddat %>% 
   gadsum_fun(yrsel = yrsel) %>% 
   gadsum_plo(family = fml)
-```
+``` -->
 
 ## Trash Free Waters
 

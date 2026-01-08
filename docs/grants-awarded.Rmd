@@ -11,7 +11,7 @@ load(file = here('data/tberfdat.RData'))
 load(file = here('data/bmgdat.RData'))
 load(file = here('data/dcgdat.RData'))
 load(file = here('data/comdat.RData'))
-maxyr <- 2024
+maxyr <- 2025
 tberfsum <- grntsum_fun(tberfdat)
 bmgsum <- grntsum_fun(bmgdat)
 dcgsum <- grntsum_fun(dcgdat, rnd = 'k')
@@ -61,19 +61,19 @@ The following shows totals to date for each of the grant programs coordinated by
 ### TBERF
 
 ```{r, out.width = '100%'}
-grntsum_plo(tberfdat, family = fml, width = NULL, height = 400)
+grntsum_plo(tberfdat, maxyr = maxyr, family = fml, width = NULL, height = 400)
 ```
 
 ### Bay Mini Grants
 
 ```{r, out.width = '100%'}
-grntsum_plo(bmgdat, family = fml, width = NULL, height = 400)
+grntsum_plo(bmgdat, maxyr = maxyr, family = fml, width = NULL, height = 400)
 ```
 
 ### License Plate Sales
 
 ```{r, out.width = '100%'}
-grntsum_plo(comdat, family = fml, width = NULL, height = 400)
+grntsum_plo(comdat, maxyr = maxyr, family = fml, width = NULL, height = 400)
 ```
 
 <script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
