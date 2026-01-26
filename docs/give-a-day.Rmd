@@ -20,7 +20,7 @@ Since 2019, there have been `r tots['nevent']` Give-A-Day for the Bay volunteer 
 
 ## `r yrsel` Year in Review 
 
-![](https://tbep.org/wp-content/uploads/Give-A-Day-Recap-1.jpg){width="80%" style="display: block; margin-left: auto; margin-right: auto;"}
+![](img/Give-A-Day-Recap-1.jpg){width="80%" style="display: block; margin-left: auto; margin-right: auto;"}
 
 <!-- ```{r, out.width = '80%', fig.height = 17, fig.width = 14}
 gaddat %>% 
