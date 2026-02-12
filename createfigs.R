@@ -705,7 +705,6 @@ show_sitesegmap(epcdata, yrsel = 2025)
 dev.off()
 
 # water quality report card map minimal ----------------------------------
-
 # from source code in show_sitesegmap()
 trgs <- targets
 prj <- '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
@@ -734,7 +733,16 @@ seglabs <- data.frame(
 ) %>%
   st_as_sf(coords = c('Longitude', 'Latitude'), crs = prj)
 
-p <- ggplot2::ggplot() +
+dat_ext <- segcat %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(2, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom = 10)
+
+m <- ggplot2::ggplot() + 
+  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
   geom_sf(data = segcat, aes(fill = outcome), colour = 'black', alpha = 0.5, inherit.aes = F) +
   ggplot2::scale_fill_manual(values = segcols, drop = T) +
   ggspatial::annotation_scale(unit_category = 'metric', location = 'br') +
@@ -751,8 +759,17 @@ p <- ggplot2::ggplot() +
     text = ggplot2::element_text(family = 'sans')
   )
 
+dat_ext <- dat_ext %>% 
+  sf::st_as_sfc(dat_ext) %>% 
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+# set coordinates because vector not clipped
+m <- m +
+  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
+
 jpeg('figures/waterqualityreportcardmapminimal.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
-print(p)
+print(m)
 dev.off()
 
 # habitat report card -------------------------------------------------------------------------
