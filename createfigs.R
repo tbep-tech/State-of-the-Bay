@@ -1577,3 +1577,9 @@ p <- m + mat + plot_layout(ncol = 1, heights = c(1, 0.2))
 png(here('figures/sobchlmatmap.png'), family = fml, height = 6.75, width = 4, units = 'in', res = 300)
 print(p)
 dev.off()
+
+# non-native species -----------------------------------------------------
+
+file.copy('C:/proj/tbep-invasives/derived_data/report_cards/abundance_report_card.png', here('figures/nonnativeabundancereportcard.png'), overwrite = TRUE)
+
+file.copy('C:/proj/tbep-invasives/derived_data/report_cards/richness_report_card.png', here('figures/nonnativerichnessreportcard.png'), overwrite = TRUE)
