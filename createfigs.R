@@ -1583,3 +1583,15 @@ dev.off()
 file.copy('C:/proj/tbep-invasives/derived_data/report_cards/abundance_report_card.png', here('figures/nonnativeabundancereportcard.png'), overwrite = TRUE)
 
 file.copy('C:/proj/tbep-invasives/derived_data/report_cards/richness_report_card.png', here('figures/nonnativerichnessreportcard.png'), overwrite = TRUE)
+
+# combine the two figures in a single file
+abun <- png::readPNG(here('figures/nonnativeabundancereportcard.png'))
+rich <- png::readPNG(here('figures/nonnativerichnessreportcard.png'))
+combined <- gridExtra::grid.arrange(
+  grid::rasterGrob(abun), 
+  grid::rasterGrob(rich), 
+  ncol = 2
+)
+png(here('figures/nonnativereportcard.png'), height = 6, width = 9, units = 'in', res = 300)
+grid::grid.draw(combined)
+dev.off()
