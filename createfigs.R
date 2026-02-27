@@ -704,6 +704,74 @@ jpeg('figures/waterqualityreportcardmap.jpg', family = fml, height = 6, width = 
 show_sitesegmap(epcdata, yrsel = 2025)
 dev.off()
 
+# water quality report card map minimal ----------------------------------
+# from source code in show_sitesegmap()
+trgs <- targets
+prj <- '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+yrsel <- 2025
+  
+# segment
+segcat <- epcdata |> 
+  anlz_avedat(partialyr = T) |> 
+  anlz_attain(trgs = trgs) %>%
+  dplyr::filter(yr == yrsel) %>%
+  dplyr::mutate(
+    outcome = factor(outcome,
+                      levels = c('green', 'yellow', 'red'),
+                      labels = c('Stay the Course', 'Caution', 'On Alert'))
+  ) |> 
+  dplyr::select(bay_segment, outcome) 
+segcat <- dplyr::left_join(tbseg, segcat, by = 'bay_segment') %>%
+  st_as_sf(crs = prj)
+segcols <- c('Stay the Course' = '#2DC938', 'Caution' = '#E9C318', 'On Alert' = '#CC3231')
+
+# segment labels
+seglabs <- data.frame(
+  Longitude = c(-82.6, -82.64, -82.58, -82.42),
+  Latitude = c(27.55, 27.81, 28, 27.925),
+  bay_segment = c('LTB', 'MTB', 'OTB', 'HB')
+) %>%
+  st_as_sf(coords = c('Longitude', 'Latitude'), crs = prj)
+
+dat_ext <- segcat %>% 
+  sf::st_as_sfc() %>% 
+  sf::st_buffer(dist = units::set_units(2, kilometer)) %>%
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+tls <- maptiles::get_tiles(dat_ext, provider = 'CartoDB.PositronNoLabels', zoom = 10)
+
+m <- ggplot2::ggplot() + 
+  tidyterra::geom_spatraster_rgb(data = tls, maxcell = 1e8) +
+  geom_sf(data = segcat, aes(fill = outcome), colour = 'black', alpha = 0.5, inherit.aes = F) +
+  ggplot2::scale_fill_manual(values = segcols, drop = T) +
+  ggspatial::annotation_scale(unit_category = 'metric', location = 'br') +
+  labs(fill = 'Bay segment outcomes') +
+  ggplot2::geom_label(data = seglabs, aes(label = bay_segment, geometry = geometry), stat = "sf_coordinates", inherit.aes = F, fill = rgb(1, 1, 1, 0.5)) +
+  theme_bw(base_family = 'sans', base_size = 12) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_text(size = 7),
+    legend.background = element_blank(),
+    legend.key = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    text = ggplot2::element_text(family = 'sans')
+  )
+
+dat_ext <- dat_ext %>% 
+  sf::st_as_sfc(dat_ext) %>% 
+  sf::st_transform(crs = 4326) %>% 
+  sf::st_bbox()
+
+# set coordinates because vector not clipped
+m <- m +
+  ggplot2::coord_sf(xlim = dat_ext[c(1, 3)], ylim = dat_ext[c(2, 4)], expand = FALSE, crs = 4326)
+
+jpeg('figures/waterqualityreportcardmapminimal.jpg', family = fml, height = 6, width = 6, units = 'in', res = 300)
+print(m)
+dev.off()
+
 # habitat report card -------------------------------------------------------------------------
 
 
@@ -1508,4 +1576,22 @@ p <- m + mat + plot_layout(ncol = 1, heights = c(1, 0.2))
 
 png(here('figures/sobchlmatmap.png'), family = fml, height = 6.75, width = 4, units = 'in', res = 300)
 print(p)
+dev.off()
+
+# non-native species -----------------------------------------------------
+
+file.copy('C:/proj/tbep-invasives/derived_data/report_cards/abundance_report_card.png', here('figures/nonnativeabundancereportcard.png'), overwrite = TRUE)
+
+file.copy('C:/proj/tbep-invasives/derived_data/report_cards/richness_report_card.png', here('figures/nonnativerichnessreportcard.png'), overwrite = TRUE)
+
+# combine the two figures in a single file
+abun <- png::readPNG(here('figures/nonnativeabundancereportcard.png'))
+rich <- png::readPNG(here('figures/nonnativerichnessreportcard.png'))
+combined <- gridExtra::grid.arrange(
+  grid::rasterGrob(abun), 
+  grid::rasterGrob(rich), 
+  ncol = 2
+)
+png(here('figures/nonnativereportcard.png'), height = 6, width = 9, units = 'in', res = 300)
+grid::grid.draw(combined)
 dev.off()
